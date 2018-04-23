@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+  
+
+ <Button
+        android:id="@+id/btnListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List View" />
+    <Button
+        android:id="@+id/btnListViewCustom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="List View Custom" />
+    <Button
+        android:id="@+id/btnExpandableListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Expandable List View" />
+
+</LinearLayout>
