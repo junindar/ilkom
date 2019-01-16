@@ -25,7 +25,7 @@ public class SizeAdapter
 	}
 
 
-	public SizeAdapter () throws java.lang.Throwable
+	public SizeAdapter ()
 	{
 		super ();
 		if (getClass () == SizeAdapter.class)

@@ -16,7 +16,7 @@ public class ListViewActivity
 	}
 
 
-	public ListViewActivity () throws java.lang.Throwable
+	public ListViewActivity ()
 	{
 		super ();
 		if (getClass () == ListViewActivity.class)

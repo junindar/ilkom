@@ -19,7 +19,7 @@ public class MakananAdapter
 	}
 
 
-	public MakananAdapter () throws java.lang.Throwable
+	public MakananAdapter ()
 	{
 		super ();
 		if (getClass () == MakananAdapter.class)

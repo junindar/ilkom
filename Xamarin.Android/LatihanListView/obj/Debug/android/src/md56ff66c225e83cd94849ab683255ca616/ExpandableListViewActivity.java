@@ -16,7 +16,7 @@ public class ExpandableListViewActivity
 	}
 
 
-	public ExpandableListViewActivity () throws java.lang.Throwable
+	public ExpandableListViewActivity ()
 	{
 		super ();
 		if (getClass () == ExpandableListViewActivity.class)
