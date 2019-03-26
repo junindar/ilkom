@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Paths>
+  <Jars>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\1\jl\arch-core-common.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\10\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\11\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\12\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\13\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\2\jl\arch-lifecycle-common.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\3\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\4\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\5\jl\support-annotations.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\6\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\7\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\8\jl\bin\classes.jar</Jar>
+    <Jar>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\9\jl\bin\classes.jar</Jar>
+  </Jars>
+  <ResolvedResourceDirectories>
+    <ResolvedResourceDirectory>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\6\jl\res</ResolvedResourceDirectory>
+    <ResolvedResourceDirectory>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\10\jl\res</ResolvedResourceDirectory>
+    <ResolvedResourceDirectory>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\11\jl\res</ResolvedResourceDirectory>
+    <ResolvedResourceDirectory>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\12\jl\res</ResolvedResourceDirectory>
+  </ResolvedResourceDirectories>
+  <ResolvedAssetDirectories>
+    <ResolvedAssetDirectory>obj\Debug\lp\11\jl\assets</ResolvedAssetDirectory>
+  </ResolvedAssetDirectories>
+  <ResolvedEnvironmentFiles />
+  <ResolvedResourceDirectoryStamps>
+    <ResolvedResourceDirectoryStamp>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\6.stamp</ResolvedResourceDirectoryStamp>
+    <ResolvedResourceDirectoryStamp>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\10.stamp</ResolvedResourceDirectoryStamp>
+    <ResolvedResourceDirectoryStamp>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\11.stamp</ResolvedResourceDirectoryStamp>
+    <ResolvedResourceDirectoryStamp>C:\Users\Junindar\Source\Repos\ilkom\Xamarin.Android\LatihanRecyclerView\obj\Debug\lp\12.stamp</ResolvedResourceDirectoryStamp>
+  </ResolvedResourceDirectoryStamps>
+</Paths>

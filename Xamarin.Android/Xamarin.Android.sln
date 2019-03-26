@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanExpandableListView",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanCardView", "LatihanCardView\LatihanCardView.csproj", "{C334F543-B67F-4AA9-B887-FF22F4ADC55E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanRecyclerView", "LatihanRecyclerView\LatihanRecyclerView.csproj", "{AD147E77-856A-4317-A32C-2C0CB0AEC752}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -33,6 +35,12 @@ Global
 		{C334F543-B67F-4AA9-B887-FF22F4ADC55E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{C334F543-B67F-4AA9-B887-FF22F4ADC55E}.Release|Any CPU.Build.0 = Release|Any CPU
 		{C334F543-B67F-4AA9-B887-FF22F4ADC55E}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{AD147E77-856A-4317-A32C-2C0CB0AEC752}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AD147E77-856A-4317-A32C-2C0CB0AEC752}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AD147E77-856A-4317-A32C-2C0CB0AEC752}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AD147E77-856A-4317-A32C-2C0CB0AEC752}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AD147E77-856A-4317-A32C-2C0CB0AEC752}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AD147E77-856A-4317-A32C-2C0CB0AEC752}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
