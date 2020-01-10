@@ -3,6 +3,7 @@
 //
 // Generated with Bot Builder V4 SDK Template for Visual Studio EchoBot v4.6.2
 
+using System;
 using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
@@ -13,9 +14,52 @@ namespace IntroBotFramework.Bots
 {
     public class EchoBot : ActivityHandler
     {
-        protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext, CancellationToken cancellationToken)
+        private BotState _userState;
+        public EchoBot( UserState userState)
         {
-            await turnContext.SendActivityAsync(CreateActivityWithTextAndSpeak($"Echo: {turnContext.Activity.Text}"), cancellationToken);
+            _userState = userState;
+        }
+
+        protected override async Task OnMessageActivityAsync(ITurnContext<IMessageActivity> turnContext,
+            CancellationToken cancellationToken)
+        {
+
+            
+            var userStateAccessors = _userState.CreateProperty<UserProfile>(nameof(UserProfile));
+            var userProfile = await userStateAccessors.GetAsync(turnContext, () => new UserProfile());
+
+            if (string.IsNullOrEmpty(userProfile.Nama))
+            {
+                if (!userProfile.PromptedUserForName)
+                {
+                    await turnContext.SendActivityAsync("Masukkan nama :");
+                    userProfile.PromptedUserForName = true;
+                }
+                else
+                {
+                    userProfile.Nama = turnContext.Activity.Text?.Trim();
+                    await turnContext.SendActivityAsync($"Hi {userProfile.Nama}, Silahkan Masukkan Alamat anda:");
+                }
+               
+            }
+            else 
+            {
+                userProfile.Alamat = turnContext.Activity.Text?.Trim();
+                var textMsg =
+                    $"Data anda sebagai berikut telah kami simpan. Nama {userProfile.Nama} dan Alamat {userProfile.Alamat}. Untuk memulai pendaftaran ketik 'Hi'";
+                userProfile.Nama = string.Empty;
+                userProfile.Alamat = string.Empty;
+                userProfile.PromptedUserForName = false;
+                await turnContext.SendActivityAsync(textMsg);
+            }
+           
+        }
+
+        public override async Task OnTurnAsync(ITurnContext turnContext, CancellationToken cancellationToken = default(CancellationToken))
+        {
+            await base.OnTurnAsync(turnContext, cancellationToken);
+
+            await _userState.SaveChangesAsync(turnContext, false, cancellationToken);
         }
 
         protected override async Task OnMembersAddedAsync(IList<ChannelAccount> membersAdded, ITurnContext<IConversationUpdateActivity> turnContext, CancellationToken cancellationToken)
@@ -24,7 +68,7 @@ namespace IntroBotFramework.Bots
             {
                 if (member.Id != turnContext.Activity.Recipient.Id)
                 {
-                    await turnContext.SendActivityAsync(CreateActivityWithTextAndSpeak($"Hello and welcome!"), cancellationToken);
+                    await turnContext.SendActivityAsync(CreateActivityWithTextAndSpeak($"Selamat datang di latihan Chatbot.."), cancellationToken);
                 }
             }
         }
