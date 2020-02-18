@@ -21,7 +21,6 @@ namespace LatihanBlazor.Pages
         public IEnumerable<Book> Books { get; set; }
 
       
-
         private List<Category> Categories { get; set; }
 
         private void InitializeCategories()
