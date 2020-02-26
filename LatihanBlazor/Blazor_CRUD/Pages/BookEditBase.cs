@@ -7,7 +7,7 @@ using Blazor_CRUD.Data;
 using Blazor_CRUD.Entity;
 using BlazorInputFile;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Hosting;
+
 
 namespace Blazor_CRUD.Pages
 {
@@ -32,9 +32,9 @@ namespace Blazor_CRUD.Pages
         public List<Category> Categories { get; set; } = new List<Category>();
 
         protected string CategoryId = string.Empty;
-        public IFileListEntry file { get; set; }
-        public MemoryStream fs { get; set; }
-        public string ImageData { get; set; }
+        protected IFileListEntry file;
+        protected MemoryStream fs;
+        protected string ImageData = string.Empty;
 
 
         protected override async Task OnInitializedAsync()
@@ -85,13 +85,10 @@ namespace Blazor_CRUD.Pages
             if (file!=null && file.Data.Length>0)
             {
                await fileUpload.UploadAsync(fs,Book.Gambar);
-              // await fileUpload.UploadAsync2(file);
             }
 
             NavigationManager.NavigateTo("/BookList");
         }
-
-       
         protected async Task  FileUpload(IFileListEntry[] files)
         {
             file = files.FirstOrDefault();

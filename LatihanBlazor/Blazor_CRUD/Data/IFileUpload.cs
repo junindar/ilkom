@@ -44,7 +44,7 @@ namespace Blazor_CRUD.Data
 
             var ms = new MemoryStream();
             await file.Data.CopyToAsync(ms);
-           await using (FileStream fs = new FileStream(uploads, FileMode.Create, FileAccess.Write))
+            await using (FileStream fs = new FileStream(uploads, FileMode.Create, FileAccess.Write))
             {
                 ms.WriteTo(fs);
             }

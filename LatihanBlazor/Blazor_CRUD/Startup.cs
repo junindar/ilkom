@@ -36,18 +36,12 @@ namespace Blazor_CRUD
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
             services.AddTransient<IFileUpload, FileUpload>();
-            services.AddSingleton<WeatherForecastService>();
+          
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
-
-            //app.Use((context, next) =>
-            //{
-            //    context.Features.Get<IHttpMaxRequestBodySizeFeature>().MaxRequestBodySize = null;
-            //    return next.Invoke();
-            //});
 
            
             if (env.IsDevelopment())

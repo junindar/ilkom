@@ -1,6 +1,5 @@
 ﻿@page "/bookedit"
 @page "/bookedit/{BookId}"
-
 @inherits BookEditBase
 
 <section class="book-edit">
@@ -13,7 +12,8 @@
 
         <div class="form-group row">
             <label for="Judul" class="col-sm-3">Judul Buku: </label>
-            <InputText id="Judul" @bind-Value="@Book.Judul" class="form-control col-sm-8" placeholder="Judul Buku" required></InputText>
+            <InputText id="Judul" @bind-Value="@Book.Judul" 
+            class="form-control col-sm-8" placeholder="Judul Buku" required></InputText>
             <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Judul)" />
         </div>
 
@@ -53,10 +53,11 @@
                 &nbsp;Status
             </label>
         </div>
+
         <div class="form-group">
             <label for="Deskripsi" class="col-sm-3" >Gambar Buku : </label>
             <InputText  type="hidden" id="Gambar" @bind-Value="@Book.Gambar" class="form-control col-sm-8" ></InputText>
-            <InputFile multiple OnChange="@FileUpload"   />
+            <InputFile  OnChange="@FileUpload"   />
             <img id="user_img" height="100" width="90" style="border: solid" src="@ImageData" />
             <br />
         </div>

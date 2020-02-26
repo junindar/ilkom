@@ -25,7 +25,7 @@ else
                 <th>Id Buku</th>
                 <th>Judul</th>
                 <th>Penulis</th>
-                @*<th>Penerbit</th>*@
+
                 <th></th>
             </tr>
         </thead>
@@ -38,7 +38,7 @@ else
                     <td>@book.BookID</td>
                     <td>@book.Judul</td>
                     <td>@book.Penulis</td>
-                    @*<td>@book.Penerbit</td>*@
+
                     <td>
                         <a href="@($"bookdetail/{book.BookID}")" class="btn btn-primary table-btn">
                             <i class="fas fa-info-circle"></i>
