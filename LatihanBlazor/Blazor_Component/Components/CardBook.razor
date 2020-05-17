@@ -1,0 +1,75 @@
+﻿@inherits CardBookBase
+
+
+@if (Books == null)
+{
+    <p><em>Data tidak tersedia</em></p>
+}
+else
+{
+
+    <div class="col-lg-12">
+        <div class="panel panel-default">
+            <div class="panel-heading" style="height: 43.38px">
+                <label >@PanelText</label>
+                <div style="display:inline-block; position:relative; right:-55%;">
+                    <button type="button" class="btn btn-primary btn-xs" 
+                            @onclick="@(() => ShowBookCategoryAsync("Teknologi"))">Teknologi</button>
+                    <button type="button" class="btn btn-primary btn-xs" 
+                            @onclick="@(() => ShowBookCategoryAsync("Agama"))">Agama</button>
+                    <button type="button" class="btn btn-primary btn-xs" 
+                            @onclick="@(() => ShowBookCategoryAsync("Bahasa"))">Bahasa</button>
+                    <button type="button" class="btn btn-primary btn-xs" 
+                            @onclick="@(() => ShowBookCategoryAsync("Sosial"))">Sosial</button>
+                </div>
+
+            </div>
+            <div class="panel-body">
+                <div class="row">
+            
+                    @foreach (var book in Books)
+                    {
+                        <div class="col-md-4">
+                            <div class="card" style="height: 450px;" align="center">
+                                <a asp-action="DetailBook" asp-route-id="@book.BookID">
+                                    <img src="/images/@book.Gambar" height="250" width="200" />
+                                </a>
+                                <div style="padding: 9px;color:#333">
+                                    <h6 style="text-align: center">@book.Judul</h6>
+                                    <h5 style="text-align: center">@book.Penulis</h5>
+                                    <h6 style="text-align: center">@book.Penerbit</h6>
+
+                                    @{
+                                        if (book.Status)
+                                        {
+                                            <p style="text-align: center">
+                                                <a class="btn btn-success" role="button"
+                                                   data-bukuId="@book.BookID"
+                                                   data-bukuImage="@book.Gambar"
+                                                   data-bukuJudul="@book.Judul"
+                                                   data-bukuPenulis="@book.Penulis"
+                                                   style="margin-top: 10px;color:white!important">
+                                                    <span class="glyphicon glyphicon-shopping-cart"></span> Add To Cart
+                                                </a>
+
+                                            </p>
+
+                                        }
+                                    }
+
+
+                                </div>
+                            </div><br />
+                        </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+     
+
+        }

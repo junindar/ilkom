@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.29519.87
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LatihanBlazor", "LatihanBlazor\LatihanBlazor.csproj", "{D98EEC7F-D76C-4942-BBFA-3A24BA488801}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor_CRUD", "Blazor_CRUD\Blazor_CRUD.csproj", "{D9FBF891-C88D-4FB7-8F62-936AD170556A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor_CRUD", "Blazor_CRUD\Blazor_CRUD.csproj", "{D9FBF891-C88D-4FB7-8F62-936AD170556A}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor_Component", "Blazor_Component\Blazor_Component.csproj", "{3AE68781-6C76-4211-95B3-4419F265C0BE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{D9FBF891-C88D-4FB7-8F62-936AD170556A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D9FBF891-C88D-4FB7-8F62-936AD170556A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D9FBF891-C88D-4FB7-8F62-936AD170556A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3AE68781-6C76-4211-95B3-4419F265C0BE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3AE68781-6C76-4211-95B3-4419F265C0BE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3AE68781-6C76-4211-95B3-4419F265C0BE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3AE68781-6C76-4211-95B3-4419F265C0BE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

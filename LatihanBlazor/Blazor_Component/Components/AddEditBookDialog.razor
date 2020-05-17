@@ -1,0 +1,126 @@
+﻿@inherits AddEditBookDialogBase
+
+@if (ShowDialog)
+{
+    <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content" style="width: 800px !important;">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="titleLabel">Add/Edit/Delete Book</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    @*sintaks Edit Form*@
+                    <EditForm Model="@Book" OnValidSubmit="@HandleValidSubmit">
+
+                        <DataAnnotationsValidator />
+                        <ValidationSummary />
+
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group row">
+                                    <label for="Judul" class="col-sm-3">Judul Buku: </label>
+                                    <InputText id="Judul" @bind-Value="@Book.Judul"
+                                               class="form-control col-sm-8" placeholder="Judul Buku" required></InputText>
+                                    <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Judul)" />
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="Penulis" class="col-sm-3">Penulis: </label>
+                                    <InputText id="Penulis" @bind-Value="@Book.Penulis" class="form-control col-sm-8" placeholder="Penulis" required></InputText>
+                                    <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Penulis)" />
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="Penerbit" class="col-sm-3">Penerbit: </label>
+                                    <InputText id="Penerbit" @bind-Value="@Book.Penerbit" class="form-control col-sm-8" placeholder="Penerbit" required></InputText>
+                                    <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Penerbit)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="category" class="col-sm-3">Category Buku: </label>
+                                    <InputSelect id="category" class="form-control col-sm-8" @bind-Value="@CategoryId" required>
+                                        @foreach (var cat in Categories)
+                                            {
+                                            <option value="@cat.CategoryID">@cat.NamaCategory</option>
+                                            }
+                                        /**/
+                                        /**/
+                                        /**/
+                                        /**/
+
+                                    </InputSelect>
+                                </div>
+
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="Deskripsi" class="col-sm-3">Deskripsi Buku: </label>
+                                    <InputTextArea id="Deskripsi" @bind-Value="@Book.Deskripsi" class="form-control col-sm-8" placeholder="Masukkan Deskripsi Buku"></InputTextArea>
+                                    <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Deskripsi)" />
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label for="Status" class=" offset-sm-3">
+                                        <InputCheckbox id="Status" @bind-Value="@Book.Status"></InputCheckbox>
+                                        &nbsp;Status
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+
+
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label for="Deskripsi" class="col-sm-3"> &nbsp;</label>
+                                    <InputText type="hidden" id="Gambar" @bind-Value="@Book.Gambar" class="form-control col-sm-8"></InputText>
+                                               <InputFile OnChange="@FileUpload" />
+                                               
+                                               </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="col-sm-3">&nbsp;</div>
+                                <img id="user_img" height="100" width="90" style="border: solid" src="@ImageData"  />
+                                <br />
+                            </div>
+                        </div>
+
+
+                       
+                        <button type="submit" class="btn btn-primary">Save</button>
+                        @if (Book.BookID > 0)
+                        {
+                            <a class="btn btn-danger" @onclick="@DeleteBook">
+                                Delete
+                            </a>
+                        }
+                        <a class="btn btn-outline-primary" @onclick="@Close">Close</a>
+                    </EditForm>
+
+                </div>
+            </div>
+        </div>
+    </div>
+}
