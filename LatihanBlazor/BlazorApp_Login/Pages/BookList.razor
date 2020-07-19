@@ -1,0 +1,57 @@
+﻿@page "/BookList"
+@inherits BookListBase
+@attribute [Authorize(Roles = "Admin,Staff")]
+<h3>Daftar Buku</h3>
+
+
+@if (Books == null)
+{
+    <p><em>Data tidak tersedia</em></p>
+}
+else
+{
+
+
+    <AddEditBookDialog @ref="AddEditBookDialog" CloseEventCallback="@AddEditBookDialog_OnDialogClose"></AddEditBookDialog>
+
+    <div class="row">
+        <button @onclick="@(() => AddEditBookShow(0))" class="btn btn-outline-primary">Tambah Buku</button>
+    </div>
+    <br />
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id Buku</th>
+                <th>Judul</th>
+                <th>Penulis</th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Books)
+            {
+                <tr>
+
+                    <td><img src="@($"images/{book.Gambar}")" class="rounded-circle" width="100" height="100" /></td>
+                    <td>@book.BookID</td>
+                    <td>@book.Judul</td>
+                    <td>@book.Penulis</td>
+
+                    <td>
+                        <a href="@($"bookdetail/{book.BookID}")" class="btn btn-primary table-btn">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+
+
+                        <button @onclick="@(() => AddEditBookShow(book.BookID))" class="btn btn-primary table-btn">  <i class="fas fa-edit"></i></button>
+
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+

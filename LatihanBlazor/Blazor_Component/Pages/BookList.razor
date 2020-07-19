@@ -1,6 +1,6 @@
 ﻿@page "/BookList"
 @inherits BookListBase
-
+@attribute [Authorize(Roles = "Admin")]
 <h3>Daftar Buku</h3>
 
 
@@ -11,7 +11,7 @@
 else
 {
 
-   
+
     <AddEditBookDialog @ref="AddEditBookDialog" CloseEventCallback="@AddEditBookDialog_OnDialogClose"></AddEditBookDialog>
 
     <div class="row">

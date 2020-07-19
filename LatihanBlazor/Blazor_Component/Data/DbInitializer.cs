@@ -10,7 +10,21 @@ namespace Blazor_Component.Data
     {
         public static void Seed(PustakaDbContext context)
         {
-           
+
+            if (!context.Users.Any())
+            {
+                var user = new User
+                {
+                    Username = "admin",
+                    Password = "password",
+                    Nama = "Junindar",
+                    Role = "Admin",
+                    Status = true
+                };
+
+                context.Users.Add(user);
+            }
+
             if (!context.Categories.Any())
             {
                 var categories = new List<Category>
@@ -81,7 +95,7 @@ namespace Blazor_Component.Data
                 context.Categories.Add(cat1);
                 context.Categories.Add(cat2);
 
-
+               
                 context.SaveChanges();
             }
 

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Blazor_Component.Data;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,7 +26,7 @@ namespace Blazor_Component
 
                 var context = services.GetRequiredService<PustakaDbContext>();
                 DbInitializer.Seed(context);
-
+               // builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
 
             }
             host.Run();

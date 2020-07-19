@@ -1,12 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Blazor_Component.Data;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
+using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -29,11 +26,18 @@ namespace Blazor_Component
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddRazorPages();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
+
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                .AddCookie();
+
+            services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
             services.AddDbContext<PustakaDbContext>(options =>
                 options.UseSqlServer(Configuration.GetConnectionString("pustakaConnection")));
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IFileUpload, FileUpload>();
         }
 
