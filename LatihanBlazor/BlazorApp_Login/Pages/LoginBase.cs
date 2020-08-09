@@ -1,6 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿
 using System.Security.Claims;
 using System.Threading.Tasks;
 using BlazorAPP_Login.Data;
@@ -36,7 +34,8 @@ namespace BlazorAPP_Login.Pages
 
             if (claimsPrincipal.Identity.IsAuthenticated)
             {
-                ((CustomAuthStateProvider)AuthenticationStateProvider).UserIsLoggedOut();
+                ((CustomAuthStateProvider)AuthenticationStateProvider)
+                    .UserIsLoggedOut();
             }
             
 
@@ -49,7 +48,8 @@ namespace BlazorAPP_Login.Pages
             {
                 if (loginResult.Status)
                 {
-                     ((CustomAuthStateProvider)AuthenticationStateProvider).UserAuthenticated(loginResult);
+                     ((CustomAuthStateProvider)AuthenticationStateProvider).
+                         UserAuthenticated(loginResult);
                      NavigationManager.NavigateTo("/");
                 }
                 else

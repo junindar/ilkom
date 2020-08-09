@@ -17,13 +17,35 @@ namespace BlazorAPP_Login.Data
                 var user = new User
                 {
                     Username = "admin",
-                    Password = "password",
+                    Password = "123",
                     Nama = "Junindar",
                     Role = "Admin",
                     Status = true
                 };
 
                 context.Users.Add(user);
+                user = new User
+                {
+                    Username = "user1",
+                    Password = "123",
+                    Nama = "Andi",
+                    Role = "Staff",
+                    Status = true
+                };
+
+                context.Users.Add(user);
+
+                user = new User
+                {
+                    Username = "user2",
+                    Password = "123",
+                    Nama = "Yudi",
+                    Role = "General",
+                    Status = true
+                };
+
+                context.Users.Add(user);
+                context.SaveChanges();
             }
 
             if (!context.Categories.Any())

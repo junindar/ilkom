@@ -4,30 +4,31 @@
 
 
 <EditForm Model="@user" OnValidSubmit="@ValidateUser">
+    @*Detail sintaks pada project lampiran*@
     <div>
-        
-    </div>
-    <div>
-        <h3 style="font-weight:bold; color:blue">Login</h3>
-    </div>
-    <div>
-        <br />
-    </div>
-    <div class="col-3 row">
-        <input class="form-control col-12" @bind="user.Username" placeholder="Username" />
-    </div>
-    <br />
-    <div class="col-3 row">
-        <input type="password" class="form-control col-12" @bind="user.Password" placeholder="password" />
-    </div>
-    <br />
-    <div class="col-3 row">
-        <span class="col-12"></span>
-        <input type="submit" class="form-control col-6 btn btn-primary" value="Login" />
 
     </div>
-    <br />
-    <div class="col-12 row" style="text-align:left; font-weight:bold">
+    <div>
+        <h3 style="font-weight: bold; color: blue">Login</h3>
+    </div>
+    <div>
+        <br/>
+    </div>
+    <div class="col-3 row">
+        <input class="form-control col-12" @bind="user.Username" placeholder="Username"/>
+    </div>
+    <br/>
+    <div class="col-3 row">
+        <input type="password" class="form-control col-12" @bind="user.Password" placeholder="password"/>
+    </div>
+    <br/>
+    <div class="col-3 row">
+        <span class="col-12"></span>
+        <input type="submit" class="form-control col-6 btn btn-primary" value="Login"/>
+
+    </div>
+    <br/>
+    <div class="col-12 row" style="text-align: left; font-weight: bold">
         <span class="col-12">@LoginMesssage</span>
     </div>
 </EditForm>

@@ -13,41 +13,29 @@ namespace BlazorAPP_Login.Data
     {
         public override Task<AuthenticationState> GetAuthenticationStateAsync()
         {
-
             var identity = new ClaimsIdentity();
-
-
             var claimsPrincipal = new ClaimsPrincipal(identity);
-
             return Task.FromResult(new AuthenticationState(claimsPrincipal));
-
         }
 
         public void UserAuthenticated(User user)
         {
-            
             var identity = UserClaimsIdentity(user);
-
             var claimsPrincipal = new ClaimsPrincipal(identity);
-
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(claimsPrincipal)));
         }
 
         public void UserIsLoggedOut()
         {
-
             var identity = new ClaimsIdentity();
-
             var user = new ClaimsPrincipal(identity);
-
             NotifyAuthenticationStateChanged(Task.FromResult(new AuthenticationState(user)));
         }
 
         private ClaimsIdentity UserClaimsIdentity(User user)
         {
             var claimsIdentity = new ClaimsIdentity();
-
-            if (user!= null)
+            if (user != null)
             {
                 var claims = new List<Claim>
                         {
@@ -56,13 +44,11 @@ namespace BlazorAPP_Login.Data
                             new Claim(ClaimTypes.Role, user.Role),
                         };
 
-
-                 claimsIdentity = new ClaimsIdentity(
-                                claims,
-                                CookieAuthenticationDefaults.AuthenticationScheme);
+                claimsIdentity = new ClaimsIdentity(
+                               claims,
+                               CookieAuthenticationDefaults.AuthenticationScheme);
 
             }
-
             return claimsIdentity;
         }
 

@@ -1,12 +1,13 @@
 ﻿@page "/bookdetail/{BookId}"
 @inherits BookDetailBase
+@attribute [Authorize(Roles = "Admin,Staff")]
 <h1 class="page-title">Detail Buku : @Book.Judul</h1>
 
 
 
 <div class="col-12 row">
     <div class="col-4">
-        <img src="@($"images/{Book.Gambar}")"   width="200" height="300" />
+        <img src="@($"images/{Book.Gambar}")" width="200" height="300" />
     </div>
     <div class="col-8 row">
         <div class="col-xs-12 col-sm-8">
