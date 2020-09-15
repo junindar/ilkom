@@ -1,0 +1,33 @@
+{
+  "iisSettings": {
+    "windowsAuthentication": false,
+    "anonymousAuthentication": true,
+    "iis": {
+      "applicationUrl": "http://localhost/LatihanWebApi",
+      "sslPort": 0
+    },
+    "iisExpress": {
+      "applicationUrl": "http://localhost:49423",
+      "sslPort": 0
+    }
+  },
+  "$schema": "http://json.schemastore.org/launchsettings.json",
+  "profiles": {
+    "IIS Express": {
+      "commandName": "Project",
+      "launchUrl": "category",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:49423"
+    },
+    "LatihanWebApi": {
+      "commandName": "Project",
+      "launchUrl": "weatherforecast",
+      "environmentVariables": {
+        "ASPNETCORE_ENVIRONMENT": "Development"
+      },
+      "applicationUrl": "http://localhost:5000"
+    }
+  }
+}

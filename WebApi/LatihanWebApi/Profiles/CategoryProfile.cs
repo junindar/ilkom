@@ -1,0 +1,22 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using AutoMapper;
+using LatihanWebApi.Entity;
+using LatihanWebApi.Models;
+
+namespace LatihanWebApi.AutoMapper
+{
+    public class CategoryProfile : Profile
+    {
+        public CategoryProfile()
+        {
+            CreateMap<Category, CategoryDto>().ForMember(dest=>dest.Id,opt=>opt.MapFrom(src=>src.CategoryID))
+                .ForMember(dest => dest.Nama, opt => opt.MapFrom(src => src.NamaCategory)
+            );
+        }
+    }
+
+   
+}
