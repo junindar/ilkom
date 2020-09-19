@@ -30,15 +30,25 @@ namespace FilteringWebApi.Controllers
 
             var resultRepo = await _categoryRepository.GetAll();
             return Ok(_mapper.Map<IEnumerable<CategoryDto>>(resultRepo));
-            
+
 
         }
 
-     
+        //[HttpGet()]
+        //public async Task<IActionResult> GetCategories()
+        //{
+        //    throw new Exception("Sample Exeption");
+        //    var resultRepo = await _categoryRepository.GetAll();
+        //    return Ok(_mapper.Map<IEnumerable<CategoryDto>>(resultRepo));
+
+
+        //}
+
 
         [HttpGet("{categoryId}")]
         public async Task<IActionResult> GetCategory(int categoryId)
         {
+
             var resultRepo = await _categoryRepository.GetById(categoryId);
             
             if (resultRepo == null)
