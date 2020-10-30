@@ -5,7 +5,9 @@ VisualStudioVersion = 16.0.30320.27
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LatihanWebApi", "LatihanWebApi\LatihanWebApi.csproj", "{BDDE4273-5771-40E2-BE51-4C0780B1F31D}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FilteringWebApi", "FilteringWebApi\FilteringWebApi.csproj", "{4FE29E00-F7D3-4472-B43F-C3C37961AFC4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FilteringWebApi", "FilteringWebApi\FilteringWebApi.csproj", "{4FE29E00-F7D3-4472-B43F-C3C37961AFC4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrudWebApi", "CrudWebApi\CrudWebApi.csproj", "{40F835D2-F05D-42A4-94BC-C32080FBDFA2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{4FE29E00-F7D3-4472-B43F-C3C37961AFC4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4FE29E00-F7D3-4472-B43F-C3C37961AFC4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4FE29E00-F7D3-4472-B43F-C3C37961AFC4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{40F835D2-F05D-42A4-94BC-C32080FBDFA2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{40F835D2-F05D-42A4-94BC-C32080FBDFA2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{40F835D2-F05D-42A4-94BC-C32080FBDFA2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{40F835D2-F05D-42A4-94BC-C32080FBDFA2}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
