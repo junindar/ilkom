@@ -27,14 +27,7 @@ namespace WebAPIVersioning.Controllers
 
         }
 
-        //[HttpGet()]
-        //[Route("api/books")]
-        //public async Task<ActionResult<IEnumerable<BookDto>>> GetBooks(string penerbit)
-        //{
-
-        //    var resultRepo = await _bookRepository.GetAllBooks(penerbit);
-        //    return Ok(_mapper.Map<IEnumerable<BookDto>>(resultRepo));
-        //}
+   
 
         [HttpGet()]
         [Route("api/books")]

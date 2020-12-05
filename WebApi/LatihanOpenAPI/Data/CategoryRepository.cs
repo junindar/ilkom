@@ -19,7 +19,10 @@ namespace LatihanOpenApi.Data
         {
             return await _dbContext.Categories.ToListAsync();
         }
-
+        public async Task<List<Category>> GetAllIncludeBook()
+        {
+            return await _dbContext.Categories.Include(c => c.Books).ToListAsync();
+        }
         public async Task<Category> GetById(int categoryId)
         {
             return await _dbContext.Categories.FirstOrDefaultAsync(c=>c.CategoryID== categoryId);

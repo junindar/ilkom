@@ -10,6 +10,7 @@ namespace LatihanOpenApi.Data
   public  interface ICategoryRepository
     {
         Task<List<Category>> GetAll();
+        Task<List<Category>> GetAllIncludeBook();
         Task<Category> GetById(int categoryId);
         Task<Category> InsertCategory(Category obj);
         Task InsertMultipleCategory(IEnumerable<Category> obj);

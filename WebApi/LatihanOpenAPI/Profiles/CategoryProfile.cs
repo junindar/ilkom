@@ -19,6 +19,14 @@ namespace LatihanOpenApi.AutoMapper
             CreateMap<CategoryDto, Category>().ForMember(dest => dest.CategoryID, opt => opt.MapFrom(src => src.Id))
                 .ForMember(dest => dest.NamaCategory, opt => opt.MapFrom(src => src.Nama)
                 );
+
+            CreateMap<KategoriAddDTO, Category>().ForMember(dest => dest.CategoryID, opt => opt.MapFrom(src => src.Id))
+                .ForMember(dest => dest.NamaCategory, opt => opt.MapFrom(src => src.Nama)
+                );
+
+            CreateMap<Category, KategoriAddDTO>().ForMember(dest => dest.Id, opt => opt.MapFrom(src => src.CategoryID))
+                .ForMember(dest => dest.Nama, opt => opt.MapFrom(src => src.NamaCategory)
+                );
         }
     }
 

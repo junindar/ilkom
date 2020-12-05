@@ -1,6 +1,8 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using AutoMapper;
 using LatihanOpenApi.Data;
@@ -8,11 +10,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+//using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using Microsoft.OpenApi.Models;
 
 namespace LatihanOpenAPI
 {
@@ -36,6 +40,42 @@ namespace LatihanOpenAPI
                 options.UseSqlServer(Configuration.GetConnectionString("pustakaConnection")));
             services.AddTransient<IBookRepository, BookRepository>();
             services.AddTransient<ICategoryRepository, CategoryRepository>();
+
+           
+
+            services.AddSwaggerGen(setupAction =>
+            {
+                setupAction.SwaggerDoc("LatihanOpenAPICategory", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Title = "Latihan Open API-Category", Version = "1",
+                    Description ="Latihan membuat Web API dengan menggunakan .Net Core-Category",
+                    Contact = new OpenApiContact()
+                    {
+                        Email = "Junindar@gmail.com",
+                        Name = "Junindar",
+                        Url = new Uri("http://junindar.blogspot.com")
+                        
+                    }
+                });
+
+                setupAction.SwaggerDoc("LatihanOpenAPIBook", new Microsoft.OpenApi.Models.OpenApiInfo()
+                {
+                    Title = "Latihan Open API-Book",
+                    Version = "1",
+                    Description = "Latihan membuat Web API dengan menggunakan .Net Core - Book",
+                    Contact = new OpenApiContact()
+                    {
+                        Email = "Junindar@gmail.com",
+                        Name = "Junindar",
+                        Url = new Uri("http://junindar.blogspot.com")
+
+                    }
+                });
+                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
+                var xmlFullPath = Path.Combine(AppContext.BaseDirectory,xmlFile);
+                setupAction.IncludeXmlComments(xmlFullPath);
+            });
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -58,7 +98,13 @@ namespace LatihanOpenAPI
             }
 
             app.UseRouting();
-
+            app.UseSwagger();
+            app.UseSwaggerUI(setupAction =>
+            {
+                setupAction.SwaggerEndpoint("/Swagger/LatihanOpenAPICategory/swagger.json", "Latihan Open API-Category");
+                setupAction.SwaggerEndpoint("/Swagger/LatihanOpenAPIBook/swagger.json", "Latihan Open API-Book");
+                setupAction.RoutePrefix = "";
+            });
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>

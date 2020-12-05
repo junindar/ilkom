@@ -1,0 +1,61 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>LatihanOpenAPI</name>
+    </assembly>
+    <members>
+        <member name="M:LatihanOpenApi.Controllers.CategoryController.GetCategory(System.Int32)">
+            <summary>
+            Untuk mendapatkan Category berdasarkan Category ID
+            </summary>
+            <param name="categoryId">ID yang dicari</param>
+            <returns>Jika ID yang dicari ditemukan, maka akan mendapatkan data category dan daftar buku</returns>
+            <remarks>
+            
+            </remarks>
+        </member>
+        <member name="M:LatihanOpenApi.Controllers.CategoryController.CreateCategory(LatihanOpenApi.Models.KategoriAddDTO)">
+            <summary>
+            Tambah Kategori
+            </summary>
+            <returns>Data Kategori yang baru dibuat</returns>
+            <remarks>
+            Contoh untuk menambah kategori \
+            {\
+                "Id": 0,\
+                "Nama" : "Contoh Kategori"\
+            }
+            </remarks>
+        </member>
+        <member name="P:LatihanOpenApi.Models.CategoryDto.Id">
+            <summary>
+            Category ID
+            </summary>
+        </member>
+        <member name="P:LatihanOpenApi.Models.CategoryDto.Nama">
+            <summary>
+            Nama Kategori
+            </summary>
+        </member>
+        <member name="P:LatihanOpenApi.Models.CategoryDto.Books">
+            <summary>
+            Daftar Buku berdasarkan Kategori
+            </summary>
+        </member>
+        <member name="T:LatihanOpenApi.Models.KategoriAddDTO">
+            <summary>
+            Model untuk proses CRUD pada API
+            </summary>
+        </member>
+        <member name="P:LatihanOpenApi.Models.KategoriAddDTO.Id">
+            <summary>
+            Category ID
+            </summary>
+        </member>
+        <member name="P:LatihanOpenApi.Models.KategoriAddDTO.Nama">
+            <summary>
+            Nama Kategori
+            </summary>
+        </member>
+    </members>
+</doc>

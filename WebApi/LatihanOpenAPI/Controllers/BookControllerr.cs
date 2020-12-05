@@ -13,7 +13,8 @@ namespace LatihanOpenApi.Controllers
 {
     
     [ApiController]
-   public class BookController : ControllerBase
+    [ApiExplorerSettings(GroupName = "LatihanOpenAPIBook")]
+    public class BookController : ControllerBase
     {
         private readonly IBookRepository _bookRepository;
         private readonly ICategoryRepository _categoryRepository;
@@ -63,7 +64,7 @@ namespace LatihanOpenApi.Controllers
 
 
         }
-
+        [HttpGet()]
         [Route("api/categories/{categoryId}/books/{bookid}",Name = "GetBookByCategory")]
         public async Task<ActionResult<BookDto>> GetBookByCategory(int categoryId,int bookid)
         {

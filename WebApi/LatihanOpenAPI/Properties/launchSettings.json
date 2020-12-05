@@ -10,8 +10,9 @@
   "$schema": "http://json.schemastore.org/launchsettings.json",
   "profiles": {
     "IIS Express": {
-      "commandName": "Project",
-      "launchUrl": "weatherforecast",
+      "commandName": "IISExpress",
+      "launchBrowser": true,
+      "launchUrl": "Category",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       },

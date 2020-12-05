@@ -13,6 +13,8 @@ namespace LatihanOpenApi.Controllers
     
     [ApiController]
     [Route("api/categories")]
+    //Category Controller
+    [ApiExplorerSettings(GroupName = "LatihanOpenAPICategory")]
     public class CategoryController : ControllerBase
     {
         private readonly ICategoryRepository _categoryRepository;
@@ -35,17 +37,18 @@ namespace LatihanOpenApi.Controllers
 
         }
 
-        //[HttpGet()]
-        //public async Task<IActionResult> GetCategories()
-        //{
-        //    throw new Exception("Sample Exeption");
-        //    var resultRepo = await _categoryRepository.GetAll();
-        //    return Ok(_mapper.Map<IEnumerable<CategoryDto>>(resultRepo));
+       
 
 
-        //}
 
-
+        /// <summary>
+        /// Untuk mendapatkan Category berdasarkan Category ID
+        /// </summary>
+        /// <param name="categoryId">ID yang dicari</param>
+        /// <returns>Jika ID yang dicari ditemukan, maka akan mendapatkan data category dan daftar buku</returns>
+        /// <remarks>
+        /// 
+        /// </remarks>
         [HttpGet("{categoryId}",Name = "GetCategory")]
         public async Task<IActionResult> GetCategory(int categoryId)
         {
@@ -61,15 +64,25 @@ namespace LatihanOpenApi.Controllers
 
         }
 
-        
 
+        /// <summary>
+        /// Tambah Kategori
+        /// </summary>
+        /// <returns>Data Kategori yang baru dibuat</returns>
+        /// <remarks>
+        /// Contoh untuk menambah kategori \
+        /// {\
+        ///     "Id": 0,\
+        ///     "Nama" : "Contoh Kategori"\
+        /// }
+        /// </remarks>
         [HttpPost]
-        public async Task<ActionResult<CategoryDto>> CreateCategory(CategoryDto category)
+        public async Task<ActionResult<KategoriAddDTO>> CreateCategory(KategoriAddDTO category)
         {
             var categoryEntity = _mapper.Map<Category>(category);
             categoryEntity = await _categoryRepository.InsertCategory(categoryEntity);
 
-            var categoryForReturn = _mapper.Map<CategoryDto>(categoryEntity);
+            var categoryForReturn = _mapper.Map<KategoriAddDTO>(categoryEntity);
 
             return CreatedAtRoute("GetCategory", new { categoryId = categoryForReturn.Id }, categoryForReturn);
 
@@ -108,6 +121,7 @@ namespace LatihanOpenApi.Controllers
 
     [ApiController]
     [Route("api/categorycollections")]
+  [ApiExplorerSettings(GroupName = "LatihanOpenAPICategory")]
     public class CategoryCollectionsController : ControllerBase
     {
         private readonly ICategoryRepository _categoryRepository;
