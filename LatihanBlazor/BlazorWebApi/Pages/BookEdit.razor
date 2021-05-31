@@ -1,0 +1,83 @@
+﻿@page "/bookedit"
+@page "/bookedit/{BookId}"
+@inherits BookEditBase
+
+<section class="book-edit">
+
+    <h1 class="page-title">Add/Edit Buku</h1>
+
+    <EditForm Model="@Book" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group row">
+            <label for="Judul" class="col-sm-3">Judul Buku: </label>
+            <InputText id="Judul" @bind-Value="@Book.Judul"
+                       class="form-control col-sm-8" placeholder="Judul Buku" required></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Judul)" />
+        </div>
+
+        <div class="form-group row">
+            <label for="Penulis" class="col-sm-3">Penulis: </label>
+            <InputText id="Penulis" @bind-Value="@Book.Penulis"
+                       class="form-control col-sm-8" placeholder="Penulis" required></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Penulis)" />
+        </div>
+
+        <div class="form-group row">
+            <label for="Penerbit" class="col-sm-3">Penerbit: </label>
+            <InputText id="Penerbit" @bind-Value="@Book.Penerbit"
+                       class="form-control col-sm-8" placeholder="Penerbit" required></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Penerbit)" />
+        </div>
+
+        <div class="form-group row">
+            <label for="category" class="col-sm-3">Category Buku: </label>
+            <InputSelect id="category" class="form-control col-sm-8" @bind-Value="@CategoryId" required>
+                @foreach (var cat in Categories)
+                {
+                    <option value="@cat.ID">@cat.Nama</option>
+                }
+
+
+            </InputSelect>
+        </div>
+
+        <div class="form-group row">
+            <label for="Deskripsi" class="col-sm-3">Deskripsi Buku: </label>
+            <InputTextArea id="Deskripsi" @bind-Value="@Book.Deskripsi"
+                           class="form-control col-sm-8"
+                           placeholder="Masukkan Deskripsi Buku"></InputTextArea>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Deskripsi)" />
+        </div>
+
+        <div class="form-group row">
+            <label for="Status" class=" offset-sm-3">
+                <InputCheckbox id="Status" @bind-Value="@Book.Status"></InputCheckbox>
+                &nbsp;Status
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label for="Deskripsi" class="col-sm-3">Gambar Buku : </label>
+            <InputText type="hidden" id="Gambar" @bind-Value="@Book.Gambar"
+                       class="form-control col-sm-8"></InputText>
+            <InputFile OnChange="@FileUpload" />
+            <img id="user_img" height="100" width="90" style="border: solid" src="@ImageData" />
+            <br />
+        </div>
+
+
+        <button type="submit" class="btn btn-primary edit-btn">Save</button>
+
+        @if (Book.ID > 0)
+        {
+            <a class="btn btn-danger" @onclick="@DeleteBook">
+                Delete
+            </a>
+        }
+        <a class="btn btn-primary edit-btn" @onclick="@NavigateToList">Back</a>
+    </EditForm>
+
+
+</section>

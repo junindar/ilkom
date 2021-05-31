@@ -1,0 +1,56 @@
+﻿@page "/BookList"
+@inherits BookListBase
+
+<h3>Daftar Buku</h3>
+
+
+@if (Books == null)
+{
+    <p><em>Data tidak tersedia</em></p>
+}
+else
+{
+
+
+    <div class="row">
+        <a href="/bookedit" class="btn btn-outline-primary">
+            Tambah Buku
+        </a>
+    </div>
+    <br />
+    <table class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Id Buku</th>
+                <th>Judul</th>
+                <th>Penulis</th>
+
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in Books)
+            {
+                <tr>
+
+                    <td><img src="@($"images/{book.Gambar}")" class="rounded-circle" width="100" height="100" /></td>
+                    <td>@book.ID</td>
+                    <td>@book.Judul</td>
+                    <td>@book.Penulis</td>
+
+                    <td>
+                        <a href="@($"bookdetail/{book.ID}")" class="btn btn-primary table-btn">
+                            <i class="fas fa-info-circle"></i>
+                        </a>
+
+                        <a href="@($"bookedit/{book.ID}")" class="btn btn-primary table-btn">
+                            <i class="fas fa-edit"></i>
+                        </a>
+
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
