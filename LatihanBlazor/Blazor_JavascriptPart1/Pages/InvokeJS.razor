@@ -1,0 +1,144 @@
+﻿@inject IJSRuntime JsRuntime
+@page "/InvokeJS"
+@using Blazor_JavascriptPart1.Entity
+
+<div>
+    <hr />
+    <div class="form-group row">
+        <h2>
+
+            Call JS return void
+
+
+        </h2>
+    </div>
+    <div class="form-group row">
+        <button class="btn btn-secondary" @onclick="ShowAlert">Show Alert </button>
+    </div>
+
+    <div class="form-group row">
+        <input type="text" placeholder="Ketikkan Isi Pesan" class="col-sm-8"
+               @bind="@CustomMessage" @oninput="@((e) => { CustomMessage = (string) e.Value; })" />
+
+    </div>
+    <div class="form-group row">
+        <button  @onclick="ShowAlertCustom" class="btn btn-secondary col-sm-2">Show Alert Custom </button>
+    </div>
+
+
+
+    <hr />
+</div>
+
+<div>
+    <hr />
+    <div class="form-group row">
+        <h2>
+            Call JS return value
+        </h2>
+    </div>
+
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <button class="btn btn-secondary" @onclick="ShowPrompt">Show prompt </button>
+        </div>
+
+        <div class="col-sm-4">Prompt Result :<b> @promptResult</b></div>
+
+    </div>
+    <div class="form-group row">
+        <div class="col-sm-4">
+            <button class="btn btn-secondary" @onclick="CreateBook">Create Book </button>
+        </div>
+
+    </div>
+    <div class="form-group row">
+        <table class="table">
+            <thead>
+                <tr>
+
+                    <th>No</th>
+                    <th>Judul</th>
+                    <th>Penulis</th>
+
+                    <th>Penerbit</th>
+                </tr>
+            </thead>
+            <tbody>
+         @{
+             int iRow = 1;
+         }
+            @foreach (var book in Books)
+            {
+                <tr>
+
+                    <td>@iRow</td>
+                    <td>@book.Judul @iRow</td>
+                    <td>@book.Penulis  @iRow</td>
+                    <td>@book.Penerbit  @iRow</td>
+                   
+                </tr>
+                iRow++;
+            }
+           
+            </tbody>
+        </table>
+    </div>
+
+
+    <hr />
+</div>
+
+
+
+@code{
+
+    #region Return Void
+
+
+    private async Task ShowAlert()
+    {
+        await JsRuntime.InvokeVoidAsync("blazorInterop.showAlert", "Hi.. Javascript");
+    }
+    private string CustomMessage { get; set; }
+    private async Task ShowAlertCustom()
+    {
+        await JsRuntime.InvokeVoidAsync("blazorInterop.showAlert", CustomMessage);
+    }
+
+    private async Task PassDotNetObjectToJs()
+    {
+        await JsRuntime.InvokeVoidAsync("blazorInterop.logToConsoleTable", new Book { Judul = "Blazor Tutorial", Penulis = "Junindar" });
+    }
+
+    #endregion
+
+
+    #region Return Value
+
+
+    private string promptResult;
+    private async Task ShowPrompt()
+    {
+        var result = await JsRuntime.InvokeAsync<string>("blazorInterop.showPrompt", "Ketikkan nama buku", promptResult ?? "");
+        if (!string.IsNullOrEmpty(result))
+        {
+            promptResult = result;
+        }
+
+    }
+  
+    List<Book> Books= new List<Book>();
+    private async Task CreateBook()
+    {
+        var book = await JsRuntime.InvokeAsync<Book>("blazorInterop.createBook", "Blazor", "Junindar");
+        Books.Add(book);
+    }
+
+
+    #endregion
+
+
+   
+
+}
