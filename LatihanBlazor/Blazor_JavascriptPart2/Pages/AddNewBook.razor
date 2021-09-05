@@ -1,0 +1,51 @@
+﻿@page "/addnewbook"
+
+
+
+<section class="book-edit">
+
+    <h1 class="page-title">Add/Edit Buku</h1>
+
+    <EditForm Model="@Book">
+        <DataAnnotationsValidator />
+        <ValidationSummary />
+
+        <div class="form-group row">
+            <label for="Judul" class="col-sm-3">Judul Buku: </label>
+            <InputText id="Judul" @bind-Value="@Book.Judul"
+                       class="form-control col-sm-8" placeholder="Judul Buku" required></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Judul)" />
+        </div>
+
+        <div class="form-group row">
+            <label for="Penulis" class="col-sm-3">Penulis: </label>
+            <InputText id="Penulis" @bind-Value="@Book.Penulis" class="form-control col-sm-8" placeholder="Penulis" required></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Penulis)" />
+        </div>
+
+        <div class="form-group row">
+            <label for="Penerbit" class="col-sm-3">Penerbit: </label>
+            <InputText id="Penerbit" @bind-Value="@Book.Penerbit" class="form-control col-sm-8" placeholder="Penerbit" required></InputText>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Penerbit)" />
+        </div>
+
+
+        <div class="form-group row">
+            <label for="Deskripsi" class="col-sm-3">Deskripsi Buku: </label>
+            <InputTextArea id="Deskripsi" @bind-Value="@Book.Deskripsi" class="form-control col-sm-8" placeholder="Masukkan Deskripsi Buku"></InputTextArea>
+            <ValidationMessage class="offset-sm-3 col-sm-8" For="@(() => Book.Deskripsi)" />
+        </div>
+
+        <div class="form-group row">
+            <label for="Status" class=" offset-sm-3">
+                <InputCheckbox id="Status" @bind-Value="@Book.Status"></InputCheckbox>
+                &nbsp;Status
+            </label>
+        </div>
+
+
+        <a class="btn btn-primary edit-btn" href="">Back</a>
+    </EditForm>
+
+
+</section>

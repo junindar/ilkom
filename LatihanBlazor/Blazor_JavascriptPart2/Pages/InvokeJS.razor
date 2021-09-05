@@ -1,0 +1,117 @@
+﻿@inject IJSRuntime JsRuntime
+@implements IAsyncDisposable
+@page "/InvokeJS"
+@using Blazor_JavascriptPart2.Entity
+
+<div>
+
+    <div>
+        <hr />
+        <h2>
+            Pass HTML element references
+        </h2>
+        <div class="form-group">
+            <label>Element to focus:</label>
+            <input @ref="elementReference" type="text" class="form-control" />
+        </div>
+        <button class="btn btn-secondary" @onclick="FocusElement">Focus TextBox</button>
+
+
+        <hr />
+    </div>
+</div>
+
+<div>
+    <hr />
+    <h2>
+        Handle JavaScript Error In .NET
+    </h2>
+
+    <button class="btn btn-secondary" @onclick="CallThrowError">Call Error</button>
+    <div>Error Message : @_errorMessage</div>
+
+    <hr />
+</div>
+
+<div>
+    <hr />
+    <h2>
+        Use JavaScript Module
+    </h2>
+
+    <button class="btn btn-secondary" @onclick="ShowAlertModule">Call Module JavaScript </button>
+
+
+    <hr />
+</div>
+
+
+@code{
+
+    #region Focus Element
+
+    private ElementReference elementReference;
+
+    private async Task FocusElement()
+    {
+        await JsRuntime.InvokeVoidAsync("blazorInterop.focusElement", elementReference);
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await FocusElement();
+        }
+    }
+
+    #endregion
+
+
+    #region Call JavaScript Error
+
+    private string _errorMessage;
+    private async Task CallThrowError()
+    {
+        try
+        {
+            await JsRuntime.InvokeVoidAsync("blazorInterop.throwsError");
+        }
+        catch (JSException ex)
+        {
+            //  _errorMessage = ex.Message;
+            var errLines = ex.Message.Split(
+                 new[] { "\r\n", "\r", "\n" },
+                 StringSplitOptions.None
+                 ).ToList();
+            await JsRuntime.InvokeVoidAsync("blazorInterop.showAlert", errLines.First());
+
+        }
+
+    }
+    #endregion
+
+    #region Module
+
+    private IJSObjectReference module;
+
+    private async Task ShowAlertModule()
+    {
+        if (module == null)
+        {
+            module = await JsRuntime.InvokeAsync<IJSObjectReference>("import", "./scripts/newModule.js");
+        }
+        await module.InvokeVoidAsync("showAlert", "Hi .. New Javascript Module");
+    }
+    public async ValueTask DisposeAsync()
+    {
+        if (module != null)
+        {
+            await module.DisposeAsync();
+        }
+    }
+
+    #endregion
+
+
+}
