@@ -1,0 +1,44 @@
+﻿@page "/OpenClose"
+@inject IJSRuntime JsRuntime;
+@using System.Text.Json.Serialization
+
+
+
+<button type="button" @onclick="OpenWindow">Open</button>
+    <button type="button" @onclick="CloseWindow">Close</button>
+
+@code
+{
+
+
+    public class JsRuntimeObjectRef : IAsyncDisposable
+    {
+        internal IJSRuntime JSRuntime { get; set; }
+
+        public JsRuntimeObjectRef()
+        {
+        }
+
+        [JsonPropertyName("__jsObjectRefId")]
+        public int JsObjectRefId { get; set; }
+
+        public async ValueTask DisposeAsync()
+        {
+            await JSRuntime.InvokeVoidAsync("cleanObjectRef", JsObjectRefId);
+        }
+    }
+    private JsRuntimeObjectRef _windowRef;
+    private async Task OpenWindow()
+    {
+        _windowRef = await JsRuntime.InvokeAsync<JsRuntimeObjectRef>("openWindow");
+        _windowRef.JSRuntime = JsRuntime;
+    }
+
+    private async Task CloseWindow()
+    {
+        await JsRuntime.InvokeVoidAsync("closeWindow", _windowRef);
+        await _windowRef.DisposeAsync();
+    }
+
+
+}

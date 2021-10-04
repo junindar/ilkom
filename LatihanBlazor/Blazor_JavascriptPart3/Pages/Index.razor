@@ -1,0 +1,115 @@
+﻿@page "/"
+@using System.Drawing
+
+@inject IJSRuntime JsRuntime
+
+
+<div>
+
+
+    <button class="btn btn-secondary" onclick="blazorInterop.methodCalculate()">
+        Call Calculate method
+    </button>
+    <button class="btn btn-secondary" onclick="blazorInterop.methodCalculateCustomIdentifier()">
+        Call Calculate method overload
+    </button>
+
+</div>
+<div>
+    <hr />
+    <p>
+        <label>
+            Name: <input @bind="name" />
+        </label>
+    </p>
+
+  
+    <button  class="btn btn-secondary" @onclick="instanceMethod1">
+        Instance Method 1
+    </button>
+  
+
+   
+</div>
+<div>
+    <p>
+        @result
+    </p>
+</div>
+
+<div>
+    <h2>Show Window Sizw</h2>
+    <button class="btn btn-secondary" @onclick="SendDotNetInstanceToJavaScript">Call Size</button>
+    <div>Window size : @_windowSize.Width x @_windowSize.Height</div>
+</div>
+
+
+
+
+    @code
+{
+
+
+        [JSInvokable]
+        public static int Calculate(int val1)
+        {
+            int iLocalVal = 4;
+            return val1 * iLocalVal;
+        }
+
+
+        [JSInvokable("CalculateWithVal2")]
+        public static int Calculate(int val1, int val2)
+        {
+            int iLocalVal = 4;
+            return val1 * val2 * iLocalVal;
+        }
+
+        private string name;
+        private string result;
+
+        public async Task instanceMethod1()
+        {
+            var objRef = DotNetObjectReference.Create(this);
+            result = await JsRuntime.InvokeAsync<string>("blazorInterop.sayHello1", objRef);
+        }
+
+        [JSInvokable]
+        public string GetHelloMessage()
+        {
+            return $"Hello, {name}!";
+        }
+
+
+        private Size _windowSize;
+
+        [JSInvokable]
+        public void SetWindowSize(Size windowSize)
+        {
+            _windowSize = windowSize;
+            StateHasChanged();
+        }
+
+        private async Task SendDotNetInstanceToJavaScript()
+        {
+            var dotNetObjectReference = DotNetObjectReference.Create(this);
+            await JsRuntime.InvokeVoidAsync("blazorInterop.callDotNetSetWindowSizeMethod",
+                dotNetObjectReference);
+        }
+
+
+        protected override async Task OnAfterRenderAsync(bool firstRender)
+        {
+            if (firstRender)
+            {
+                var dotNetObjectReference = DotNetObjectReference.Create(this);
+                await JsRuntime.InvokeVoidAsync("blazorInterop.registerResizeHandler",
+                    dotNetObjectReference);
+            }
+    }
+
+
+
+
+
+    }
