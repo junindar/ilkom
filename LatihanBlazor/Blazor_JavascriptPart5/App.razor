@@ -1,0 +1,31 @@
+@inject ISettingsService SettingsService
+@inject ILocalStorageService  LocalStorageService
+<Router AppAssembly="@typeof(Program).Assembly" PreferExactMatches="@true">
+    <Found Context="routeData">
+        <RouteView RouteData="@routeData" DefaultLayout="@typeof(MainLayout)" />
+    </Found>
+    <NotFound>
+        <LayoutView Layout="@typeof(MainLayout)">
+            <p>Sorry, there's nothing at this address.</p>
+        </LayoutView>
+    </NotFound>
+</Router>
+@code{
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitializeUserSettingsFromLocalStorageAsync();
+        }
+    }
+
+    private async Task InitializeUserSettingsFromLocalStorageAsync()
+    {
+        var userSettings = await LocalStorageService.GetItemAsync<Setting>("settings");
+        if (userSettings != null)
+        {
+            SettingsService.Setting = userSettings;
+            SettingsService.RaiseSettingsChanged();
+        }
+    }
+}

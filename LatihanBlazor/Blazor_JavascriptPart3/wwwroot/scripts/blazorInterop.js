@@ -54,3 +54,4 @@ blazorInterop.startRandomGenerator = function (dotNetObject) {
         dotNetObject.invokeMethodAsync('AddText', text.toString());
     }, 1000);
 };
+

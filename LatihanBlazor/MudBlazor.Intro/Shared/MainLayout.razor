@@ -1,0 +1,182 @@
+﻿@inherits LayoutComponentBase
+
+<MudThemeProvider  Theme="_currentTheme"/>
+<MudDialogProvider />
+<MudSnackbarProvider />
+
+<MudLayout>
+    <MudAppBar>
+        <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
+       
+        <MudButtonGroup  Variant="Variant.Outlined" >
+            <MudButton>@_buttonText</MudButton>
+            <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Direction="Direction.Bottom" OffsetY="true" >
+                <MudMenuItem  OnClick="() => SetButtonText(0)" >Default</MudMenuItem>
+                <MudMenuItem OnClick="() => SetButtonText(1)">Dark</MudMenuItem>
+                <MudMenuItem OnClick="() => SetButtonText(2)">Green</MudMenuItem>
+                <MudMenuItem OnClick="() => SetButtonText(3)">Orange</MudMenuItem>
+            </MudMenu>
+        </MudButtonGroup>
+
+    </MudAppBar>
+    <MudDrawer @bind-Open="@_drawerOpen" >
+        <NavMenu />
+    </MudDrawer>
+    <MudMainContent>
+        <MudContainer MaxWidth="MaxWidth.Medium">
+            @Body
+        </MudContainer>
+    </MudMainContent>
+</MudLayout>
+@code {
+
+    private string _buttonText = "Default";
+
+    private void SetButtonText(int id)
+    {
+        switch (id)
+        {
+            case 0:
+                _currentTheme = defaultTheme;
+                _buttonText = "Default";
+                break;
+            case 1:
+                _currentTheme = darkTheme;
+                _buttonText = "Dark";
+                break;
+            case 2:
+                _currentTheme = greenTheme;
+                _buttonText = "Green";
+                break;
+            case 3:
+                _currentTheme =orangeTheme;
+                _buttonText = "Orange";
+                break;
+        }
+    }
+
+
+    protected override void OnInitialized()
+    {
+        _currentTheme = defaultTheme;
+    }
+    private MudTheme _currentTheme = new MudTheme();
+
+    private MudTheme defaultTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+
+
+            AppbarText = "#ffffff",
+            TextPrimary = "#ffffff",
+            Surface = "#0D47A1",
+        }
+    };
+
+
+    MudTheme darkTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#27272f",
+            Background = "#32333d",
+            BackgroundGrey = "#27272f",
+            Surface = "#373740",
+            DrawerBackground = "#27272f",
+            DrawerText = "rgba(255,255,255, 0.50)",
+            DrawerIcon = "rgba(255,255,255, 0.50)",
+            AppbarBackground = "#27272f",
+            AppbarText = "rgba(255,255,255, 0.70)",
+            TextPrimary = "rgba(255,255,255, 0.70)",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            ActionDefault = "#adadb1",
+            ActionDisabled = "rgba(255,255,255, 0.26)",
+            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+            Divider = "rgba(255,255,255, 0.12)",
+            DividerLight = "rgba(255,255,255, 0.06)",
+            TableLines = "rgba(255,255,255, 0.12)",
+            LinesDefault = "rgba(255,255,255, 0.12)",
+            LinesInputs = "rgba(255,255,255, 0.3)",
+            TextDisabled = "rgba(255,255,255, 0.2)"
+        }
+    };
+
+
+    MudTheme greenTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#27272f",
+            Background = "#E8F5E9",
+            BackgroundGrey = "#4CAF50",
+            Surface = "#2E7D32",
+            DrawerBackground = "#4CAF50",
+            //DrawerText = "rgba(255,255,255, 0.50)",
+            //DrawerIcon = "rgba(255,255,255, 0.50)",
+            DrawerText = "#ffffff",
+            DrawerIcon = "#ffffff",
+            AppbarBackground = "#4CAF50",
+            AppbarText = "#ffffff",
+            TextPrimary = "#ffffff",
+            ////AppbarText = "rgba(255,255,255, 0.70)",
+            ////TextPrimary = "rgba(255,255,255, 0.70)",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            ActionDefault = "#adadb1",
+            ActionDisabled = "rgba(255,255,255, 0.26)",
+            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+            Divider = "rgba(255,255,255, 0.12)",
+            //  DividerLight = "rgba(255,255,255, 0.06)",
+            DividerLight = "#000000",
+            TableLines = "rgba(255,255,255, 0.12)",
+            LinesDefault = "rgba(255,255,255, 0.12)",
+            LinesInputs = "rgba(255,255,255, 0.3)",
+            TextDisabled = "rgba(255,255,255, 0.2)",
+            Primary = "#1B5E20"
+
+        }
+    };
+
+    MudTheme orangeTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#27272f",
+            Background = "#FFF3E0",
+            BackgroundGrey = "#FF9800",
+            Surface = "#FFB74D",
+            DrawerBackground = "#FF9800",
+    //DrawerText = "rgba(255,255,255, 0.50)",
+    //DrawerIcon = "rgba(255,255,255, 0.50)",
+            DrawerText = "#ffffff",
+            DrawerIcon = "#ffffff",
+            AppbarBackground = "#FF9800",
+            AppbarText = "#ffffff",
+            TextPrimary = "#ffffff",
+    ////AppbarText = "rgba(255,255,255, 0.70)",
+    ////TextPrimary = "rgba(255,255,255, 0.70)",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            ActionDefault = "#adadb1",
+            ActionDisabled = "rgba(255,255,255, 0.26)",
+            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+            Divider = "rgba(255,255,255, 0.12)",
+    //  DividerLight = "rgba(255,255,255, 0.06)",
+            DividerLight = "#000000",
+            TableLines = "rgba(255,255,255, 0.12)",
+            LinesDefault = "rgba(255,255,255, 0.12)",
+            LinesInputs = "rgba(255,255,255, 0.3)",
+            TextDisabled = "rgba(255,255,255, 0.2)",
+            Primary = "#E65100"
+
+        }
+    };
+
+    bool _drawerOpen = true;
+
+    void DrawerToggle()
+    {
+        _drawerOpen = !_drawerOpen;
+    }
+
+
+}

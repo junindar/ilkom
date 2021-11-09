@@ -1,0 +1,16 @@
+﻿
+    <MudDrawerHeader>
+        <MudAvatar Color="Color.Primary" Variant="Variant.Outlined">
+            <MudIcon Icon="@Icons.Custom.Brands.MudBlazor" />
+        </MudAvatar>
+        <MudText Typo="Typo.h5" Color="Color.Primary" Style="margin-top:10px; margin-left:15px;">Crystal</MudText>
+    </MudDrawerHeader>
+    <MudNavMenu>
+        <MudNavLink Href="/" Match="NavLinkMatch.All" Icon="@Icons.Filled.Home">Home</MudNavLink>
+        <MudNavLink Href="/fetchdata" Icon="@Icons.Filled.Storage">FetchData</MudNavLink>
+        <MudNavGroup Title="Expanding" Icon="@Icons.Filled.DashboardCustomize" Expanded="true">
+            <MudNavLink Href="/themes" Icon="@Icons.Filled.Camera">Themes</MudNavLink>
+            <MudNavLink Href="#" Icon="@Icons.Filled.Celebration">Party</MudNavLink>
+        </MudNavGroup>
+    </MudNavMenu>
+

@@ -1,0 +1,45 @@
+﻿@page "/Settings"
+
+
+@inject ISettingsService SettingsService
+@inject ILocalStorageService LocalStorageService
+<section class="user-settings">
+    <h1 class="page-title">Application settings</h1>
+
+    @if (settings == null)
+    {
+        <p>Loading...</p>
+    }
+    else
+    {
+
+        <div class="form-group">
+            <label for="appTitle">Application title: </label>
+            <input id="appTitle" class="form-control" type="text" @bind="settings.AppTitle" />
+        </div>
+        <div class="form-group">
+            <label for="userPictureUrl">User picture URL: </label>
+            <input id="userPictureUrl" class="form-control" type="text" @bind="settings.UserPictureUrl" />
+        </div>
+       
+        <button class="btn btn-primary edit-btn" @onclick="SaveSettingsAsync">Save</button>
+
+    }
+
+</section>
+@code {
+
+    Setting settings;
+
+    protected override void OnInitialized()
+    {
+        settings = SettingsService.Setting;
+    }
+
+    async Task SaveSettingsAsync()
+    {
+        await LocalStorageService.SetItemAsync("settings", settings);
+        
+        SettingsService.RaiseSettingsChanged();
+    }
+}

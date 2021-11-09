@@ -1,0 +1,90 @@
+﻿@page "/themes"
+
+<h3>Themes</h3>
+
+@*<MudButton Variant="Variant.Filled" Color="Color.Primary" Disabled="_defaultIsDisable">Default</MudButton>
+<MudButton Variant="Variant.Filled" Color="Color.Dark" Disabled="_darkIsDisable">Dark</MudButton>
+<MudButton Variant="Variant.Filled" Style="@($"background:{Colors.Green.Default};")" Disabled="_greenIsDisable">Green</MudButton>
+<MudButton Variant="Variant.Filled" Style="@($"background:{Colors.Orange.Default};")" Disabled="_orangeIsDisable">Orange</MudButton>*@
+
+<MudButtonGroup Color="Color.Primary"  Variant="Variant.Outlined" >
+    <MudButton>@_buttonText</MudButton>
+    <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Direction="Direction.Bottom" OffsetY="true" >
+        <MudMenuItem  OnClick="() => SetButtonText(0)" >Default</MudMenuItem>
+        <MudMenuItem OnClick="() => SetButtonText(1)">Dark</MudMenuItem>
+        <MudMenuItem OnClick="() => SetButtonText(2)">Green</MudMenuItem>
+        <MudMenuItem OnClick="() => SetButtonText(3)">Orange</MudMenuItem>
+    </MudMenu>
+</MudButtonGroup>
+
+@code {
+    private bool _defaultIsDisable = true;
+    private bool _darkIsDisable = false;
+    private bool _greenIsDisable = false;
+    private bool _orangeIsDisable = false;
+
+
+    private string _buttonText = "Default";
+
+    private void SetButtonText(int id)
+    {
+        switch (id)
+        {
+            case 0: 
+                currentTheme = defaultTheme;
+                _buttonText = "Default";
+                break;
+            case 1:
+                currentTheme = darkTheme;
+                _buttonText = "Dark";
+                break;
+            case 2:
+                _buttonText = "Green";
+                break;
+            case 3:
+                _buttonText = "Orange";
+                break;
+        }
+    }
+
+    protected override void OnInitialized()
+    {
+        currentTheme = defaultTheme;
+    }
+
+    MudTheme currentTheme = new MudTheme();
+    MudTheme defaultTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#272c34"
+        }
+    };
+
+    MudTheme darkTheme = new MudTheme()
+    {
+        Palette = new Palette()
+        {
+            Black = "#27272f",
+            Background = "#32333d",
+            BackgroundGrey = "#27272f",
+            Surface = "#373740",
+            DrawerBackground = "#27272f",
+            DrawerText = "rgba(255,255,255, 0.50)",
+            DrawerIcon = "rgba(255,255,255, 0.50)",
+            AppbarBackground = "#27272f",
+            AppbarText = "rgba(255,255,255, 0.70)",
+            TextPrimary = "rgba(255,255,255, 0.70)",
+            TextSecondary = "rgba(255,255,255, 0.50)",
+            ActionDefault = "#adadb1",
+            ActionDisabled = "rgba(255,255,255, 0.26)",
+            ActionDisabledBackground = "rgba(255,255,255, 0.12)",
+            Divider = "rgba(255,255,255, 0.12)",
+            DividerLight = "rgba(255,255,255, 0.06)",
+            TableLines = "rgba(255,255,255, 0.12)",
+            LinesDefault = "rgba(255,255,255, 0.12)",
+            LinesInputs = "rgba(255,255,255, 0.3)",
+            TextDisabled = "rgba(255,255,255, 0.2)"
+        }
+    };
+}

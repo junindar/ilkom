@@ -1,16 +1,19 @@
-using Blazor_Component.Data;
-using Microsoft.AspNetCore.Authentication.Cookies;
+
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Components;
-using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Blazor_JavascriptPart5.Services.LocalStorage;
+using Blazor_JavascriptPart5.Services.Settings;
 
-
-namespace Blazor_Component
+namespace Blazor_JavascriptPart5
 {
     public class Startup
     {
@@ -25,20 +28,11 @@ namespace Blazor_Component
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddRazorPages().AddRazorRuntimeCompilation();
-            services.AddControllersWithViews().AddRazorRuntimeCompilation();
-            services.AddServerSideBlazor().AddCircuitOptions(options => { options.DetailedErrors = true; });
+            services.AddRazorPages();
+            services.AddServerSideBlazor();
+            services.AddSingleton<ISettingsService, SettingsService>();
+            services.AddTransient<ILocalStorageService, LocalStorageService>();
 
-            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-                .AddCookie();
-
-            services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-            services.AddDbContext<PustakaDbContext>(options =>
-                options.UseSqlServer(Configuration.GetConnectionString("pustakaConnection")));
-            services.AddTransient<IBookRepository, BookRepository>();
-            services.AddTransient<ICategoryRepository, CategoryRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IFileUpload, FileUpload>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

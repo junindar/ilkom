@@ -1,0 +1,15 @@
+﻿.isOnline {
+    background-color: #23cfa7;
+    color: white;
+    position: absolute;
+    width: 250px;
+    padding: 2px 5px;
+}
+
+.isOffline {
+    background-color: lightcoral;
+    color: white;
+    position: absolute;
+    width: 250px;
+    padding: 2px 5px;
+}

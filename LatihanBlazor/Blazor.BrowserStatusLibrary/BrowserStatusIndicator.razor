@@ -1,0 +1,30 @@
+﻿@using System.Threading.Tasks
+@inject IJSRuntime JSRuntime
+@if (_isOnline)
+{
+    <div class="isOnline">Online</div>
+}
+else
+{
+    <div class="isOffline">Offline</div>
+}
+@code {
+    private bool _isOnline = true;
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            var dotNetObjectReference = DotNetObjectReference.Create(this);
+            await JSRuntime.InvokeVoidAsync("browserCheckLib.registerOnlineHandler",
+                dotNetObjectReference);
+        }
+    }
+
+    [JSInvokable]
+    public void SetOnlineStatus(bool isOnline)
+    {
+        _isOnline = isOnline;
+        StateHasChanged();
+    }
+}
