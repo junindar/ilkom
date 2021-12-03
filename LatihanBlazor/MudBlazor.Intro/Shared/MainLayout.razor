@@ -1,17 +1,18 @@
-﻿@inherits LayoutComponentBase
+﻿@inject IJSRuntime JsRuntime
+@inherits LayoutComponentBase
 
-<MudThemeProvider  Theme="_currentTheme"/>
-<MudDialogProvider />
-<MudSnackbarProvider />
+<MudThemeProvider Theme="_currentTheme" />
+@*<MudDialogProvider />
+<MudSnackbarProvider />*@
 
 <MudLayout>
     <MudAppBar>
         <MudIconButton Icon="@Icons.Material.Filled.Menu" Color="Color.Inherit" Edge="Edge.Start" OnClick="@((e) => DrawerToggle())" />
-       
-        <MudButtonGroup  Variant="Variant.Outlined" >
+
+        <MudButtonGroup Variant="Variant.Outlined">
             <MudButton>@_buttonText</MudButton>
-            <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Direction="Direction.Bottom" OffsetY="true" >
-                <MudMenuItem  OnClick="() => SetButtonText(0)" >Default</MudMenuItem>
+            <MudMenu Icon="@Icons.Material.Filled.ArrowDropDown" Direction="Direction.Bottom" OffsetY="true">
+                <MudMenuItem OnClick="() => SetButtonText(0)">Default</MudMenuItem>
                 <MudMenuItem OnClick="() => SetButtonText(1)">Dark</MudMenuItem>
                 <MudMenuItem OnClick="() => SetButtonText(2)">Green</MudMenuItem>
                 <MudMenuItem OnClick="() => SetButtonText(3)">Orange</MudMenuItem>
@@ -19,7 +20,7 @@
         </MudButtonGroup>
 
     </MudAppBar>
-    <MudDrawer @bind-Open="@_drawerOpen" >
+    <MudDrawer @bind-Open="@_drawerOpen">
         <NavMenu />
     </MudDrawer>
     <MudMainContent>
@@ -31,9 +32,11 @@
 @code {
 
     private string _buttonText = "Default";
+    private MudTheme _currentTheme = new MudTheme();
 
-    private void SetButtonText(int id)
+    private async Task SetButtonText(int id)
     {
+
         switch (id)
         {
             case 0:
@@ -49,33 +52,77 @@
                 _buttonText = "Green";
                 break;
             case 3:
-                _currentTheme =orangeTheme;
+                _currentTheme = orangeTheme;
                 _buttonText = "Orange";
                 break;
         }
+
+        await JsRuntime.InvokeVoidAsync("localStorage.setItem", "theme", _buttonText);
     }
 
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            await InitializeThemeFromLocalStorageAsync();
+        }
+    }
+
+    private async Task InitializeThemeFromLocalStorageAsync()
+    {
+        var theme = await JsRuntime.InvokeAsync<string>("localStorage.getItem", "theme");
+        if (!string.IsNullOrEmpty(theme))
+        {
+            if (theme == "Default")
+            {
+                _currentTheme = defaultTheme;
+            }
+            else if (theme == "Dark")
+            {
+                _currentTheme = darkTheme;
+            }
+            else if (theme == "Green")
+            {
+                _currentTheme = greenTheme;
+            }
+            else if (theme == "Orange")
+            {
+                _currentTheme = orangeTheme;
+            }
+
+        }
+        else
+        {
+            _currentTheme = defaultTheme;
+        }
+        _buttonText = theme;
+        StateHasChanged();
+    }
 
     protected override void OnInitialized()
     {
         _currentTheme = defaultTheme;
+
     }
-    private MudTheme _currentTheme = new MudTheme();
+
+
 
     private MudTheme defaultTheme = new MudTheme()
     {
         Palette = new Palette()
         {
 
-
             AppbarText = "#ffffff",
+            ActionDefault = "#ffffff",
             TextPrimary = "#ffffff",
-            Surface = "#0D47A1",
+            Surface = "#39399e",
+            Background = "#f5f7fa"
         }
     };
 
 
-    MudTheme darkTheme = new MudTheme()
+    private MudTheme darkTheme = new MudTheme()
     {
         Palette = new Palette()
         {
@@ -103,7 +150,7 @@
     };
 
 
-    MudTheme greenTheme = new MudTheme()
+    private  MudTheme greenTheme = new MudTheme()
     {
         Palette = new Palette()
         {
@@ -122,7 +169,8 @@
             ////AppbarText = "rgba(255,255,255, 0.70)",
             ////TextPrimary = "rgba(255,255,255, 0.70)",
             TextSecondary = "rgba(255,255,255, 0.50)",
-            ActionDefault = "#adadb1",
+            // ActionDefault = "#adadb1",
+            ActionDefault = "#ffffff",
             ActionDisabled = "rgba(255,255,255, 0.26)",
             ActionDisabledBackground = "rgba(255,255,255, 0.12)",
             Divider = "rgba(255,255,255, 0.12)",
@@ -137,30 +185,32 @@
         }
     };
 
-    MudTheme orangeTheme = new MudTheme()
+    private   MudTheme orangeTheme = new MudTheme()
     {
         Palette = new Palette()
         {
             Black = "#27272f",
             Background = "#FFF3E0",
             BackgroundGrey = "#FF9800",
-            Surface = "#FFB74D",
+            Surface = "#d9870f",
             DrawerBackground = "#FF9800",
-    //DrawerText = "rgba(255,255,255, 0.50)",
-    //DrawerIcon = "rgba(255,255,255, 0.50)",
+            //DrawerText = "rgba(255,255,255, 0.50)",
+            //DrawerIcon = "rgba(255,255,255, 0.50)",
             DrawerText = "#ffffff",
             DrawerIcon = "#ffffff",
             AppbarBackground = "#FF9800",
             AppbarText = "#ffffff",
+
             TextPrimary = "#ffffff",
-    ////AppbarText = "rgba(255,255,255, 0.70)",
-    ////TextPrimary = "rgba(255,255,255, 0.70)",
+            ////AppbarText = "rgba(255,255,255, 0.70)",
+            ////TextPrimary = "rgba(255,255,255, 0.70)",
             TextSecondary = "rgba(255,255,255, 0.50)",
-            ActionDefault = "#adadb1",
+            //ActionDefault = "#adadb1",
+            ActionDefault = "#ffffff",
             ActionDisabled = "rgba(255,255,255, 0.26)",
             ActionDisabledBackground = "rgba(255,255,255, 0.12)",
             Divider = "rgba(255,255,255, 0.12)",
-    //  DividerLight = "rgba(255,255,255, 0.06)",
+            //  DividerLight = "rgba(255,255,255, 0.06)",
             DividerLight = "#000000",
             TableLines = "rgba(255,255,255, 0.12)",
             LinesDefault = "rgba(255,255,255, 0.12)",
