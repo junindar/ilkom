@@ -25,7 +25,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor_JavascriptPart5", "B
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor.BrowserStatusLibrary", "Blazor.BrowserStatusLibrary\Blazor.BrowserStatusLibrary.csproj", "{48D30FEA-F487-4329-A2D9-6B478EA2DAE6}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazor.Intro", "MudBlazor.Intro\MudBlazor.Intro.csproj", "{5990A54E-234F-440E-B989-3B3A306F8B32}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Intro", "MudBlazor.Intro\MudBlazor.Intro.csproj", "{5990A54E-234F-440E-B989-3B3A306F8B32}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Table", "MudBlazor.Table\MudBlazor.Table.csproj", "{E66009AA-6DF4-424D-AEEC-9792134171FE}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -81,6 +83,10 @@ Global
 		{5990A54E-234F-440E-B989-3B3A306F8B32}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{5990A54E-234F-440E-B989-3B3A306F8B32}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{5990A54E-234F-440E-B989-3B3A306F8B32}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E66009AA-6DF4-424D-AEEC-9792134171FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E66009AA-6DF4-424D-AEEC-9792134171FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E66009AA-6DF4-424D-AEEC-9792134171FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E66009AA-6DF4-424D-AEEC-9792134171FE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

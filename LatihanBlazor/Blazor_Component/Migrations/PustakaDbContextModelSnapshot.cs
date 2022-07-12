@@ -18,7 +18,55 @@ namespace Blazor_Component.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-          
+            modelBuilder.Entity("Blazor_Component.Entity.Book", b =>
+                {
+                    b.Property<int>("BookID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("CategoryID")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Deskripsi")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Gambar")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Judul")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Penerbit")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Penulis")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("Status")
+                        .HasColumnType("bit");
+
+                    b.HasKey("BookID");
+
+                    b.HasIndex("CategoryID");
+
+                    b.ToTable("Books");
+                });
+
+            modelBuilder.Entity("Blazor_Component.Entity.Category", b =>
+                {
+                    b.Property<int>("CategoryID")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("NamaCategory")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("CategoryID");
+
+                    b.ToTable("Categories");
+                });
 
             modelBuilder.Entity("Blazor_Component.Entity.User", b =>
                 {
@@ -45,7 +93,14 @@ namespace Blazor_Component.Migrations
                     b.ToTable("Users");
                 });
 
-           
+            modelBuilder.Entity("Blazor_Component.Entity.Book", b =>
+                {
+                    b.HasOne("Blazor_Component.Entity.Category", "Category")
+                        .WithMany("Books")
+                        .HasForeignKey("CategoryID")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
 #pragma warning restore 612, 618
         }
     }

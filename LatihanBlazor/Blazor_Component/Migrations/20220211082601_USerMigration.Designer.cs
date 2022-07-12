@@ -9,8 +9,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Blazor_Component.Migrations
 {
     [DbContext(typeof(PustakaDbContext))]
-    [Migration("20200718040228_AddUserMigration")]
-    partial class AddUserMigration
+    [Migration("20220211082601_USerMigration")]
+    partial class USerMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

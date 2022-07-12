@@ -1,0 +1,139 @@
+﻿@page "/SampleRelatedData"
+@using MudBlazor.Table.Entity
+@using MudBlazor.Table.Data
+
+
+
+<TitlePrompt Title="Table With related data" />
+
+<MudTable Items="@Categories" Hover="true" Breakpoint="Breakpoint.Sm"
+          Loading="@_loading" LoadingProgressColor="Color.Info">
+    <ColGroup>
+        <col style="width:300px;" />
+        <col style="width:100px;" />
+        <col />
+
+    </ColGroup>
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh>Id Category</MudTh>
+        <MudTh>Category Name</MudTh>
+
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd>
+            <MudButton Variant="Variant.Outlined" Size="Size.Small"
+                       OnClick="@(() => ShowBtnPress(context.CategoryID))">
+                @((context.ShowDetails == true) ? "Hide" : "Show") Book Details
+            </MudButton>
+        </MudTd>
+        <MudTd DataLabel="Nr">@context.CategoryID</MudTd>
+        <MudTd DataLabel="Name">@context.NamaCategory</MudTd>
+
+    </RowTemplate>
+    <ChildRowContent>
+        @if (context.ShowDetails)
+        {
+        <MudTr>
+            <td colspan="3">
+                <MudCard Elevation="0">
+                    <MudCardHeader>
+                        <CardHeaderContent>
+                            <MudText Typo="Typo.body1">Book Details for <strong>@context.NamaCategory</strong></MudText>
+                        </CardHeaderContent>
+                    </MudCardHeader>
+                    <MudCardContent Class="pa-0">
+                        <MudTable Items="@context.Books" Context="BookContext" Hover="true" Breakpoint="Breakpoint.Sm" Elevation="0">
+                            
+                            <HeaderContent>
+                                <MudTh></MudTh>
+                                <MudTh>Judul</MudTh>
+                                <MudTh>Penulis</MudTh>
+                            </HeaderContent>
+                            <RowTemplate>
+                                <MudTd DataLabel="Gambar">
+                                    <img src="@($"images/{@BookContext.Gambar}")" class="rounded-circle" width="100" height="100" />
+                                </MudTd>
+                                <MudTd DataLabel="Judul">@BookContext.Judul</MudTd>
+                                <MudTd DataLabel="Penulis">@BookContext.Penulis</MudTd>
+                              
+                            </RowTemplate>
+                        </MudTable>
+                    </MudCardContent>
+                </MudCard>
+            </td>
+        </MudTr>
+        }
+    </ChildRowContent>
+</MudTable>
+
+@code {
+
+    public class CategoryVM
+    {
+        public bool ShowDetails { get; set; }
+        public int CategoryID { get; set; }
+        public string NamaCategory { get; set; }
+        public IList<BookVM> Books { get; set; }= new List<BookVM>();
+    }
+
+    public class BookVM
+    {
+        public int BookID { get; set; }
+        public string Judul { get; set; }
+        public string Penulis { get; set; }
+        public string Gambar { get; set; }
+    }
+
+    private void ShowBtnPress(int catid)
+    {
+        CategoryVM tmpCat = Categories.First(f => f.CategoryID == catid);
+        tmpCat.ShowDetails = !tmpCat.ShowDetails;
+    }
+
+    private async Task  FillData()
+    {
+        var categories = (await CategoryRepository.GetAll()).ToList();
+        var books = (await BookRepository.GetAllBooks()).ToList();
+        foreach (var cat in categories)
+        {
+            var catVM = new CategoryVM()
+            {
+                CategoryID=cat.CategoryID,NamaCategory=cat.NamaCategory,ShowDetails=false
+            };
+
+            foreach (var book in books.Where(c=>c.CategoryID==cat.CategoryID))
+            {
+                var bookVM = new BookVM()
+                {
+                    BookID= book.BookID,
+                    Judul = book.Judul,
+                    Penulis = book.Penulis,
+                    Gambar = book.Gambar
+                };
+                catVM.Books.Add(bookVM);
+            }
+
+            Categories.Add(catVM);
+        }
+    }
+
+
+    private bool _loading;
+    [Inject]
+    public IBookRepository BookRepository { get; set; }
+
+    [Inject]
+    public ICategoryRepository CategoryRepository { get; set; }
+
+    private List<CategoryVM> Categories = new List<CategoryVM>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        _loading = true;
+        await Task.Delay(1000);
+        await FillData();
+        _loading = false;
+    }
+
+}

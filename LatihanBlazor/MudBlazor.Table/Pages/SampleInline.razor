@@ -1,0 +1,164 @@
+﻿@page "/SampleInline"
+@using MudBlazor.Table.Entity
+@using MudBlazor.Table.Data
+
+
+
+<TitlePrompt Title="Server Side Pagination and Filtering" />
+
+<MudTable ServerData="@(new Func<TableState, Task<TableData<Book>>>(ServerReload))" Hover="true"
+          CanCancelEdit="true" ReadOnly="false" 
+          Loading="false" @ref="table" CommitEditTooltip="Commit Edit"
+          RowEditPreview="BackupItem" RowEditCancel="ResetItemToOriginalValues"
+          RowEditCommit="SaveItem"
+          LoadingProgressColor="Color.Info">
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Daftar Buku</MudText>
+        <MudSpacer />
+        <MudTextField T="string" ValueChanged="@(s=>OnSearch(s))" Placeholder="Search" Adornment="Adornment.Start"
+                      AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+    <HeaderContent>
+        <MudTh></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="id_field" T="Book">Id Buku</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="judul_field" T="Book">Judul</MudTableSortLabel></MudTh>
+        <MudTh><MudTableSortLabel SortLabel="penulis_field" T="Book">Penulis</MudTableSortLabel></MudTh>
+
+    </HeaderContent>
+    <RowTemplate>
+        <MudTd DataLabel="Gambar">
+
+            <img src="@($"images/{@context.Gambar}")" class="rounded-circle" width="100" height="100" />
+        </MudTd>
+        <MudTd DataLabel="BookID">@context.BookID</MudTd>
+        <MudTd DataLabel="Judul">@context.Judul</MudTd>
+        <MudTd DataLabel="Penulis">@context.Penulis</MudTd>
+
+    </RowTemplate>
+    <RowEditingTemplate>
+        <MudTd DataLabel="Gambar">
+
+            <img src="@($"images/{@context.Gambar}")" class="rounded-circle" width="100" height="100" />
+        </MudTd>
+        <MudTd DataLabel="BookID">@context.BookID</MudTd>
+        <MudTd DataLabel="Judul">
+            <MudTextField @bind-Value="@context.Judul" Required />
+        </MudTd>
+        <MudTd DataLabel="Penulis">
+            <MudTextField @bind-Value="@context.Penulis" Required />
+        </MudTd>
+      
+    </RowEditingTemplate>
+        <NoRecordsContent>
+            <MudText>No matching records found</MudText>
+        </NoRecordsContent>
+        <LoadingContent>
+            <MudText>Loading...</MudText>
+        </LoadingContent>
+        <PagerContent>
+            <MudTablePager PageSizeOptions="pageSizeOptions" />
+        </PagerContent>
+</MudTable>
+
+@code {
+
+    [Inject]
+    public IBookRepository BookRepository { get; set; }
+
+    private IEnumerable<Book> pagedData;
+    private MudTable<Book> table;
+
+    private int totalItems;
+    private string searchString = "";
+    private Book elementBeforeEdit;
+    private async Task<TableData<Book>> ServerReload(TableState state)
+    {
+
+        IEnumerable<Book> data = await BookRepository.GetAllBooks();
+
+        await Task.Delay(1000);
+        data = data.Where(book =>
+        {
+            if (string.IsNullOrWhiteSpace(searchString))
+                return true;
+            if (book.Penulis.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            if (book.Judul.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+                return true;
+            return false;
+        }).ToArray();
+        totalItems = data.Count();
+
+        switch (state.SortLabel)
+        {
+            case "id_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.BookID);
+                break;
+            case "judul_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Judul);
+                break;
+            case "penulis_field":
+                data = data.OrderByDirection(state.SortDirection, o => o.Penulis);
+                break;
+
+        }
+
+        pagedData = data.Skip(state.Page * state.PageSize).Take(state.PageSize).ToArray();
+
+        return new TableData<Book>() {TotalItems = totalItems, Items = pagedData};
+
+    }
+
+    private int[] pageSizeOptions = new int[] {5, 10, 15};
+
+
+
+    private void OnSearch(string text)
+    {
+        searchString = text;
+        table.ReloadServerData();
+    }
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+        table.SetRowsPerPage(5);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+
+
+
+
+ 
+  
+ 
+    private void BackupItem(object book)
+    {
+        elementBeforeEdit = new Book()
+        {
+            BookID = ((Book)book).BookID,
+            Judul = ((Book)book).Judul,
+            Penulis = ((Book)book).Penulis
+        };
+
+    }
+
+
+
+    private async void SaveItem(object book)
+    {
+        var updateBook = await BookRepository.GetBookById(((Book) book).BookID);
+        updateBook.Judul=((Book)book).Judul;
+        updateBook.Penulis=((Book)book).Penulis;
+        await  BookRepository.Update(updateBook);
+   
+    }
+
+    private void ResetItemToOriginalValues(object book)
+    {
+        ((Book)book).BookID = elementBeforeEdit.BookID;
+        ((Book)book).Judul = elementBeforeEdit.Judul;
+        ((Book)book).Penulis = elementBeforeEdit.Penulis;
+
+
+    }
+}

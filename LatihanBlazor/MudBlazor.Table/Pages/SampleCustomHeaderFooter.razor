@@ -1,0 +1,121 @@
+﻿@page "/SampleCustomHeaderFooter"
+@using MudBlazor.Table.Entity
+@using MudBlazor.Table.Data
+
+<style>
+    
+
+    .mud-table-head .header-centered th {
+        text-align: center;
+        font-size: 1.2em;
+    }
+
+    .mud-table-foot .bold-text .mud-table-cell {
+        font-weight: 500;
+    }
+</style>
+
+<TitlePrompt Title="Grouping" />
+
+<MudTable Items="@Books" Hover="true" Loading="@_loading" @ref="table"
+          Filter="new Func<Book,bool>(FilterTable)" 
+          @bind-SelectedItems="selectedItems" MultiSelection="_multiSelect" Striped="true" Bordered="true"
+          CustomHeader="true" CustomFooter="true" HeaderClass="table-head-bordered" FooterClass="table-foot-bordered"
+          LoadingProgressColor="Color.Info">
+
+    <ToolBarContent>
+        <MudText Typo="Typo.h6">Daftar Buku</MudText>
+        <MudSpacer />
+        <MudTextField @bind-Value="searchString" Placeholder="Search" Adornment="Adornment.Start"
+                       AdornmentIcon="@Icons.Material.Filled.Search" IconSize="Size.Medium" Class="mt-0"></MudTextField>
+    </ToolBarContent>
+
+    <HeaderContent>
+        <MudTHeadRow IgnoreCheckbox="true" Class="header-centered">
+            <MudTh colspan="5">Books Info</MudTh>
+        </MudTHeadRow>
+        <MudTHeadRow IgnoreCheckbox="true" Class="header-centered">
+            <MudTh colspan="2">Image</MudTh>
+            <MudTh colspan="3">Detail Data</MudTh>
+        </MudTHeadRow>
+        <MudTHeadRow IsCheckable="true">
+            <MudTh></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Book, object>(x => x.BookID)">Id Buku</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Book, object>(x => x.Judul)">Judul</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<Book, object>(x => x.Penulis)">Penulis</MudTableSortLabel></MudTh>
+            @*<MudTh><MudTableSortLabel SortBy="new Func<Book, object>(x => x.Penerbit)">Penerbit</MudTableSortLabel></MudTh>*@
+        </MudTHeadRow>
+
+    </HeaderContent>
+
+    <RowTemplate>
+        <MudTd DataLabel="Gambar">
+
+            <img src="@($"images/{@context.Gambar}")" class="rounded-circle" width="100" height="100" />
+        </MudTd>
+        <MudTd DataLabel="BookID">@context.BookID</MudTd>
+        <MudTd DataLabel="Judul">@context.Judul</MudTd>
+        <MudTd DataLabel="Penulis">@context.Penulis</MudTd>
+        @*<MudTd DataLabel="Penulis">@context.Penerbit</MudTd>*@
+    </RowTemplate>
+    <FooterContent>
+        <MudTFootRow Class="bold-text">
+            <MudTd></MudTd>
+            <MudTd>Id Buku</MudTd>
+            <MudTd>Judul</MudTd>
+            <MudTd>Penulis</MudTd>
+            @*<MudTd>Penerbit</MudTd>*@
+        </MudTFootRow>
+        <MudTFootRow IsCheckable="true">
+            <MudTd colspan="5">Selected: @selectedItems.Count</MudTd>
+        </MudTFootRow>
+    </FooterContent>
+    <PagerContent>
+        <MudTablePager PageSizeOptions="pageSizeOptions" />
+    </PagerContent>
+</MudTable>
+
+
+@code {
+    private bool _multiSelect = true;
+    private int[] pageSizeOptions = new int[] { 5, 10, 15 };
+    private bool _loading;
+    private string searchString = "";
+
+   
+    private HashSet<Book> selectedItems = new HashSet<Book>();
+    private MudTable<Book> table;
+
+    protected override Task OnAfterRenderAsync(bool firstRender)
+    {
+
+        table.SetRowsPerPage(5);
+        return base.OnAfterRenderAsync(firstRender);
+    }
+    [Inject]
+    public IBookRepository BookRepository { get; set; }
+    private IEnumerable<Book> Books = new List<Book>();
+
+
+    protected override async Task OnInitializedAsync()
+    {
+
+        _loading = true;
+        await Task.Delay(1000);
+        Books = (await BookRepository.GetAllBooks()).ToList();
+        _loading = false;
+    }
+    private bool FilterTable(Book book) => FilterFunc(book, searchString);
+
+    private bool FilterFunc(Book book, string searchString)
+    {
+        if (string.IsNullOrWhiteSpace(searchString))
+            return true;
+        if (book.Penulis.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+        if (book.Judul.Contains(searchString, StringComparison.OrdinalIgnoreCase))
+            return true;
+
+        return false;
+    }
+}
