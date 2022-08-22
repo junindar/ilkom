@@ -4,7 +4,7 @@
 
 
 
-<TitlePrompt Title="Server Side Pagination and Filtering" />
+<TitlePrompt Title="Inline Edit Mode" />
 
 <MudTable ServerData="@(new Func<TableState, Task<TableData<Book>>>(ServerReload))" Hover="true"
           CanCancelEdit="true" ReadOnly="false" 
@@ -37,7 +37,6 @@
     </RowTemplate>
     <RowEditingTemplate>
         <MudTd DataLabel="Gambar">
-
             <img src="@($"images/{@context.Gambar}")" class="rounded-circle" width="100" height="100" />
         </MudTd>
         <MudTd DataLabel="BookID">@context.BookID</MudTd>
@@ -47,7 +46,6 @@
         <MudTd DataLabel="Penulis">
             <MudTextField @bind-Value="@context.Penulis" Required />
         </MudTd>
-      
     </RowEditingTemplate>
         <NoRecordsContent>
             <MudText>No matching records found</MudText>
@@ -125,11 +123,6 @@
         return base.OnAfterRenderAsync(firstRender);
     }
 
-
-
-
- 
-  
  
     private void BackupItem(object book)
     {
@@ -142,15 +135,12 @@
 
     }
 
-
-
     private async void SaveItem(object book)
     {
         var updateBook = await BookRepository.GetBookById(((Book) book).BookID);
         updateBook.Judul=((Book)book).Judul;
         updateBook.Penulis=((Book)book).Penulis;
         await  BookRepository.Update(updateBook);
-   
     }
 
     private void ResetItemToOriginalValues(object book)
@@ -158,7 +148,5 @@
         ((Book)book).BookID = elementBeforeEdit.BookID;
         ((Book)book).Judul = elementBeforeEdit.Judul;
         ((Book)book).Penulis = elementBeforeEdit.Penulis;
-
-
     }
 }
