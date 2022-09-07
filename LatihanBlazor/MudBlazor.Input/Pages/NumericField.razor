@@ -1,0 +1,146 @@
+﻿@page "/NumericField"
+
+
+@using System.Globalization
+
+<TitlePrompt Title="Checkbox" />
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudNumericField @bind-Value="IntValue" Label="Standard" Variant="Variant.Text" Min="0" Max="10" />
+            </div>
+            <div class="col-md-4">
+                <MudNumericField @bind-Value="DoubleValue" Label="Filled" Variant="Variant.Filled" Min="0.0" />
+            </div>
+            <div class="col-md-4">
+                <MudNumericField @bind-Value="DecimalValue" Label="Outlined" Variant="Variant.Outlined" Step=".2M" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Hide Spin Buttons</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudNumericField HideSpinButtons="true" @bind-Value="IntValue" Label="Standard" Variant="Variant.Text" Min="0" Max="10" />
+            </div>
+            <div class="col-md-4">
+                <MudNumericField HideSpinButtons="true" @bind-Value="DoubleValue" Label="Filled" Variant="Variant.Filled" Min="0.0" />
+            </div>
+            <div class="col-md-4">
+                <MudNumericField HideSpinButtons="true" @bind-Value="DecimalValue" Label="Outlined" Variant="Variant.Outlined" Step=".2M" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Setting Culture and Format</MudText>
+        <div class="row">
+            <div class="col-md-6">
+                <MudNumericField Immediate="false" Label="de-DE" Format="N2" Culture="@_de" T="double?" @bind-Value="_valueDe" HelperText="@_valueDe.ToString()" />
+            </div>
+            <div class="col-md-6">
+                <MudNumericField Immediate="false" Label="en-US" Format="N2" Culture="@_en" T="double?" @bind-Value="_valueEn" HelperText="@_valueEn.ToString()" />
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Binding Value Types vs Nullables</MudText>
+        <div class="row">
+            <div class="col-md-6">
+                <MudNumericField @bind-Value="intValue" Label="Enter an int" Variant="Variant.Outlined" />
+            </div>
+            <div class="col-md-6">
+                <MudNumericField @bind-Value="doubleValue" Label="Enter a double" Format="F1" Variant="Variant.Outlined" />
+            </div>
+
+        </div>
+        <div class="row">
+            <div class="col-md-6">
+                <MudNumericField @bind-Value="nullableInt" Label="Enter an int" Variant="Variant.Outlined" />
+            </div>
+            <div class="col-md-6">
+                <MudNumericField @bind-Value="nullableDouble" Label="Enter a double" Format="F1" Variant="Variant.Outlined" />
+            </div>
+
+        </div>
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Change the Value with the Mouse Wheel</MudText>
+        <div class="row">
+            <div class="col-md-6">
+                <MudNumericField @bind-Value="@_normal" InvertMouseWheel="@_invertMouseWheel" Label="Use Shift + Mouse Wheel" Variant="Variant.Outlined" />
+            </div>
+            <div class="col-md-6">
+                <MudCheckBox Class="mt-3" @bind-Checked="@_invertMouseWheel" Label="Revert Mouse Wheel" Color="Color.Primary" />
+            </div>
+
+        </div>
+       
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+@code {
+
+    public int IntValue { get; set; }
+    public double DoubleValue { get; set; }
+    public decimal DecimalValue { get; set; }
+
+    public CultureInfo _de = CultureInfo.GetCultureInfo("de-DE");
+    public CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
+
+    public double? _valueDe = 1234.56;
+    public double? _valueEn = 1234.56;
+
+
+    int intValue;
+    double doubleValue;
+    int? nullableInt;
+    double? nullableDouble;
+
+    double _normal = 0;
+    bool _invertMouseWheel = false;
+}

@@ -1,0 +1,332 @@
+﻿@page "/TextField"
+
+
+
+
+<TitlePrompt Title="Checkbox" />
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Standard" Variant="Variant.Text"></MudTextField>
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Filled" Variant="Variant.Filled"></MudTextField>
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined"></MudTextField>
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Dense</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Standard" Variant="Variant.Text" Margin="Margin.Dense"></MudTextField>
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Filled" Variant="Variant.Filled" Margin="Margin.Dense"></MudTextField>
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Outlined" Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+            </div>
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Helper Text</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="With Helper" HelperText="Some helping Text" Variant="Variant.Text" />
+
+
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="With Helper" HelperText="Some helping Text" Variant="Variant.Filled" />
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="With Helper" HelperText="Some helping Text" Variant="Variant.Outlined" />
+            </div>
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Helper Text On Focus</MudText>
+        <div class="row">
+            <div class="col-md-6">
+                <MudTextField T="string" Label="OnFocus Helper" HelperText="Some helping text" HelperTextOnFocus="true" Variant="Variant.Text" />
+
+            </div>
+            <div class="col-md-6">
+                <MudTextField T="string" Label="With Helper" HelperText="Some helping text" Variant="Variant.Text" />
+            </div>
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Disabled</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Disabled" Label="Disabled" Disabled="true" Variant="Variant.Text" />
+
+
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Disabled" Label="Disabled" Disabled="true" Variant="Variant.Filled" />
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Disabled" Label="Disabled" Disabled="true" Variant="Variant.Outlined" />
+            </div>
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Read Only</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField @bind-Value="ReadOnly" Label="Read Only" ReadOnly="true" Variant="Variant.Text" />
+
+
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="ReadOnly" Label="Read Only" ReadOnly="true" Variant="Variant.Filled" />
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="ReadOnly" Label="Read Only" ReadOnly="true" Variant="Variant.Outlined" />
+            </div>
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Counter</MudText>
+        <div class="row">
+            <div class="col-md-3">
+                <MudTextField T="string" Counter="25" HelperText="This field uses Counter prop"
+                              Immediate="true" Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))"
+                              Label="Regular" Variant="Variant.Text" />
+            </div>
+            <div class="col-md-3">
+                <MudTextField T="string" Counter="25" MaxLength="25" HelperText="This field uses Counter and MaxLength prop"
+                              Immediate="true"
+                              Validation="@(new Func<string, IEnumerable<string>>(MaxCharacters))"
+                              Label="Limited" Variant="Variant.Text" />
+            </div>
+            <div class="col-md-3">
+                <MudTextField T="string" Counter="0" HelperText="This field has Counter set to 0"
+                              Immediate="true" Label="Counter" Variant="Variant.Text" />
+            </div>
+            <div class="col-md-3">
+                <MudTextField T="string" MaxLength="10" HelperText="This field uses MaxLength prop"
+                              Immediate="true" Label="Max Length" Variant="Variant.Text" />
+            </div>
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Adornments</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Amount" Label="Amount" Variant="Variant.Outlined" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.AttachMoney" />
+
+
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Weight" HelperText="Weight" Variant="Variant.Outlined" Adornment="Adornment.End"
+                              AdornmentText="Kg" Class="mx-8" />
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Password" Label="Password" Variant="Variant.Outlined" InputType="@PasswordInput" Adornment="Adornment.End"
+                              AdornmentIcon="@PasswordInputIcon"
+                              OnAdornmentClick="ButtonTestclick" AdornmentAriaLabel="Show Password" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+    <MudCardContent>
+        <MudText>
+            Adornment Color
+        </MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Amount" Label="Amount" Variant="Variant.Outlined" Adornment="Adornment.Start"
+                              AdornmentIcon="@Icons.Material.Filled.AttachMoney" AdornmentColor="Color.Warning" />
+
+
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Weight" Label="Weight" Variant="Variant.Outlined" Adornment="Adornment.End"
+                              AdornmentText="Kg" AdornmentColor="Color.Info" />
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="Search" Label="Search" Variant="Variant.Outlined" Adornment="Adornment.End" AdornmentIcon="@Icons.Filled.Search" AdornmentColor="Color.Secondary" />
+            </div>
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Clear button</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Clearable Standard" Variant="Variant.Text" Clearable="true" Adornment="Adornment.End"
+                                AdornmentIcon="@Icons.Custom.Brands.MudBlazor" AdornmentColor="Color.Primary" Immediate="true" />
+
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Clearable Filled" Variant="Variant.Filled" Clearable="true" Immediate="true" />
+            </div>
+            <div class="col-md-4">
+                <MudTextField @bind-Value="TextValue" Label="Clearable Outlined" Variant="Variant.Outlined" Clearable="true" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+   
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Input Types</MudText>
+        <div class="row">
+            <div class="col-md-1">
+                <MudTextField T="string" Label="Color" InputType="InputType.Color" />
+              
+
+            </div>
+            <div class="col-md-4">
+              
+                <MudTextField T="DateTime?" Format="yyyy-MM-dd" Label="Date" InputType="InputType.Date" />
+
+            </div>
+
+            <div class="col-md-4">
+                <MudTextField T="DateTime?" Format="s" Label="DateTimeLocal" InputType="InputType.DateTimeLocal" />
+            </div>
+            <div class="col-md-7">
+
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTextField T="string" Label="Month" InputType="InputType.Month"/>
+
+            </div>
+            <div class="col-md-4">
+                <MudTextField T="string" Label="Time" InputType="InputType.Time" />
+            </div>
+            <div class="col-md-4">
+                <MudTextField T="string" Label="Week" InputType="InputType.Week"/>
+            </div>
+        </div>
+
+    </MudCardContent>
+
+   
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+
+@code {
+    public string TextValue { get; set; }
+    public string ReadOnly { get; set; } = "Read only value";
+
+    public string Disabled { get; set; }
+
+
+    private IEnumerable<string> MaxCharacters(string ch)
+    {
+        if (!string.IsNullOrEmpty(ch) && 25 < ch?.Length)
+            yield return "Max 25 characters";
+    }
+
+
+    public double? Amount { get; set; }
+    public int? Weight { get; set; }
+    public string Password { get; set; } = "superstrong123";
+    bool isShow;
+    InputType PasswordInput = InputType.Password;
+    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+
+    void ButtonTestclick()
+    {
+        @if (isShow)
+        {
+            isShow = false;
+            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
+            PasswordInput = InputType.Password;
+        }
+        else
+        {
+            isShow = true;
+            PasswordInputIcon = Icons.Material.Filled.Visibility;
+            PasswordInput = InputType.Text;
+        }
+    }
+    public string Search { get; set; }
+
+ 
+}

@@ -1,0 +1,183 @@
+﻿@page "/Checkbox"
+
+
+
+<TitlePrompt Title="Checkbox" />
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic</MudText>
+        <div class="row">
+           
+                <MudCheckBox @bind-Checked="@Basic_CheckBox1"></MudCheckBox>
+               
+               
+               
+           
+                   <MudCheckBox @bind-Checked="@Basic_CheckBox2" Color="Color.Primary"></MudCheckBox>
+             
+                    <MudCheckBox @bind-Checked="@Basic_CheckBox3" Color="Color.Secondary"></MudCheckBox>
+             
+                    <MudCheckBox @bind-Checked="@Basic_CheckBox4" Disabled="true"></MudCheckBox>
+              
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Color</MudText>
+        <div class="row">
+           
+                <MudCheckBox @bind-Checked="@Basic_CheckBox1" UnCheckedColor="Color.Error"></MudCheckBox>
+           
+                  <MudCheckBox @bind-Checked="@Basic_CheckBox2"  UnCheckedColor="Color.Default" Color="Color.Primary"></MudCheckBox>
+             
+                             
+                <MudCheckBox @bind-Checked="@Basic_CheckBox3"  UnCheckedColor="Color.Default" Color="Color.Secondary"></MudCheckBox>
+             
+                    <MudCheckBox @bind-Checked="@Basic_CheckBox4" Disabled="true" UnCheckedColor="Color.Success"></MudCheckBox>
+             
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Label</MudText>
+        <div class="row">
+           
+                <MudCheckBox @bind-Checked="@Basic_CheckBox1" Label="Default"></MudCheckBox>
+                <MudCheckBox @bind-Checked="@Basic_CheckBox2" Label="Primary" Color="Color.Primary"></MudCheckBox>
+                <MudCheckBox @bind-Checked="@Basic_CheckBox3" Label="Secondary" Color="Color.Secondary"></MudCheckBox>
+                <MudCheckBox @bind-Checked="@Basic_CheckBox4" Disabled="true" Label="Disabled"></MudCheckBox>
+          
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Icons</MudText>
+        <div class="row">
+          
+                <MudCheckBox @bind-Checked="@Basic_CheckBox1" Color="Color.Secondary" CheckedIcon="@Icons.Material.Filled.Favorite" UncheckedIcon="@Icons.Material.Filled.FavoriteBorder"></MudCheckBox>
+                <MudCheckBox @bind-Checked="@Basic_CheckBox2" Color="Color.Tertiary" CheckedIcon="@Icons.Material.Filled.Bookmark" UncheckedIcon="@Icons.Material.Filled.BookmarkBorder"></MudCheckBox>
+                <MudCheckBox @bind-Checked="@Basic_CheckBox3" Color="Color.Warning" CheckedIcon="@Icons.Material.Filled.Star" UncheckedIcon="@Icons.Material.Filled.StarOutline"></MudCheckBox>
+           
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Size</MudText>
+        <div class="row">
+          
+                <MudCheckBox @bind-Checked="@Basic_CheckBox1" Size="Size.Small" Color="Color.Primary"></MudCheckBox>
+                <MudCheckBox @bind-Checked="@Basic_CheckBox2" Size="Size.Medium" Color="Color.Secondary"></MudCheckBox>
+                <MudCheckBox @bind-Checked="@Basic_CheckBox3" Size="Size.Large" Color="Color.Tertiary"></MudCheckBox>
+          
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Type</MudText>
+        <div class="row">
+          
+                <MudCheckBox @bind-Checked="boolean">bool: @boolean</MudCheckBox>
+                <MudCheckBox @bind-Checked="nullable" Color="Color.Primary">bool?: @nullable</MudCheckBox>
+                <MudCheckBox @bind-Checked="integer" Color="Color.Secondary">int: @integer</MudCheckBox>
+                <MudCheckBox @bind-Checked="str" Color="Color.Tertiary">string: "@str"</MudCheckBox>
+                <MudCheckBox @bind-Checked="customstr" Converter="@(new CustomStringToBoolConverter())"> custom string: "@(customstr)"</MudCheckBox>
+              
+           
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    public bool Basic_CheckBox1 { get; set; } = true;
+    public bool Basic_CheckBox2 { get; set; } = false;
+    public bool Basic_CheckBox3 { get; set; } = false;
+    public bool Basic_CheckBox4 { get; set; } = true;
+
+
+    public bool boolean { get; set; } = true;
+    public bool? nullable { get; set; } = null;
+    public int integer { get; set; } = 1;
+    public string str { get; set; } = "on";
+    public string customstr { get; set; } = CustomStringToBoolConverter.NullString;
+   
+
+
+    public class CustomStringToBoolConverter : BoolConverter<string>
+    {
+        public CustomStringToBoolConverter()
+        {
+            SetFunc = OnSet;
+            GetFunc = OnGet;
+        }
+
+        public const string TrueString = "Yes, please";
+        public const string FalseString = "No, thanks";
+        public const string NullString = "I don't know";
+
+        private string OnGet(bool? value) => value == null ? NullString : (value == true ? TrueString : FalseString);
+
+        private bool? OnSet(string arg)
+        {
+            try
+            {
+                if (arg == TrueString)
+                    return true;
+                if (arg == FalseString)
+                    return false;
+                return null;
+            }
+            catch (FormatException e)
+            {
+                UpdateSetError("Conversion error: " + e.Message);
+                return null;
+            }
+        }
+    }
+}
