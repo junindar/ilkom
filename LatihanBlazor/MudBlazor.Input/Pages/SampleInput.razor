@@ -1,0 +1,142 @@
+﻿@page "/SampleInput"
+@using MudBlazor.Input.Data
+@using MudBlazor.Input.Data.ViewModel
+
+
+   
+
+    <EditForm Model="@Book" OnValidSubmit="@HandleValidSubmit">
+        <DataAnnotationsValidator />
+      
+        <MudCard>
+        <MudCardHeader>
+            <CardHeaderContent>
+                <MudText Typo="Typo.h6">Add/Edit Book</MudText>
+            </CardHeaderContent>
+        </MudCardHeader>
+
+        <MudCardContent>
+            <div class="row">
+                <div class="col-md-6">
+                      <MudTextField @bind-Value="@Book.Judul" For="@(() => Book.Judul)" Label="Judul Buku"
+                                                               Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </div>
+                <div class="col-md-6">
+                    <MudTextField @bind-Value="@Book.Penulis" For="@(() => Book.Penulis)" Label="Penulis"
+                                  HelperText="Max. 255 characters" 
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+                    <MudAutocomplete T="Category" Label="Category" @bind-Value="categoryValue" ResetValueOnEmptyText="true" Variant="Variant.Outlined"
+                                     Class="mt-3" Margin="Margin.Dense" SearchFunc="@SearchCategory" ToStringFunc="@(e=> e==null?null : $"{e.NamaCategory}")" />
+                </div>
+                <div class="col-md-6">
+                 
+
+                    <MudSelect @bind-Value="@Book.Penerbit"  Placeholder="Select one" Label="Penerbit"
+                               Class="mt-3" Margin="Margin.Dense" Variant="Variant.Outlined"
+                               AdornmentIcon="@Icons.Material.Filled.AppRegistration" AdornmentColor="Color.Primary">
+                        @foreach (var itm in penerbit )
+                        {
+                            <MudSelectItem T="string" Value="@itm">@itm</MudSelectItem>
+                        }
+                    </MudSelect>
+                </div>
+            </div>
+               
+            <div class="row">
+                <div class="col-md-6">
+                    <MudNumericField @bind-Value="@Book.Harga" Label="Harga" For="@(() => Book.Harga)"
+                                     AdornmentText="Rp." Adornment="Adornment.Start" Class="mt-3"
+                                     Variant="Variant.Outlined" Min="0.0" Margin="Margin.Dense" />
+                </div>
+                <div class="col-md-6">
+                    <MudSlider @bind-Value="@Book.Jumlah" Min="0" Max="100" 
+                    Color="Color.Info"  ValueLabel="true" >Jumlah: @Book.Jumlah.ToString()</MudSlider>
+                </div>
+            </div>
+
+                   
+
+              <div class="row">
+                <div class="col-md-12">
+                    <MudTextField @bind-Value="@Book.Deskripsi" For="@(() => Book.Deskripsi)" Label="Deskripsi" Lines="5"
+                                  Class="mt-3"
+                                  Variant="Variant.Outlined" Margin="Margin.Dense"></MudTextField>
+                </div>
+            </div>
+
+
+            <div class="row">
+                <div class="col-md-10">
+                    <MudCheckBox @bind-Checked="@Book.Status" Dense="true" UnCheckedColor="Color.Primary" Color="Color.Primary"
+                                 Class="mt-3" Label="Status"></MudCheckBox>
+                </div>
+            </div>
+           
+              
+
+          
+
+
+            
+
+            
+            </MudCardContent>
+            <MudCardActions>
+            <MudButton ButtonType="ButtonType.Submit" Variant="Variant.Filled" StartIcon="@Icons.Material.Filled.Save"
+            Color="Color.Primary" Class="ml-auto">Submit</MudButton>
+          @*  <MudButton ButtonType="ButtonType.Button" Variant="Variant.Filled" Color="Color.Primary" Class="ml-auto">Back</MudButton>*@
+            </MudCardActions>
+        </MudCard>
+      
+
+      
+
+
+       
+
+      
+       
+    </EditForm>
+
+
+
+@code {
+
+    private async Task<IEnumerable<Category>> SearchCategory(string value)
+    {
+
+        if (string.IsNullOrEmpty(value))
+            return Categories;
+        return Categories.Where(x => x.NamaCategory.Contains(value, StringComparison.InvariantCultureIgnoreCase));
+    }
+    [Inject]
+    public ICategoryRepository CategoryRepository { get; set; }
+    private Category categoryValue;
+   // protected string CategoryId = string.Empty;
+    public Book Book { get; set; } = new Book();
+    public int valueJumlah = 0;
+
+    public IEnumerable<Category> Categories { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        Categories = (await CategoryRepository.GetAll()).ToList();
+    }
+
+    protected async Task HandleValidSubmit()
+    {
+        
+    }
+
+    private string[] penerbit =
+       {
+       "Ebookuid", "Gramedia", "Elexmedia", "Erlangga", "Yudhistira",
+        "Mizan", "Publishers", "Agro Media Grup", "Tiga Serangkai Pustaka Mandiri",
+        "DIVA Press", "Media Pressindo", "Indiva Media Kreasi"
+    };
+}

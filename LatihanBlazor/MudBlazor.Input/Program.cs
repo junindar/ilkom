@@ -10,7 +10,9 @@ builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddMudServices();
 
+builder.Services.AddHttpClient<IProvinsiRepository, ProvinsiRepository>();
 builder.Services.AddHttpClient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<ICategoryRepository, CategoryRepository>();
 builder.Services.AddSingleton<HttpClient>();
 var app = builder.Build();
 

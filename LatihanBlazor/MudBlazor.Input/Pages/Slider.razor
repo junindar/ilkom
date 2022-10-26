@@ -1,0 +1,206 @@
+﻿@page "/Slider"
+
+@using System.Globalization
+@using System.Linq
+<TitlePrompt Title="Slider" />
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic Sliders</MudText>
+        <div class="row">
+            <div class="col-md-12">
+               <MudSlider Value="@value">Volume</MudSlider>
+            </div>
+            <div class="col-md-12">
+               <MudSlider Disabled="true" Value="@(20)">Disabled Slider</MudSlider>
+            </div>
+           
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Filled</MudText>
+        <div class="row">
+            <div class="col-md-12">
+                <MudSlider Value="@value" Variant="Variant.Filled">Volume Filled</MudSlider>
+            </div>
+           
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Color</MudText>
+        <div class="row">
+            <div class="col-md-12">
+                <MudSlider Step="10" Value="70" Color="Color.Success" />
+            </div>
+            <div class="col-md-12">
+                <MudSlider Step="25" Value="50" Color="Color.Warning" />
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Min and Max Values</MudText>
+        <div class="row">
+            <div class="col-md-12">
+              <MudSlider @bind-Value="value1" Min="20" Max="80" Color="Color.Info">Value: @value1.ToString()</MudSlider>
+            </div>
+            <div class="col-md-12">
+                <MudSlider @bind-Value="value2" Min="-1" Max="1" Step="0.05" Color="Color.Error">Value: @value2.ToString("F2")</MudSlider>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Display Ticks</MudText>
+        <div class="row">
+            <div class="col-md-12">
+                <MudSlider TickMarks="true" Step="10" Value="@value" />
+            </div>
+          
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Label</MudText>
+        <div class="row">
+            <div class="col-md-12">
+                <MudSlider TickMarks="true" TickMarkLabels="@labels" Step="10" Value="@valueInt" />
+            </div>
+            <div class="col-md-12">
+                <br />
+            </div>
+           
+            <div class="col-md-12">
+                <MudSlider TickMarks="true" TickMarkLabels="@labels" Step="25" Value="@valueInt" />
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Value Label</MudText>
+        <div class="row">
+            <div class="col-md-12">
+                <MudSlider Value="@value" ValueLabel="true" />
+            </div>
+          
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Size</MudText>
+        <div class="row">
+            <div class="col-md-12">
+                <MudSlider Size="Size.Small" Value="@valueInt" />
+            </div>
+            <div class="col-md-12">
+                <MudSlider Size="Size.Medium" Value="@valueInt" />
+            </div>
+            <div class="col-md-12">
+                <MudSlider Size="Size.Large" Value="@valueInt" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true" Style="height=600px!important">
+    <MudCardContent Height="600">
+        <MudText>Vertical</MudText>
+        <div class="row">
+            <div class="col-md-6">
+                <MudSlider Value="@value" Vertical="true" >Vertical</MudSlider>
+            </div>
+            <div class="col-md-6">
+                <MudSlider Value="@value" Vertical="true" />
+            </div>
+           
+        </div>
+        <div class="row">
+            <br /> 
+        </div>
+       
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+    @code {
+
+
+    double value = 50.0;
+    public double value1 = 50;
+    public double value2 = -0.75;
+   
+    int valueInt = 50;
+    string[] labels = new string[] { "Start", "Tick 1", "Tick 2", "Tick 3", "Tick 4", "Tick 5", "Tick 6", "Tick 7", "Tick 8", "Tick 9", "Finish" };
+
+}

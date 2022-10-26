@@ -29,7 +29,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Intro", "MudBlazo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Table", "MudBlazor.Table\MudBlazor.Table.csproj", "{E66009AA-6DF4-424D-AEEC-9792134171FE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazor.Input", "MudBlazor.Input\MudBlazor.Input.csproj", "{71758395-A129-4428-8BBE-C4B338D14A0A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Input", "MudBlazor.Input\MudBlazor.Input.csproj", "{71758395-A129-4428-8BBE-C4B338D14A0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

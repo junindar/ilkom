@@ -1,0 +1,140 @@
+﻿@page "/RadioButton"
+
+
+
+<TitlePrompt Title="Radio" />
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic</MudText>
+        <div class="row">
+           
+            <MudRadioGroup @bind-SelectedOption="@SelectedOption">
+                <MudRadio Option="@("Radio 1")" Color="Color.Primary">Primary</MudRadio>
+                <MudRadio Option="@("Radio 2")" Color="Color.Secondary">Secondary</MudRadio>
+                <MudRadio Option="@("Radio 3")">Default</MudRadio>
+                <MudRadio Option="@("Radio 4")" Color="Color.Primary" Disabled="true">Disabled</MudRadio>
+            </MudRadioGroup>
+              
+        </div> 
+        <div class="row">
+            <MudButton Variant="Variant.Outlined" OnClick="Reset">Reset</MudButton>
+            <MudText Class="ml-4">Selected Option: @SelectedOption</MudText>
+        </div>
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Color</MudText>
+        <div class="row">
+            <MudRadioGroup T="int">
+                <MudRadio Option="1" Color="Color.Primary" UnCheckedColor="Color.Default">One</MudRadio>
+                <MudRadio Option="2" Color="Color.Secondary" UnCheckedColor="Color.Default">Two</MudRadio>
+                <MudRadio Option="3" Color="Color.Success" UnCheckedColor="Color.Error">Three</MudRadio>
+                <MudRadio Option="4" Color="Color.Primary" Disabled="true">Four</MudRadio>
+            </MudRadioGroup>
+             
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Dense</MudText>
+        <div class="row">
+           
+            <MudRadioGroup @bind-SelectedOption="Dense_Radio">
+                <MudRadio Option="true" Color="Color.Primary" Dense="true">Dense</MudRadio>
+                <MudRadio Option="false" Color="Color.Secondary" Dense="false">Normal</MudRadio>
+            </MudRadioGroup>
+          
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+
+
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Size</MudText>
+        <div class="row">
+          
+            <MudRadioGroup @bind-SelectedOption="Radio_Size">
+                <MudRadio Option="1" Color="Color.Primary" Size="Size.Small">Small</MudRadio>
+                <MudRadio Option="2" Color="Color.Secondary" Size="Size.Medium">Medium</MudRadio>
+                <MudRadio Option="3" Color="Color.Tertiary" Size="Size.Large">Large</MudRadio>
+            </MudRadioGroup>
+          
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Content Placement</MudText>
+        <div class="row">
+            <MudRadioGroup @bind-SelectedOption="@Placement">
+                <MudRadio Color="Color.Primary" Option="@(Placement.Top)">Top</MudRadio>
+                <MudRadio Color="Color.Primary" Option="@(Placement.Bottom)">Bottom</MudRadio>
+                <MudRadio Color="Color.Primary" Option="@(Placement.Start)">Start</MudRadio>
+                <MudRadio Color="Color.Primary" Option="@(Placement.End)">End</MudRadio>
+                <MudRadio Color="Color.Primary" Option="@(Placement.Left)">Left</MudRadio>
+                <MudRadio Color="Color.Primary" Option="@(Placement.Right)">Right</MudRadio>
+            </MudRadioGroup>
+        </div>
+        <div class="row">
+            <MudRadioGroup T="string">
+                <MudRadio T="string" Placement="@Placement" Color="Color.Secondary">Content Placement</MudRadio>
+            </MudRadioGroup>
+
+        </div>
+      
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    public string SelectedOption { get; set; }
+
+    private void Reset()
+    {
+        SelectedOption = null;
+    }
+    public bool Dense_Radio { get; set; } = true;
+    public int Radio_Size { get; set; } = 2;
+
+    public Placement Placement { get; set; } = Placement.Right;
+
+  
+   
+
+
+   
+}

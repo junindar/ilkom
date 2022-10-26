@@ -3,7 +3,7 @@
 
 @using System.Globalization
 
-<TitlePrompt Title="Checkbox" />
+<TitlePrompt Title="Numeric Field" />
 
 <MudCard Outlined="true">
     <MudCardContent>
@@ -56,7 +56,7 @@
         <MudText>Setting Culture and Format</MudText>
         <div class="row">
             <div class="col-md-6">
-                <MudNumericField Immediate="false" Label="de-DE" Format="N2" Culture="@_de" T="double?" @bind-Value="_valueDe" HelperText="@_valueDe.ToString()" />
+                <MudNumericField Immediate="false" Label="id-ID" Format="N2" Culture="@_id" T="double?" @bind-Value="_valueId" HelperText="@_valueId.ToString()" />
             </div>
             <div class="col-md-6">
                 <MudNumericField Immediate="false" Label="en-US" Format="N2" Culture="@_en" T="double?" @bind-Value="_valueEn" HelperText="@_valueEn.ToString()" />
@@ -123,24 +123,24 @@
     <br />
 </div>
 
-@code {
+    @code {
 
-    public int IntValue { get; set; }
-    public double DoubleValue { get; set; }
-    public decimal DecimalValue { get; set; }
+        public int IntValue { get; set; }
+        public double DoubleValue { get; set; }
+        public decimal DecimalValue { get; set; }
 
-    public CultureInfo _de = CultureInfo.GetCultureInfo("de-DE");
-    public CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
+        public CultureInfo _id = CultureInfo.GetCultureInfo("id-ID");
+        public CultureInfo _en = CultureInfo.GetCultureInfo("en-US");
 
-    public double? _valueDe = 1234.56;
-    public double? _valueEn = 1234.56;
+        public double? _valueId = 1234.56;
+        public double? _valueEn = 1234.56;
 
 
-    int intValue;
-    double doubleValue;
-    int? nullableInt;
-    double? nullableDouble;
+        int intValue;
+        double doubleValue;
+        int? nullableInt;
+        double? nullableDouble;
 
-    double _normal = 0;
-    bool _invertMouseWheel = false;
-}
+        double _normal = 0;
+        bool _invertMouseWheel = false;
+    }

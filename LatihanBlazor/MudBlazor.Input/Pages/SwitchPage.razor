@@ -1,0 +1,208 @@
+﻿@page "/SwitchPage"
+
+
+
+<TitlePrompt Title="Switch" />
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic</MudText>
+        <div class="row">
+            <MudSwitch @bind-Checked="@Basic_Switch1" />
+            <MudSwitch @bind-Checked="@Basic_Switch2" Color="Color.Primary" />
+            <MudSwitch @bind-Checked="@Basic_Switch3" Color="Color.Secondary" />
+            <MudSwitch T="bool" Disabled="true" />
+              
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Color</MudText>
+        <div class="row">
+           
+            <MudSwitch @bind-Checked="@Basic_Switch1" Color="Color.Success" UnCheckedColor="Color.Error" />
+            <MudSwitch @bind-Checked="@Basic_Switch2" Color="Color.Primary" UnCheckedColor="Color.Secondary" />
+            <MudSwitch @bind-Checked="@Basic_Switch3" Color="Color.Info" UnCheckedColor="Color.Warning" />
+            <MudSwitch T="bool" Disabled="true" UnCheckedColor="Color.Dark" />
+             
+        </div>
+
+    </MudCardContent>
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Label</MudText>
+        <div class="row">
+            <MudSwitch @bind-Checked="@Label_Switch1" Label="Info" Color="Color.Info" />
+            <MudSwitch @bind-Checked="@Label_Switch2" Label="Success" Color="Color.Success" />
+            <MudSwitch @bind-Checked="@Label_Switch3" Label="Warning" LabelPosition="LabelPosition.Start" Color="Color.Warning" />
+            <MudSwitch T="bool" Disabled="true" Label="Disabled" LabelPosition="LabelPosition.Start" />
+          
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Icons</MudText>
+        <div class="row">
+          
+            <MudSwitch @bind-Checked="@_checked1" ThumbIcon="@Icons.Custom.Brands.MudBlazor">Basic</MudSwitch>
+            <MudSwitch @bind-Checked="@_checked2" ThumbIcon="@Icons.Custom.Brands.MudBlazor" ThumbIconColor="Color.Info">Colored</MudSwitch>
+            <MudSwitch @bind-Checked="@_checked3" ThumbIcon="@(_checked3==true ? Icons.Material.Filled.Done : Icons.Material.Filled.Close)" ThumbIconColor="@(_checked3==true ? Color.Success : Color.Error)">Changing</MudSwitch>
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+
+
+
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Type</MudText>
+        <div class="row">
+            <MudSwitch @bind-Checked="boolean">bool: @boolean</MudSwitch>
+            <MudSwitch @bind-Checked="nullable" Color="Color.Primary">bool?: @nullable</MudSwitch>
+            <MudSwitch @bind-Checked="integer" Color="Color.Secondary">int: @integer</MudSwitch>
+            <MudSwitch @bind-Checked="str" Color="Color.Tertiary">string: "@(str)"</MudSwitch>
+            <MudSwitch @bind-Checked="customstr" Color="Color.Error" Converter="@(new CustomStringToBoolConverter())"> custom string: "@(customstr)"</MudSwitch>
+            <MudSwitch @bind-Checked="customobj" Color="Color.Dark" Converter="@(new ObjectToBoolConverter())">object: "@(customobj.ToString())"</MudSwitch>
+              
+           
+
+        </div>
+
+    </MudCardContent>
+</MudCard>
+
+@code {
+
+    public bool Basic_Switch1 { get; set; } = false;
+    public bool Basic_Switch2 { get; set; } = true;
+    public bool Basic_Switch3 { get; set; } = true;
+
+    public bool Label_Switch1 { get; set; } = false;
+    public bool Label_Switch2 { get; set; } = true;
+    public bool Label_Switch3 { get; set; } = true;
+
+
+    bool _checked1 = false;
+    bool _checked2 = false;
+    bool _checked3 = false;
+
+    public bool boolean { get; set; } = true;
+    public bool? nullable { get; set; } = null;
+    public int integer { get; set; } = 1;
+    public string str { get; set; } = "on";
+    public string customstr { get; set; } = CustomStringToBoolConverter.NullString;
+   
+    public object customobj { get; set; } = false;
+
+
+    public class ObjectToBoolConverter : BoolConverter<object>
+    {
+
+        public ObjectToBoolConverter()
+        {
+            SetFunc = OnSet;
+            GetFunc = OnGet;
+        }
+
+        private object OnGet(bool? value)
+        {
+            try
+            {
+                return value == true;
+            }
+            catch (Exception e)
+            {
+                UpdateGetError("Conversion error: " + e.Message);
+                return default;
+            }
+        }
+
+        private bool? OnSet(object arg)
+        {
+            if (arg == null)
+                return null;
+            try
+            {
+                if (arg is bool)
+                    return (bool)arg;
+                else if (arg is bool?)
+                    return (bool?)arg;
+                else
+                {
+                    UpdateSetError("Unable to convert to bool? from type object");
+                    return null;
+                }
+            }
+            catch (FormatException e)
+            {
+                UpdateSetError("Conversion error: " + e.Message);
+                return null;
+            }
+        }
+
+    }
+
+    public class CustomStringToBoolConverter : BoolConverter<string>
+    {
+        public CustomStringToBoolConverter()
+        {
+            SetFunc = OnSet;
+            GetFunc = OnGet;
+        }
+
+        public const string TrueString = "Yes, please";
+        public const string FalseString = "No, thanks";
+        public const string NullString = "I don't know";
+
+        private string OnGet(bool? value) => value == null ? NullString : (value == true ? TrueString : FalseString);
+
+        private bool? OnSet(string arg)
+        {
+            try
+            {
+                if (arg == TrueString)
+                    return true;
+                if (arg == FalseString)
+                    return false;
+                return null;
+            }
+            catch (FormatException e)
+            {
+                UpdateSetError("Conversion error: " + e.Message);
+                return null;
+            }
+        }
+    }
+}
