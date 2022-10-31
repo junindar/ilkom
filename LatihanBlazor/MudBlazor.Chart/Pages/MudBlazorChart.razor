@@ -1,0 +1,186 @@
+﻿@page "/MudBlazorChart"
+@using MudBlazor
+<TitlePrompt Title="Bar Chart" />
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Chart 1</MudText>
+                <div class="row">
+           
+                    <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels"
+                              InputLabels="@InputLabels" Width="100%" Height="350px" ChartOptions="@options" LegendPosition="Position.Bottom"></MudChart>
+              
+                </div> 
+              
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Chart 2 (SVG Content)</MudText>
+                <div class="row">
+
+                    <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px">
+                        <CustomGraphics>
+                            <style>
+                                .heavy { font: bold 30px Helvetica; }
+                                .Rrrrr { font: italic 40px Helvetica; fill: rgb(62,44,221); }
+                            </style>
+                            <text x="80" y="35" class="heavy">MudBlazor</text>
+                            <text x="105" y="70" class="Rrrrr">Bar Chart</text>
+                        </CustomGraphics>
+                    </MudChart>
+
+                </div>
+       
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</div>
+
+
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Chart 1</MudText>
+                <div class="row">
+                    <MudChart ChartType="MudBlazor.ChartType.Donut" Width="300px" Height="300px" InputData="@data" InputLabels="@labels"></MudChart>
+
+                </div>
+              
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Chart 2 (SVG Content)</MudText>
+                <div class="row">
+
+                    <MudChart ChartType="MudBlazor.ChartType.Donut" Width="300px" Height="300px" InputData="@data" InputLabels="@labels">
+                        <CustomGraphics>
+                            <text class="donut-inner-text" x="47%" y="35%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="2">Total</text>
+                            <text class="donut-inner-text" x="47%" y="50%" dominant-baseline="middle" text-anchor="middle" fill="black" font-family="Helvetica" font-size="5">@data.Sum().ToString()</text>
+                        </CustomGraphics>
+                    </MudChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</div>
+
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Chart 1</MudText>
+                <div class="row">
+                    <MudChart ChartType="MudBlazor.ChartType.Line" ChartSeries="@Series" XAxisLabels="@XAxisLabels" Width="100%" Height="350px"></MudChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Chart 2 (SVG Content)</MudText>
+                <div class="row">
+
+                    <MudChart ChartType="MudBlazor.ChartType.Line" ChartSeries="@Series" XAxisLabels="@XAxisLabels"
+                              Width="100%" Height="350px" ChartOptions="chartOptions"></MudChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+   
+</div>
+
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Chart 1</MudText>
+                <div class="row">
+                    <MudChart ChartType="MudBlazor.ChartType.Pie" InputData="@data" InputLabels="@labels" Width="300px" Height="300px" />
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+
+</div>
+
+<div class="row">
+    <br />
+</div>
+
+@code {
+    public ChartOptions chartOptions = new ChartOptions();
+
+    #region Bar
+
+    ChartOptions options = new ChartOptions();
+
+    protected override void OnInitialized()
+    {
+  
+        options = new() { ChartPalette = new[] { "#ff0000", "#00FF00", "#0000ff" } };
+        chartOptions.LineStrokeWidth = 5;
+    }
+
+  
+
+    public List<ChartSeries> Series = new List<ChartSeries>()
+    {
+        new ChartSeries() { Name = "United States", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15 } },
+        new ChartSeries() { Name = "Germany", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31 } },
+        new ChartSeries() { Name = "Sweden", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18 } },
+    };
+
+    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
+
+    public string[] InputLabels = { "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9" };
+
+    #endregion
+
+    #region Donut
+    public double[] data = { 50, 25, 20, 5 };
+    public string[] labels = { "Fossile", "Nuclear", "Solar", "Wind", "Oil", "Coal", "Gas", "Biomass",
+        "Hydro", "Geothermal", "Fossil", "Nuclear", "Solar", "Wind", "Oil",
+        "Coal", "Gas", "Biomass", "Hydro", "Geothermal" };
+    
+
+    #endregion
+   
+  
+}

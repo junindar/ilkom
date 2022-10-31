@@ -1,0 +1,322 @@
+﻿@page "/ApexChartBar"
+
+<TitlePrompt Title="Bar Chart" />
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Basic</MudText>
+                <div class="row">
+
+                    <ApexCharts.ApexChart TItem="Order"
+                               Title="Order Net Value">
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Gross Value"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         SeriesType="SeriesType.Bar"/>
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Net Value"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.NetValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         SeriesType="SeriesType.Bar"/>
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Series Color</MudText>
+                <div class="row">
+                    <ApexCharts.ApexChart TItem="Order"
+                               Title="Order Net Value">
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Gross Value"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         SeriesType="SeriesType.Bar"
+                                         Color = "#3633FF"/>
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Net Value"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.NetValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         SeriesType="SeriesType.Bar"
+                                         Color= "#E51C15"/>
+                    </ApexCharts.ApexChart>
+                   
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</div>
+
+
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Horizontal</MudText>
+                <div class="row">
+
+                    <ApexCharts.ApexChart TItem="Order"
+                               Title="Order Net Value"
+                               Options=options>
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Gross Value"
+                                         XValue="@(e => e.Country)"
+                                         SeriesType="SeriesType.Bar"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         Color="#003399"/>
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Net Value"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.NetValue))"
+                                         OrderByDescending="e=>e.Y" 
+                                         Color = "#e62e00"/>
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Series Color</MudText>
+                <div class="row">
+                    <ApexCharts.ApexChart TItem="Order"
+                               Title="Order Net Value"
+                               Options=optionsStack>
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Gross Value"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         ShowDataLabels />
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Net Value"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.NetValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         ShowDataLabels />
+                    </ApexCharts.ApexChart>
+
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</div>
+
+
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Stacked 100%</MudText>
+                <div class="row">
+
+                    <ApexCharts.ApexChart TItem="Order"
+                                          Title="Order Net Value"
+                                          Options=optionsStack100>
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Gross Value"
+                                         XValue="@(e => e.Country)"
+                                         SeriesType="SeriesType.Bar"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         Color="#003399" />
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Net Value"
+                                         SeriesType="SeriesType.Bar"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.NetValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         Color="#e62e00" />
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText></MudText>
+                <div class="row">
+                  
+
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</div>
+
+
+<div class="row">
+    <br />
+</div>
+
+@code {
+
+    public class Order
+    {
+        public string Country { get; set; } = "";
+        public decimal GrossValue { get; set; }
+        public decimal NetValue { get; set; }
+    }
+
+   static List<Order> GetOrders()
+   {
+       List<Order> list = new List<Order>()
+       {
+           new Order { Country = "France",GrossValue = 5500,NetValue = 4500},
+           new Order { Country = "Brazil",GrossValue = 6500,NetValue = 7800},
+           new Order { Country = "Sweden",GrossValue = 7800,NetValue = 3670},
+           new Order { Country = "Spain",GrossValue = 1400,NetValue = 4500}
+       };
+
+        return list;
+    }
+
+    private List<Order> Orders { get; set; } = GetOrders();
+
+    private ApexChartOptions<Order> options;
+    private ApexChartOptions<Order> optionsStack;
+    private ApexChartOptions<Order> optionsStack100;
+    protected override void OnInitialized()
+    {
+        options = new ApexChartOptions<Order>
+        {
+            PlotOptions = new PlotOptions
+            {
+                Bar = new PlotOptionsBar
+                {
+                    Horizontal = true
+                }
+            }
+        };
+        optionsStack = new ApexChartOptions<Order>
+        {
+            Chart = new Chart
+            {
+                Stacked = true,
+            },
+            PlotOptions = new PlotOptions
+            {
+                Bar = new PlotOptionsBar
+                {
+                    Horizontal = true
+                }
+            },
+            Colors = new List<string> { "#5cb85c", "#d9534f" }
+        };
+
+        optionsStack100 = new ApexChartOptions<Order>
+        {
+            Chart = new Chart
+            {
+                Stacked = true,
+                StackType = StackType.Percent100,
+                Toolbar = new Toolbar
+                {
+                    Show = false
+                }
+            },
+            PlotOptions = new PlotOptions
+            {
+                Bar = new PlotOptionsBar
+                {
+                    Horizontal = true,
+                }
+            },
+            Theme = new Theme { Mode = Mode.Light, Palette = PaletteType.Palette8 },
+
+            Xaxis = new XAxis
+            {
+                Title = new AxisTitle
+                {
+                    Text = "Percentage",
+                    Style = new AxisTitleStyle
+                    {
+                        FontSize = "14px"
+                    }
+                },
+                Labels = new XAxisLabels
+                {
+                    Style = new AxisLabelStyle
+                    {
+                        FontSize = "14px"
+                    }
+                }
+            },
+            Yaxis = new List<YAxis> { new YAxis
+            {
+                Title = new AxisTitle
+                {
+                    Text = "Country",
+                    Style = new AxisTitleStyle {
+                        FontSize = "14px"
+                    }
+                },
+                Labels = new YAxisLabels {
+                    Style = new AxisLabelStyle {
+                        FontSize = "14px"
+                    } }
+
+            }},
+            Legend = new Legend
+            {
+                Position = LegendPosition.Right
+            }
+        };
+
+    }
+}

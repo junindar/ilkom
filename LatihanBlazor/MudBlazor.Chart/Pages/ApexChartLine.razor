@@ -1,0 +1,155 @@
+﻿@page "/ApexChartLine"
+
+<TitlePrompt Title="Donut Chart" />
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Basic</MudText>
+                <div class="row">
+
+                    <ApexCharts.ApexChart TItem="Order"
+                               Title="Order Net Value">
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Gross Value"
+                                         SeriesType="SeriesType.Line"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y" />
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Net Value"
+                                         SeriesType="SeriesType.Line"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.NetValue))"
+                                         OrderByDescending="e=>e.Y" />
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Data labels</MudText>
+                <div class="row">
+
+                    <ApexCharts.ApexChart TItem="Order"
+                               Title="Order Net Value"
+                               Options="@options">
+
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Gross Value"
+                                         SeriesType="SeriesType.Line"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         ShowDataLabels />
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         Name="Net Value"
+                                         SeriesType="SeriesType.Line"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.NetValue))"
+                                         OrderByDescending="e=>e.Y"
+                                         ShowDataLabels />
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</div>
+
+
+<div class="row">
+    <br />
+</div>
+
+
+
+@code {
+
+    public class Order
+    {
+        public string Country { get; set; } = "";
+        public decimal GrossValue { get; set; }
+        public decimal NetValue { get; set; }
+    }
+
+   static List<Order> GetOrders()
+   {
+       List<Order> list = new List<Order>()
+       {
+           new Order { Country = "France",GrossValue = 5500,NetValue = 4500},
+           new Order { Country = "Brazil",GrossValue = 6500,NetValue = 7800},
+           new Order { Country = "Sweden",GrossValue = 7800,NetValue = 3670},
+           new Order { Country = "Spain",GrossValue = 1400,NetValue = 4500}
+       };
+
+        return list;
+    }
+
+    private List<Order> Orders { get; set; } = GetOrders();
+    private ApexChartOptions<Order> options { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        options = new ApexChartOptions<Order>
+        {
+            Chart = new Chart
+            {
+                Toolbar = new Toolbar
+                {
+                    Show = false
+                },
+                DropShadow = new DropShadow
+                {
+                    Enabled = true,
+                    Color = "",
+                    Top = 18,
+                    Left = 7,
+                    Blur = 10,
+                    Opacity = 0.2d
+                }
+            },
+            DataLabels = new ApexCharts.DataLabels
+            {
+                OffsetY = -6d
+            },
+            Grid = new Grid
+            {
+                BorderColor = "#e7e7e7",
+                Row = new GridRow
+                {
+                    Colors = new List<string> { "#f3f3f3", "transparent" },
+                    Opacity = 0.5d
+                }
+            },
+
+            Colors = new List<string> { "#77B6EA", "#545454" },
+            Markers = new Markers { Shape = ShapeEnum.Circle, Size = 5, FillOpacity = new Opacity(0.8d) },
+            Stroke = new Stroke { Curve = Curve.Smooth },
+            Legend = new Legend
+            {
+                Position = LegendPosition.Top,
+                HorizontalAlign = ApexCharts.Align.Right,
+                Floating = true,
+                OffsetX = -5,
+                OffsetY = -25
+            },
+
+        };
+    }
+
+
+   
+}

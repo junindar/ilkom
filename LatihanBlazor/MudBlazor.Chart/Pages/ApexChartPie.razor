@@ -1,0 +1,110 @@
+﻿@page "/ApexChartPie"
+
+<TitlePrompt Title="Donut Chart" />
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Basic</MudText>
+                <div class="row">
+
+                    <ApexCharts.ApexChart TItem="Order"
+                               Title="Order Gross Value">
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         SeriesType="SeriesType.Pie"
+                                         Name="Gross Value"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y" />
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Basic</MudText>
+                <div class="row">
+
+                    <ApexCharts.ApexChart TItem="Order"
+                                          Title="Order Gross Value">
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         SeriesType="SeriesType.Pie"
+                                         Name="Gross Value"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         PointColor="e=> GetPointColor(e)" ShowDataLabels 
+                                         OrderByDescending="e=>e.Y" />
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</div>
+
+
+<div class="row">
+    <br />
+</div>
+
+
+
+@code {
+
+    public class Order
+    {
+        public string Country { get; set; } = "";
+        public decimal GrossValue { get; set; }
+        public decimal NetValue { get; set; }
+    }
+
+   static List<Order> GetOrders()
+   {
+       List<Order> list = new List<Order>()
+       {
+           new Order { Country = "France",GrossValue = 5500,NetValue = 4500},
+           new Order { Country = "Brazil",GrossValue = 6500,NetValue = 7800},
+           new Order { Country = "Sweden",GrossValue = 7800,NetValue = 3670},
+           new Order { Country = "Spain",GrossValue = 1400,NetValue = 4500}
+       };
+
+        return list;
+    }
+
+    private List<Order> Orders { get; set; } = GetOrders();
+    private ApexChartOptions<Order> options { get; set; } = new();
+    protected override void OnInitialized()
+    {
+        options.DataLabels = new DataLabels { DropShadow = new DropShadow { Enabled = false } };
+    }
+
+
+    private string GetPointColor(Order order)
+    {
+        switch (order.Country)
+        {
+            case "France":
+                return "#e3001b";
+            case "Brazil":
+                return "#005ba3";
+            case "Sweden":
+                return "#ffd500";
+            case "Spain":
+                return "#00783c";
+            default:
+                return "#87775d";
+        }
+
+
+
+    }
+}
