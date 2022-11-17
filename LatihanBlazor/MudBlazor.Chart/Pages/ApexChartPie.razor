@@ -1,6 +1,6 @@
 ﻿@page "/ApexChartPie"
 
-<TitlePrompt Title="Donut Chart" />
+<TitlePrompt Title="Pie Chart" />
 <div class="row">
     <MudItem md="6">
         <MudCard Outlined="true">
@@ -28,7 +28,7 @@
     <MudItem md="6">
         <MudCard Outlined="true">
             <MudCardContent>
-                <MudText>Basic</MudText>
+                <MudText>Color</MudText>
                 <div class="row">
 
                     <ApexCharts.ApexChart TItem="Order"
@@ -40,7 +40,7 @@
                                          Name="Gross Value"
                                          XValue="@(e => e.Country)"
                                          YAggregate="@(e => e.Sum(e => e.GrossValue))"
-                                         PointColor="e=> GetPointColor(e)" ShowDataLabels 
+                                         PointColor="e=> GetPointColor(e)" ShowDataLabels="true"
                                          OrderByDescending="e=>e.Y" />
                     </ApexCharts.ApexChart>
 
@@ -81,11 +81,6 @@
     }
 
     private List<Order> Orders { get; set; } = GetOrders();
-    private ApexChartOptions<Order> options { get; set; } = new();
-    protected override void OnInitialized()
-    {
-        options.DataLabels = new DataLabels { DropShadow = new DropShadow { Enabled = false } };
-    }
 
 
     private string GetPointColor(Order order)
@@ -103,8 +98,5 @@
             default:
                 return "#87775d";
         }
-
-
-
     }
 }

@@ -38,7 +38,7 @@
             <MudCardContent>
                 <MudText>Data labels</MudText>
                 <div class="row">
-
+                    
                     <ApexCharts.ApexChart TItem="Order"
                                Title="Order Net Value"
                                Options="@options">
@@ -51,7 +51,7 @@
                                          XValue="@(e => e.Country)"
                                          YAggregate="@(e => e.Sum(e => e.GrossValue))"
                                          OrderByDescending="e=>e.Y"
-                                         ShowDataLabels />
+                                         ShowDataLabels="true" />
 
                         <ApexPointSeries TItem="Order"
                                          Items="Orders"
@@ -60,7 +60,7 @@
                                          XValue="@(e => e.Country)"
                                          YAggregate="@(e => e.Sum(e => e.NetValue))"
                                          OrderByDescending="e=>e.Y"
-                                         ShowDataLabels />
+                                         ShowDataLabels="true" />
                     </ApexCharts.ApexChart>
 
                 </div>

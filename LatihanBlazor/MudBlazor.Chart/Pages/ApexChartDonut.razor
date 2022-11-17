@@ -28,7 +28,7 @@
     <MudItem md="6">
         <MudCard Outlined="true">
             <MudCardContent>
-                <MudText>Basic</MudText>
+                <MudText>Color</MudText>
                 <div class="row">
 
                     <ApexCharts.ApexChart TItem="Order"
@@ -55,7 +55,60 @@
 <div class="row">
     <br />
 </div>
+<div class="row">
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Size</MudText>
+                <div class="row">
 
+                    <ApexCharts.ApexChart TItem="Order" Options="options"
+                                          Title="Order Gross Value">
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         SeriesType="SeriesType.Donut"
+                                         Name="Gross Value"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         OrderByDescending="e=>e.Y" />
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+    <MudItem md="6">
+        <MudCard Outlined="true">
+            <MudCardContent>
+                <MudText>Data Label</MudText>
+                <div class="row">
+
+                    <ApexCharts.ApexChart TItem="Order" Options="optionsLabel"
+                                          Title="Order Gross Value">
+
+                        <ApexPointSeries TItem="Order"
+                                         Items="Orders"
+                                         SeriesType="SeriesType.Donut"
+                                         Name="Gross Value"
+                                         XValue="@(e => e.Country)"
+                                         YAggregate="@(e => e.Sum(e => e.GrossValue))"
+                                         PointColor="e=> GetPointColor(e)" ShowDataLabels="true" 
+                                         OrderByDescending="e=>e.Y" />
+                    </ApexCharts.ApexChart>
+
+                </div>
+
+            </MudCardContent>
+        </MudCard>
+    </MudItem>
+</div>
+
+
+<div class="row">
+    <br />
+</div>
 
 
 @code {
@@ -81,10 +134,45 @@
     }
 
     private List<Order> Orders { get; set; } = GetOrders();
-    private ApexChartOptions<Order> options { get; set; } = new();
+    private ApexChartOptions<Order> options;
+    private ApexChartOptions<Order> optionsLabel;
     protected override void OnInitialized()
     {
-        options.DataLabels = new DataLabels { DropShadow = new DropShadow { Enabled = false } };
+        options = new ApexChartOptions<Order>
+        {
+            PlotOptions = new PlotOptions
+            {
+                Pie = new PlotOptionsPie()
+                {
+                    Donut = new PlotOptionsDonut()
+                    {
+                        Size = "40%"
+                    }
+                }
+            }
+        };
+
+        optionsLabel = new ApexChartOptions<Order>
+        {
+            PlotOptions = new PlotOptions
+            {
+                Pie = new PlotOptionsPie()
+                {
+                    Donut = new PlotOptionsDonut()
+                    {
+                        Labels = new DonutLabels()
+                        {
+                            Total = new DonutLabelTotal()
+                            {
+                                Show = true
+                            }
+                           
+                        }
+                    }
+                }
+            }
+        };
+        
     }
 
 

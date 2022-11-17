@@ -1,6 +1,6 @@
 ﻿@page "/MudBlazorChart"
 @using MudBlazor
-<TitlePrompt Title="Bar Chart" />
+<TitlePrompt Title="MudBlazor Chart" />
 <div class="row">
     <MudItem md="6">
         <MudCard Outlined="true">
@@ -9,7 +9,7 @@
                 <div class="row">
            
                     <MudChart ChartType="MudBlazor.ChartType.Bar" ChartSeries="@Series" XAxisLabels="@XAxisLabels"
-                              InputLabels="@InputLabels" Width="100%" Height="350px" ChartOptions="@options" LegendPosition="Position.Bottom"></MudChart>
+                              Width="100%" Height="350px"  LegendPosition="Position.Bottom"></MudChart>
               
                 </div> 
               
@@ -162,23 +162,21 @@
 
     public List<ChartSeries> Series = new List<ChartSeries>()
     {
-        new ChartSeries() { Name = "United States", Data = new double[] { 40, 20, 25, 27, 46, 60, 48, 80, 15 } },
-        new ChartSeries() { Name = "Germany", Data = new double[] { 19, 24, 35, 13, 28, 15, 13, 16, 31 } },
-        new ChartSeries() { Name = "Sweden", Data = new double[] { 8, 6, 11, 13, 4, 16, 10, 16, 18 } },
+        new() { Name = "US", Data = new double[] { 40, 20, 25, 27, 46, 60 } },
+        new() { Name = "Germany", Data = new double[] { 19, 24, 35, 13, 28, 15 } },
+        new() { Name = "Sweden", Data = new double[] { 8, 6, 11, 13, 4, 16 } },
     };
 
-    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep" };
+    public string[] XAxisLabels = { "Jan", "Feb", "Mar", "Apr", "May", "Jun" };
 
-    public string[] InputLabels = { "x1", "x2", "x3", "x4", "x5", "x6", "x7", "x8", "x9" };
+    //public string[] InputLabels = { "x1", "x2", "x3", "x4", "x5", "x6" };
 
     #endregion
 
     #region Donut
     public double[] data = { 50, 25, 20, 5 };
-    public string[] labels = { "Fossile", "Nuclear", "Solar", "Wind", "Oil", "Coal", "Gas", "Biomass",
-        "Hydro", "Geothermal", "Fossil", "Nuclear", "Solar", "Wind", "Oil",
-        "Coal", "Gas", "Biomass", "Hydro", "Geothermal" };
-    
+
+    public string[] labels = { "Fossil", "Nuclear", "Solar", "Wind" };
 
     #endregion
    
