@@ -1,0 +1,151 @@
+﻿@page "/TimePicker"
+@using MudBlazor.Utilities
+@using System.Globalization
+@using System.Reflection
+@using Microsoft.AspNetCore.Components
+
+
+
+
+<TitlePrompt Title="Time Picker" />
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTimePicker Label="12 hours" AmPm="true" @bind-Time="time" />
+            </div>
+            <div class="col-md-4">
+                <MudTimePicker Label="12 hours custom format" AmPm="true" TimeFormat="h:mm tt" @bind-Time="time" />
+            </div>
+            <div class="col-md-4">
+                <MudTimePicker Label="24 hours" @bind-Time="time" />
+            </div>
+            <div class="col-md-4">
+                <MudTimePicker Label="24 hours (editable)" Editable="true" />
+            </div>
+        </div>
+       
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Action Buttons</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTimePicker @ref="_picker" Label="With action buttons" AutoClose="false">
+                    <PickerActions>
+                        <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
+                        <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                        <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                    </PickerActions>
+                </MudTimePicker>
+            </div>
+            <div class="col-md-4">
+                <MudSwitch @bind-Checked="@autoClose" Color="Color.Secondary">AutoClose</MudSwitch>
+            </div>
+            <div class="col-md-4">
+              
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Dialog Mode</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTimePicker PickerVariant="PickerVariant.Dialog" Label="12 hours" AmPm="true" @bind-Time="time" />
+            </div>
+            <div class="col-md-4">
+                <MudTimePicker PickerVariant="PickerVariant.Dialog" Label="24 hours" @bind-Time="time" />
+            </div>
+            <div class="col-md-4">
+              
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Edit Mode</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudTimePicker Label="Normal" @bind-Time="time" TimeEditMode="TimeEditMode.Normal" />
+            </div>
+            <div class="col-md-4">
+                <MudTimePicker Label="OnlyHours" @bind-Time="time" TimeEditMode="TimeEditMode.OnlyHours" />
+            </div>
+            <div class="col-md-4">
+                <MudTimePicker Label="OnlyMinutes" @bind-Time="time" TimeEditMode="TimeEditMode.OnlyMinutes" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Colors</MudText>
+        <div class="row">
+            <div class="col-md-5">
+                <MudTimePicker PickerVariant="PickerVariant.Static" Color="Color.Success" Rounded="true" Text="03:37 PM" AmPm="true" />
+            </div>
+            <div class="col-md-2">
+               
+            </div>
+            <div class="col-md-5">
+                <MudTimePicker PickerVariant="PickerVariant.Static" Color="Color.Secondary" Rounded="true" Text="13:37"/>
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+
+
+@code {
+
+    TimeSpan? time = new TimeSpan(00, 45, 00);
+
+
+    MudTimePicker _picker;
+    private bool autoClose;
+
+  
+
+}

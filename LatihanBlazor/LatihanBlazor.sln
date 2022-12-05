@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Table", "MudBlazo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Input", "MudBlazor.Input\MudBlazor.Input.csproj", "{71758395-A129-4428-8BBE-C4B338D14A0A}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazor.Chart", "MudBlazor.Chart\MudBlazor.Chart.csproj", "{77F24DE7-B0D8-4568-9019-83A48530A837}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Chart", "MudBlazor.Chart\MudBlazor.Chart.csproj", "{77F24DE7-B0D8-4568-9019-83A48530A837}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazor.Picker", "MudBlazor.Picker\MudBlazor.Picker.csproj", "{25998355-B935-4B10-838B-BC309FF48CD9}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -99,6 +101,10 @@ Global
 		{77F24DE7-B0D8-4568-9019-83A48530A837}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{77F24DE7-B0D8-4568-9019-83A48530A837}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{77F24DE7-B0D8-4568-9019-83A48530A837}.Release|Any CPU.Build.0 = Release|Any CPU
+		{25998355-B935-4B10-838B-BC309FF48CD9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{25998355-B935-4B10-838B-BC309FF48CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{25998355-B935-4B10-838B-BC309FF48CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{25998355-B935-4B10-838B-BC309FF48CD9}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

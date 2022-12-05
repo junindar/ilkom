@@ -1,0 +1,262 @@
+﻿@page "/DatePicker"
+@using MudBlazor.Utilities
+@using System.Globalization
+@using System.Reflection
+@using Microsoft.AspNetCore.Components
+
+
+
+
+<TitlePrompt Title="Date Picker" />
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudDatePicker Label="Basic example" @bind-Date="date"/>
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="Editable with Placeholder" Editable="true" @bind-Date="date" Placeholder="Select Date" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="Only Calendar" @bind-Date="date" DisableToolbar="true" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-4">
+                <MudDatePicker Label="Date Format" @bind-Date="date" DateFormat="dd.MM.yyyy" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="Show week number" ShowWeekNumbers="true" @bind-Date="date" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="Display two months" DisplayMonths="2" TitleDateFormat="dddd, dd MMMM" @bind-Date="date" />
+            </div>
+        </div>
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Input Masking</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudDatePicker Label="dd.MM.yyyy" Editable="true" @bind-Date="date1" Mask="@(new DateMask("dd.MM.yyyy"))" DateFormat="dd.MM.yyyy" Placeholder="de-AT Date" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="MM/dd/yyyy" Editable="true" @bind-Date="date2" Mask="@(new DateMask("MM/dd/yyyy"))" DateFormat="MM/dd/yyyy" Placeholder="en-US Date" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="yyyy-MM-dd" Editable="true" @bind-Date="date3" Mask="@(new DateMask("0000-00-00"))" DateFormat="yyyy-MM-dd" Placeholder="ISO Date" />
+            </div>
+        </div>
+     
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Action Buttons</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudDatePicker @ref="_picker" Label="With action buttons" @bind-Date="date" AutoClose="@autoClose">
+                    <PickerActions>
+                        <MudButton Class="mr-auto align-self-start" OnClick="@(() => _picker.Clear())">Clear</MudButton>
+                        <MudButton OnClick="@(() => _picker.Close(false))">Cancel</MudButton>
+                        <MudButton Color="Color.Primary" OnClick="@(() => _picker.Close())">Ok</MudButton>
+                    </PickerActions>
+                </MudDatePicker>
+            </div>
+            <div class="col-md-4">
+                <MudSwitch @bind-Checked="@autoClose" Color="Color.Secondary">AutoClose</MudSwitch>
+            </div>
+            <div class="col-md-4">
+              
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Culture</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudDatePicker Label="Current UI Culture" @bind-Date="dateCulture" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="Persian" @bind-Date="dateCulture" Culture="@GetPersianCulture()" UseShortNames="false" TitleDateFormat="dddd, dd MMMM"/>
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="Chinese" @bind-Date="dateCulture" Culture="@CultureInfo.GetCultureInfo("zh-Hans")" TitleDateFormat="dddd, dd MMMM" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Dialog Mode</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Picker example" Text="2020-10-19" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Only Calendar" Text="2020-10-19" DisableToolbar="true" HelperText="No header" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker PickerVariant="PickerVariant.Dialog" Label="Date Format" HelperText="For custom cultures" DateFormat="dd/MM/yyyy" Date="@(new System.DateTime(2020,10,19))" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Views</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudDatePicker Label="Year" OpenTo="OpenTo.Year" Text="2020-10-19" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="Month" OpenTo="OpenTo.Month" Text="2020-10-19" />
+            </div>
+            <div class="col-md-4">
+                <MudDatePicker Label="Date" Text="2020-10-19" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Colors</MudText>
+        <div class="row">
+            <div class="col-md-5">
+                <MudDatePicker PickerVariant="PickerVariant.Static" Color="Color.Success" Rounded="true" Date="@(DateTime.Today.AddDays(1))"  />
+            </div>
+            <div class="col-md-2">
+               
+            </div>
+            <div class="col-md-5">
+                <MudDatePicker PickerVariant="PickerVariant.Static" Color="Color.Secondary" Rounded="true" Date="@(DateTime.Today.AddDays(1))" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Range</MudText>
+        <div class="row">
+            <div class="col-md-5">
+                <MudDateRangePicker Label="Basic range picker" @bind-DateRange="_dateRange" />
+            </div>
+            <div class="col-md-2">
+            </div>
+            <div class="col-md-5">
+              
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+@code {
+
+    DateTime? date = DateTime.Today;
+
+    DateTime? date1 = null;
+    DateTime? date2 = DateTime.Today;
+    DateTime? date3 = null;
+
+    MudDatePicker _picker;
+  
+    private bool autoClose;
+
+    DateTime? dateCulture = new DateTime(2021, 02, 14); // 1399-11-26 in Persian calendar
+
+    public CultureInfo GetPersianCulture()
+    {
+        var culture = new CultureInfo("fa-IR");
+        DateTimeFormatInfo formatInfo = culture.DateTimeFormat;
+        formatInfo.AbbreviatedDayNames = new[] { "ی", "د", "س", "چ", "پ", "ج", "ش" };
+        formatInfo.DayNames = new[] { "یکشنبه", "دوشنبه", "سه شنبه", "چهار شنبه", "پنجشنبه", "جمعه", "شنبه" };
+        var monthNames = new[]
+        {
+            "فروردین", "اردیبهشت", "خرداد", "تیر", "مرداد", "شهریور", "مهر", "آبان", "آذر", "دی", "بهمن",
+            "اسفند",
+            "",
+        };
+        formatInfo.AbbreviatedMonthNames =
+            formatInfo.MonthNames =
+                formatInfo.MonthGenitiveNames = formatInfo.AbbreviatedMonthGenitiveNames = monthNames;
+        formatInfo.AMDesignator = "ق.ظ";
+        formatInfo.PMDesignator = "ب.ظ";
+        formatInfo.ShortDatePattern = "yyyy/MM/dd";
+        formatInfo.LongDatePattern = "dddd, dd MMMM,yyyy";
+        formatInfo.FirstDayOfWeek = DayOfWeek.Saturday;
+        System.Globalization.Calendar cal = new PersianCalendar();
+        FieldInfo fieldInfo = culture.GetType().GetField("calendar", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (fieldInfo != null)
+            fieldInfo.SetValue(culture, cal);
+        FieldInfo info = formatInfo.GetType().GetField("calendar", BindingFlags.NonPublic | BindingFlags.Instance);
+        if (info != null)
+            info.SetValue(formatInfo, cal);
+        culture.NumberFormat.NumberDecimalSeparator = "/";
+        culture.NumberFormat.DigitSubstitution = DigitShapes.NativeNational;
+        culture.NumberFormat.NumberNegativePattern = 0;
+        return culture;
+    }
+
+        private DateRange _dateRange = new DateRange(DateTime.Now.Date, DateTime.Now.AddDays(5).Date);
+
+   
+
+}

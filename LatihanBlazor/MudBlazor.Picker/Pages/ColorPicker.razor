@@ -1,0 +1,174 @@
+﻿@page "/ColorPicker"
+@using MudBlazor.Utilities
+
+
+
+
+<TitlePrompt Title="Color Picker" />
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Basic</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudColorPicker Label="Basic Color Picker" @bind-Text="_colorValue" Style="@($"color: {_colorValue};")" Placeholder="Select Color" />
+            </div>
+            <div class="col-md-4">
+              
+            </div>
+            <div class="col-md-4">
+               
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Part</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudColorPicker DisableToolbar="DisableToolbar" DisableAlpha="DisableAlpha"
+                                DisableColorField="DisableColorField" DisablePreview="DisablePreview"
+                                DisableSliders="DisableSliders" DisableInputs="DisableInputs" 
+                                DisableModeSwitch="DisableModeSwitch"
+                                ColorPickerMode="ColorPickerMode" PickerVariant="PickerVariant.Static" />
+            </div>
+            <div class="col-md-8">
+                <MudPaper Height="400px" Class="px-4 pt-2 pb-4">
+                    <MudText Typo="Typo.h6">Options</MudText>
+                    <MudCheckBox @bind-Checked="@DisableToolbar" Label="Disable Toolbar" Color="Color.Primary" Dense="true" />
+                    <MudCheckBox @bind-Checked="@DisableAlpha" Label="Disable Alpha" Color="Color.Primary" Dense="true" />
+                    <MudCheckBox @bind-Checked="@DisableColorField" Label="Disable Color Field" Color="Color.Primary" Dense="true" />
+                    <MudCheckBox @bind-Checked="@DisablePreview" Label="Disable Preview" Color="Color.Primary" Dense="true" />
+                    <MudCheckBox @bind-Checked="@DisableSliders" Label="Disable Sliders" Color="Color.Primary" Dense="true" />
+                    <MudCheckBox @bind-Checked="@DisableInputs" Label="Disable Inputs" Color="Color.Primary" Dense="true" />
+                    <MudCheckBox @bind-Checked="@DisableModeSwitch" Label="Disable Mode Switch" Color="Color.Primary" Dense="true" />
+                    <MudSelect Label="Color Picker Mode" Variant="Variant.Outlined" Dense="true" Margin="Margin.Dense" @bind-Value="ColorPickerMode" Class="mt-4">
+                        <MudSelectItem T="ColorPickerMode" Value="ColorPickerMode.RGB">RGB</MudSelectItem>
+                        <MudSelectItem T="ColorPickerMode" Value="ColorPickerMode.HSL">HSL</MudSelectItem>
+                        <MudSelectItem T="ColorPickerMode" Value="ColorPickerMode.HEX">HEX</MudSelectItem>
+                    </MudSelect>
+                </MudPaper>
+            </div>
+            
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>View</MudText>
+        <div class="row">
+            <div class="col-md-3">
+                <MudColorPicker Label="Spectrum" ColorPickerView="ColorPickerView.Spectrum" />
+            </div>
+            <div class="col-md-3">
+                <MudColorPicker Label="Palette" ColorPickerView="ColorPickerView.Palette" />
+            </div>
+            <div class="col-md-3">
+                <MudColorPicker Label="Grid" ColorPickerView="ColorPickerView.Grid" />
+            </div>
+            <div class="col-md-3">
+                <MudColorPicker Label="Compact Grid" ColorPickerView="ColorPickerView.GridCompact" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Custom Palette</MudText>
+        <div class="row">
+            <div class="col-md-3">
+               
+            </div>
+            <div class="col-md-6">
+                <MudColorPicker PickerVariant="PickerVariant.Static" ColorPickerView="ColorPickerView.Palette" Palette="CustomPalette" />
+            </div>
+            <div class="col-md-3">
+               
+            </div>
+          
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+        <MudText>Dialog, Inline & Static Mode</MudText>
+        <div class="row">
+            <div class="col-md-4">
+                <MudColorPicker DisableToolbar="false" Label="Dialog Picker" PickerVariant="PickerVariant.Dialog" />
+            </div>
+            <div class="col-md-4">
+                <MudColorPicker DisableToolbar="false" Label="Dialog Picker" PickerVariant="PickerVariant.Inline" />
+            </div>
+            <div class="col-md-4">
+                <MudColorPicker PickerVariant="PickerVariant.Static" />
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<div class="row">
+    <br />
+</div>
+<div class="row">
+    <br />
+</div>
+@code {
+
+    private string _colorValue;
+
+    public bool DisableToolbar { get; set; } = true;
+    public bool DisableAlpha { get; set; }
+    public bool DisableColorField { get; set; }
+    public bool DisablePreview { get; set; }
+    public bool DisableSliders { get; set; }
+    public bool DisableInputs { get; set; }
+    public bool DisableModeSwitch { get; set; }
+    public ColorPickerMode ColorPickerMode { get; set; }
+
+    public IEnumerable<MudColor> CustomPalette { get; set; } = new MudColor[]
+    {
+        "#F44336", "#E91E63", "#9C27B0", "#673AB7", "#3F51B5",
+        "#FFEBEE", "#FCE4EC", "#F3E5F5", "#EDE7F6", "#E8EAF6",
+        "#FFCDD2", "#F8BBD0", "#E1BEE7", "#D1C4E9", "#C5CAE9",
+        "#EF9A9A", "#F48FB1", "#CE93D8", "#B39DDB", "#9FA8DA",
+        "#E57373", "#F06292", "#BA68C8", "#9575CD", "#7986CB",
+        "#EF5350", "#EC407A", "#AB47BC", "#7E57C2", "#5C6BC0",
+        "#E53935", "#D81B60", "#8E24AA", "#5E35B1", "#3949AB"
+    };
+}
