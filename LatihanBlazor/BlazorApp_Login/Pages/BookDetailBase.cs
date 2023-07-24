@@ -16,7 +16,7 @@ namespace BlazorApp_Login.Pages
         protected override async Task OnInitializedAsync()
         {
             Book = await BookRepository.GetBookById(int.Parse(BookId));
-            NamaCategory = Book.Category.NamaCategory;
+            NamaCategory = Book.Category.Nama;
         }
     }
 }

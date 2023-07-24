@@ -1,0 +1,490 @@
+﻿@page "/SnackbarPage"
+@using MudBlazor.Utilities
+
+
+
+
+<TitlePrompt Title="Snackbar" />
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+       
+        <div class="row">
+            <div class="col-md-4">
+                <MudText>Basic</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => _snackBar.Add("Simple Snackbar"))">
+                    Open Snackbar
+                </MudButton>
+            </div>
+            <div class="col-md-4">
+                <MudText>HTML</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => _snackBar.Add($"<ul><li>Item {++count}</li><li>Item {++count}</li></ul>"))">
+                    Open Snackbar
+                </MudButton>
+            </div>
+            <div class="col-md-4">
+                <MudText>RenderFragment messages</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnClickRenderFragment">Show a RenderFragment Snackbar</MudButton>
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+            <div class="col-md-6">
+                <MudText>Custom component messages</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnClickCustom">Show a snackbar with a custom component</MudButton>
+            </div>
+            <div class="col-md-6">
+               
+            </div>
+          
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+            
+            <div class="col-md-12">
+                <MudText>Alerts and Severity</MudText>
+                <MudButton Color="Color.Dark" @onclick="@(() => _snackBar.Add("The reactor type is RBMK-1000", Severity.Normal))">Normal Snackbar</MudButton>
+                <MudButton Color="Color.Info" @onclick="@(() => _snackBar.Add("The reactor was fired up successfully", Severity.Info))">Info Snackbar</MudButton>
+                <MudButton Color="Color.Success" @onclick="@(() => _snackBar.Add("The reactor is running at optimum temperature", Severity.Success))">Success Snackbar</MudButton>
+                <MudButton Color="Color.Warning" @onclick="@(() => _snackBar.Add("The reactor temperature exceeds the optimal range", Severity.Warning))">Warning Snackbar</MudButton>
+                <MudButton Color="Color.Error" @onclick="@(() => _snackBar.Add("Reactor meltdown is imminent", Severity.Error))">Error Snackbar</MudButton>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Configuration</MudText>
+                <MudButton @onclick="@(() =>  _snackBar.Add("My Close button is gone!", Severity.Normal, config => { config.ShowCloseIcon = false; }))" Variant="Variant.Filled" Color="Color.Primary">
+                    Open Modified Snackbar
+                </MudButton>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Snackbar Position</MudText>
+                <MudButton @onclick="@(() => ChangePosition("Top-Start", Defaults.Classes.Position.TopStart))" Color="Color.Primary">Top-Start</MudButton>
+                <MudButton @onclick="@(() => ChangePosition("Top-Left", Defaults.Classes.Position.TopLeft))" Color="Color.Primary">Top-Left</MudButton>
+                <MudButton @onclick="@(() => ChangePosition("Top-Center", Defaults.Classes.Position.TopCenter))" Color="Color.Primary">Top-Center</MudButton>
+                <MudButton @onclick="@(() => ChangePosition("Top-Right", Defaults.Classes.Position.TopRight))" Color="Color.Primary">Top-Right</MudButton>
+                <MudButton @onclick="@(() => ChangePosition("Top-End", Defaults.Classes.Position.TopEnd))" Color="Color.Primary">Top-End</MudButton>
+                <MudDivider />
+                <MudButton @onclick="@(() => ChangePosition("Bottom-Start", Defaults.Classes.Position.BottomStart))" Color="Color.Default">Bottom-Start</MudButton>
+                <MudButton @onclick="@(() => ChangePosition("Bottom-Left", Defaults.Classes.Position.BottomLeft))" Color="Color.Default">Bottom-Left</MudButton>
+                <MudButton @onclick="@(() => ChangePosition("Bottom-Center", Defaults.Classes.Position.BottomCenter))" Color="Color.Default">Bottom-Center</MudButton>
+                <MudButton @onclick="@(() => ChangePosition("Bottom-Right", Defaults.Classes.Position.BottomRight))" Color="Color.Default">Bottom-Right</MudButton>
+                <MudButton @onclick="@(() => ChangePosition("Bottom-End", Defaults.Classes.Position.BottomEnd))" Color="Color.Default">Bottom-End</MudButton>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Snackbar Variants</MudText>
+                <MudButton @onclick="@(() => ChangeVariant("Text Snackbar", Variant.Text))" Color="Color.Primary">Open Text Snackbar Variants</MudButton>
+                <MudButton @onclick="@(() => ChangeVariant("Filled Snackbar", Variant.Filled))" Color="Color.Secondary">Open Filled Snackbar Variants</MudButton>
+                <MudButton @onclick="@(() => ChangeVariant("Outlined Snackbar", Variant.Outlined))" Color="Color.Tertiary">Open Outlined Snackbar Variants</MudButton>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Close after navigation</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@AddCloseAfterNavSnackbar">
+                    Closes After Navigation
+                </MudButton>
+
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@AddSnackbar">
+                    Default Snackbar
+                </MudButton>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Custom Action Handling</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@Show">
+                    Open Clickable Snackbar
+                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@ShowWithButton">
+                    Open Action Snackbar
+                </MudButton>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Require Interaction</MudText>
+                <MudAlert Severity="Severity.Warning" Dense="true" Class="rounded-0 rounded-t">The reactor temperature exceeds the optimal range</MudAlert>
+                <MudAlert Severity="Severity.Error" Dense="true" Class="rounded-0">Reactor meltdown is imminent!</MudAlert>
+                <div class="d-flex flex-column" style="height: 200px;">
+                    <div class="align-self-center mt-12">
+                        <MudText Typo="Typo.h6">Fuel Rod Temperature: @FuelRodTemperature.ToString()C</MudText>
+                    </div>
+                    <div class="align-self-center mt-6">
+                        <MudTooltip Text="Reactor Shutdown">
+                            <MudButton Variant="Variant.Filled" DisableElevation="true" Color="Color.Error" @onclick="@(() => ShutDown())">Scram Button</MudButton>
+                        </MudTooltip>
+                    </div>
+                </div>
+                <MudAlert Severity="Severity.Info" Dense="true" Class="rounded-0 rounded-b">The reactor is about to have a meltdown deputy chief-engineer! You must act now!</MudAlert>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Icon</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() => _snackBar.Add("Snackbar with no icon.", Severity.Success, config => { config.HideIcon = true; }))">
+                    Open Snackbar (No Icon)
+                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" @onclick="@(() =>
+    _snackBar.Add("Snackbar with a custom icon, color and size.", Severity.Info, config =>
+        {
+            config.Icon = Icons.Custom.Brands.GitHub;
+            config.IconColor = Color.Warning;
+            config.IconSize = Size.Large;
+        }))">
+
+                    Open Snackbar (Custom Icon)
+                </MudButton>
+            </div>
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Programmatically remove</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@ShowPrivate">
+                    Open Snackbar
+                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@Hide">
+                    Hide snackbar
+                </MudButton>
+            </div>  <div class="col-md-12"><br /></div>
+            <div class="col-md-12">
+                <MudText>Programmatically remove by Key</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@ShowByKey">
+                    Open Snackbar
+                </MudButton>
+                <MudButton Variant="Variant.Filled" Color="Color.Error" OnClick="@HideByKey">
+                    Hide snackbar
+                </MudButton>
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+
+            <div class="col-md-12">
+                <MudText>Preventing duplication</MudText>
+                <MudButton Variant="Variant.Filled" Color="Color.Primary" OnClick="@OnClickPrevent">Prevent duplicate Snackbars</MudButton>
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+<div class="row">
+    <br />
+</div>
+<div class="row">
+    <br />
+</div>
+@code {
+    private int count = 0;
+
+    private void OnClickRenderFragment()
+    {
+        _snackBar.Add
+    (
+    @<div>
+        <h3>Hi from a RenderFragment</h3>
+        <ul>
+            <li>Here's a regular item</li>
+            <li>Here's a <strong>bold item</strong></li>
+            <li>Here's an <em>italicized item</em></li>
+        </ul>
+    </div>
+        );
+    }
+    private void OnClickCustom()
+    {
+        _snackBar.Add<MudChip>(new Dictionary<string, object>() {
+            { "Text", "This is a snackbar with a chip!" },
+            { "Color", Color.Primary }
+        });
+    }
+    void ChangePosition(string message, string position)
+    {
+        _snackBar.Clear();
+        _snackBar.Configuration.PositionClass = position;
+        _snackBar.Add(message, Severity.Normal);
+    }
+
+    void ChangeVariant(string message, Variant variant)
+    {
+        _snackBar.Configuration.SnackbarVariant = variant;
+        _snackBar.Configuration.MaxDisplayedSnackbars = 10;
+        _snackBar.Add($"Normal {message}", Severity.Normal);
+        _snackBar.Add($"Info {message}", Severity.Info);
+        _snackBar.Add($"Success {message}", Severity.Success);
+        _snackBar.Add($"Warning {message}", Severity.Warning);
+        _snackBar.Add($"Error {message}", Severity.Error);
+    }
+    public void AddSnackbar()
+    {
+        _snackBar.Add("Remains open after navigation.", Severity.Normal);
+    }
+
+    public void AddCloseAfterNavSnackbar()
+    {
+        _snackBar.Add("Will close after navigation.", Severity.Normal, (options) =>
+        {
+            options.CloseAfterNavigation = true;
+        });
+    }
+
+    void Show()
+    {
+        _snackBar.Add("I got a message for you", Severity.Normal, config =>
+        {
+            config.Onclick = snackbar =>
+            {
+                SayHello();
+                return Task.CompletedTask;
+            };
+        });
+    }
+
+    public void SayHello()
+    {
+        _snackBar.Add("Hello World!");
+    }
+
+    void ShowWithButton()
+    {
+        _snackBar.Add("Ooops. Something really bad happened!", Severity.Normal, config =>
+        {
+            config.Action = "Help";
+            config.ActionColor = Color.Primary;
+            config.Onclick = snackbar =>
+            {
+                Help();
+                return Task.CompletedTask;
+            };
+        });
+    }
+
+    public void Help()
+    {
+        _snackBar.Add("Please check the reactor temperature and try again");
+    }
+
+    public int FuelRodTemperature { get; set; } = 600;
+
+    void ShutDown()
+    {
+        string message = "Scram Initiated!";
+        _snackBar.Add(message, Severity.Success, config =>
+        {
+            config.RequireInteraction = true;
+            config.ShowCloseIcon = false;
+            config.Onclick = snackbar =>
+            {
+                UpdateTemperature();
+                return Task.CompletedTask;
+            };
+        });
+    }
+
+    public void UpdateTemperature()
+    {
+        FuelRodTemperature += 100;
+        _snackBar.Add("Temperature is still going up!", Severity.Warning);
+        StateHasChanged();
+    }
+
+    private Snackbar _Snackbar;
+
+    void ShowPrivate()
+    {
+        _Snackbar = _snackBar.Add("Now click hide snackbar", Severity.Normal, config =>
+        {
+            config.VisibleStateDuration = int.MaxValue;
+        });
+    }
+
+    void Hide()
+    {
+        if (_Snackbar is null) return;
+        _snackBar.Remove(_Snackbar);
+    }
+
+    private const string Key = "Same";
+
+    void ShowByKey()
+    {
+        var config = (SnackbarOptions options) =>
+        {
+            options.VisibleStateDuration = int.MaxValue;
+            options.DuplicatesBehavior = SnackbarDuplicatesBehavior.Allow;
+        };
+
+        _snackBar.Add($"Now click hide snackbar. Key: {Key}", Severity.Normal, config, Key);
+        _snackBar.Add($"Now click hide snackbar. Key: {Key}", Severity.Normal, config, Key);
+    }
+
+    void HideByKey()
+    {
+        _snackBar.RemoveByKey(Key);
+    }
+    private void OnClickPrevent()
+    {
+        // We'll set all three of these snackbars to prevent duplicates and give them
+        // all the same key ("mudblazor")
+        var config = (SnackbarOptions options) =>
+        {
+            options.DuplicatesBehavior = SnackbarDuplicatesBehavior.Prevent;
+        };
+
+        // Then we try to show all three in quick succession, but only the first pops!
+        _snackBar.Add("This is the only snackbar that will be shown", configure: config, key: "mudblazor");
+        _snackBar.Add(@<span>This one has the same key</span>, configure: config, key: "mudblazor");
+        _snackBar.Add<MudChip>(new Dictionary<string, object>() {
+            { "Text", "This one also has the same key" }
+        }, configure: config, key: "mudblazor");
+    }
+}

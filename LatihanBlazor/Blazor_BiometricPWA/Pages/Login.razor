@@ -1,0 +1,60 @@
+﻿@page "/login"
+@using Blazor_BiometricPWA.Models.Requests;
+@using Blazor_BiometricPWA.Models.Responses;
+@inject IJSRuntime JS
+@inject AppSettings appSettings;
+
+<PageTitle>Biometric Authentication</PageTitle>
+<h1>Biometric Authentication Sample</h1>
+<h3>User Login</h3>
+
+<EditForm Model="@user" OnValidSubmit="@HandleLogin">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="name">Username:</label>
+        <InputText id="name" class="form-control" @bind-Value="@user.Username" />
+        <ValidationMessage For="@(() => user.Username)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Login</button>
+    @if (!string.IsNullOrEmpty(response.Message))
+    {
+        <div class="alert alert-@(response.Success ? "success" : "danger")">@response.Message</div>
+    }
+</EditForm>
+@code {
+    private UserLoginRequest user = new UserLoginRequest();
+    private ResponseModel response = new ResponseModel();
+    private async Task HandleLogin()
+    {
+        try
+        {
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri(appSettings.BaseApiUrl);
+            //fetch login options
+            var res = await client.PostAsJsonAsync("api/auth/login-options", user);
+            var options = await res.Content.ReadFromJsonAsync<ResponseModel<object>>();
+
+            //feed the make assertion options to trigger the biometric for verification
+            var data = await JS.InvokeAsync<object>("makeAssertions", options.Result);
+
+            //finally login the user with biometric data
+            res = await client.PostAsJsonAsync("api/auth/login", data);
+            var loginResult = await res.Content.ReadFromJsonAsync<ResponseModel>();
+
+            // Reset the form after successful registration
+            response.Success = loginResult.Success;
+            response.Message = loginResult.Message;
+            if (response.Success)
+            {
+                user = new UserLoginRequest();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Success = false;
+            response.Message = $"Unable to login";
+            //response.Message = $"Unable to login, {ex.ToString()}";
+        }
+    }
+}

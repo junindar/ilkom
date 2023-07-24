@@ -33,7 +33,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Input", "MudBlazo
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Chart", "MudBlazor.Chart\MudBlazor.Chart.csproj", "{77F24DE7-B0D8-4568-9019-83A48530A837}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MudBlazor.Picker", "MudBlazor.Picker\MudBlazor.Picker.csproj", "{25998355-B935-4B10-838B-BC309FF48CD9}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Picker", "MudBlazor.Picker\MudBlazor.Picker.csproj", "{25998355-B935-4B10-838B-BC309FF48CD9}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MudBlazor.Dialog", "MudBlazor.Dialog\MudBlazor.Dialog.csproj", "{E5DFBAB2-BBFC-44FB-BF21-7A0B78B9CFCD}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Blazor_Biometric", "Blazor_Biometric\Blazor_Biometric.csproj", "{96B9DEB4-A194-4668-89D0-6AB634412EEA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor_BiometricPWA", "Blazor_BiometricPWA\Blazor_BiometricPWA.csproj", "{E42FCB53-E370-489A-B7D0-E468DB0B997E}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Blazor_BiometricWebApi", "Blazor_BiometricWebApi\Blazor_BiometricWebApi.csproj", "{8A732FC1-30EC-4479-9873-FD41CF2C28FA}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -105,6 +113,22 @@ Global
 		{25998355-B935-4B10-838B-BC309FF48CD9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{25998355-B935-4B10-838B-BC309FF48CD9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{25998355-B935-4B10-838B-BC309FF48CD9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E5DFBAB2-BBFC-44FB-BF21-7A0B78B9CFCD}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E5DFBAB2-BBFC-44FB-BF21-7A0B78B9CFCD}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E5DFBAB2-BBFC-44FB-BF21-7A0B78B9CFCD}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E5DFBAB2-BBFC-44FB-BF21-7A0B78B9CFCD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{96B9DEB4-A194-4668-89D0-6AB634412EEA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{96B9DEB4-A194-4668-89D0-6AB634412EEA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{96B9DEB4-A194-4668-89D0-6AB634412EEA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{96B9DEB4-A194-4668-89D0-6AB634412EEA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E42FCB53-E370-489A-B7D0-E468DB0B997E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E42FCB53-E370-489A-B7D0-E468DB0B997E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E42FCB53-E370-489A-B7D0-E468DB0B997E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E42FCB53-E370-489A-B7D0-E468DB0B997E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8A732FC1-30EC-4479-9873-FD41CF2C28FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8A732FC1-30EC-4479-9873-FD41CF2C28FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8A732FC1-30EC-4479-9873-FD41CF2C28FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8A732FC1-30EC-4479-9873-FD41CF2C28FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

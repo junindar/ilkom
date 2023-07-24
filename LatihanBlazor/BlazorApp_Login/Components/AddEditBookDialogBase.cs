@@ -71,7 +71,7 @@ namespace BlazorApp_Login.Components
             Book.CategoryID = int.Parse(CategoryId);
 
 
-            if (Book.BookID == 0)
+            if (Book.ID == 0)
             {
                 await BookRepository.Insert(Book);
 
@@ -111,7 +111,7 @@ namespace BlazorApp_Login.Components
         
         protected async Task DeleteBook()
         {
-            await BookRepository.Delete(Book.BookID);
+            await BookRepository.Delete(Book.ID);
             ShowDialog = false;
 
             await CloseEventCallback.InvokeAsync(true);

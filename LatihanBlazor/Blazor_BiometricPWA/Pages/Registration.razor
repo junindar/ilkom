@@ -1,0 +1,66 @@
+﻿@page "/registration"
+@using Blazor_BiometricPWA.Models.Requests;
+@using Blazor_BiometricPWA.Models.Responses;
+@inject IJSRuntime JS
+@inject AppSettings appSettings;
+
+<PageTitle>Biometric Authentication</PageTitle>
+<h1>Biometric Authentication Sample</h1>
+<h3>User Registration</h3>
+
+<EditForm Model="@user" OnValidSubmit="@HandleRegistration">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="name">Username:</label>
+        <InputText id="name" class="form-control" @bind-Value="@user.Username" />
+        <ValidationMessage For="@(() => user.Username)" />
+    </div>
+    <div class="form-group">
+        <label for="name">Display Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="@user.DisplayName" />
+        <ValidationMessage For="@(() => user.DisplayName)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+    @if (!string.IsNullOrEmpty(response.Message))
+    {
+        <div class="alert alert-@(response.Success ? "success" : "danger")">@response.Message</div>
+    }
+</EditForm>
+
+@code {
+    private UserRegistrationRequest user = new UserRegistrationRequest();
+    private ResponseModel response = new ResponseModel();
+    private async Task HandleRegistration()
+    {
+        try
+        {
+            using var client = new HttpClient();
+            client.BaseAddress = new Uri(appSettings.BaseApiUrl);
+            //fetch registration options
+            var res = await client.PostAsJsonAsync("api/auth/registration-options", user);
+            var options = await res.Content.ReadFromJsonAsync<ResponseModel<object>>();
+
+            //feed the make credential options to trigger the biometric
+            var data = await JS.InvokeAsync<object>("makeCredentials", options.Result);
+
+            //finally register the user with biometric data
+            res = await client.PostAsJsonAsync("api/auth/registration", data);
+            var registrationResult = await res.Content.ReadFromJsonAsync<ResponseModel>();
+
+            // Reset the form after successful registration
+            response.Success = registrationResult.Success;
+            response.Message = registrationResult.Message;
+            if (response.Success)
+            {
+                user = new UserRegistrationRequest();
+            }
+        }
+        catch (Exception ex)
+        {
+            response.Success = false;
+            response.Message = $"Unable to register";
+            //response.Message = $"Unable to register, {ex.ToString()}";
+        }
+    }
+}

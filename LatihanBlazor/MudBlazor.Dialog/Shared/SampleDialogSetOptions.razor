@@ -1,0 +1,32 @@
+﻿<MudDialog Class="mud-dialog mud-dialog-width-sm mud-dialog-width-full">
+
+    <DialogContent>
+        <MudButton OnClick="ChangeTitle">Change Title</MudButton>
+        <MudButton OnClick="ToggleCloseButton">Toggle Close Button</MudButton>
+      
+        <MudButton OnClick="ToggleHeader">Toggle Header</MudButton>
+    </DialogContent>
+    <DialogActions>
+        
+        <MudButton Color="Color.Primary" OnClick="Submit">Ok</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    void Submit() => MudDialog.Close(DialogResult.Ok(true));
+    void ChangeTitle()
+    {
+        MudDialog.SetTitle("Current time is: " + DateTime.Now);
+    }
+    void ToggleCloseButton()
+    {
+        MudDialog.Options.CloseButton = !(MudDialog.Options.CloseButton ?? false);
+        MudDialog.SetOptions(MudDialog.Options);
+    }
+    void ToggleHeader()
+    {
+        MudDialog.Options.NoHeader = !(MudDialog.Options.NoHeader ?? false);
+        MudDialog.SetOptions(MudDialog.Options);
+    }
+}

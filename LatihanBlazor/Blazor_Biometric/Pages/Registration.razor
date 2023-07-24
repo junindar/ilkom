@@ -1,0 +1,69 @@
+﻿@page "/registration"
+@using Blazor_Biometric.Data
+@using Blazor_Biometric.Entity
+@using Blazor_Biometric.Models
+@using System.Text.Json
+@using Newtonsoft.Json
+@using JsonSerializer = System.Text.Json.JsonSerializer
+@inject IJSRuntime JS
+<PageTitle>Biometric Authentication</PageTitle>
+<h1>Biometric Authentication Sample</h1>
+<h3>User Registration</h3>
+
+<EditForm Model="@user" OnValidSubmit="@HandleRegistration">
+    <DataAnnotationsValidator />
+    <ValidationSummary />
+    <div class="form-group">
+        <label for="name">Username:</label>
+        <InputText id="name" class="form-control" @bind-Value="@user.Username" />
+        <ValidationMessage For="@(() => user.Username)" />
+    </div>
+    <div class="form-group">
+        <label for="name">Display Name:</label>
+        <InputText id="name" class="form-control" @bind-Value="@user.DisplayName" />
+        <ValidationMessage For="@(() => user.DisplayName)" />
+    </div>
+    <button type="submit" class="btn btn-primary">Register</button>
+    @if (!string.IsNullOrEmpty(response.Message))
+    {
+        <div class="alert alert-@(response.Success ? "success" : "danger")">@response.Message</div>
+    }
+</EditForm>
+
+@code {
+    [Inject]
+    public IUserService _UserService { get; set; }
+    private User user = new User();
+    private ResponseModel response = new ResponseModel();
+    private async Task HandleRegistration()
+    {
+        try
+        {
+
+            var options = _UserService.GetRegisterOption(user);
+
+            var data = await JS.InvokeAsync<object>("makeCredentials", options.responseObject);
+
+            var json = JsonSerializer.Serialize(data);
+           // string json2 = JsonConvert.SerializeObject(data, Formatting.Indented);
+          //  System.Runtime.Serialization.Json.DataContractJsonSerializer serializer = new System.Runtime.Serialization.Json.DataContractJsonSerializer(data);
+           // var output = serializer.Serialize(your_anon_object);
+            var fidoUser = JsonSerializer.Deserialize<FidoUserRegistrationRequest>(json);
+
+            var fidoUser2 = JsonConvert.DeserializeObject<FidoUserRegistrationRequest>(json);// < FidoUserRegistrationRequest > (json);
+            if (fidoUser != null)
+            {
+                await _UserService.RegistrationUser(data,fidoUser, options, CancellationToken.None);
+                response.Success = true; response.Message = "Registration successfull!";
+            }
+          
+    
+        }
+        catch (Exception ex)
+        {
+            response.Success = false;
+            response.Message = $"Unable to register";
+            response.Message = $"Unable to register, {ex.ToString()}";
+        }
+    }
+}

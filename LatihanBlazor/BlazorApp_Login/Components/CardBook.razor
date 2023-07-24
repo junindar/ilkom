@@ -31,7 +31,7 @@ else
                     {
                         <div class="col-md-4">
                             <div class="card" style="height: 450px;" align="center">
-                                <a asp-action="DetailBook" asp-route-id="@book.BookID">
+                                <a asp-action="DetailBook" asp-route-id="@book.ID">
                                     <img src="/images/@book.Gambar" height="250" width="200" />
                                 </a>
                                 <div style="padding: 9px;color:#333">
@@ -45,7 +45,7 @@ else
                                                 {
                                                     <p style="text-align: center">
                                                         <a class="btn btn-success" role="button"
-                                                           data-bukuId="@book.BookID"
+                                                           data-bukuId="@book.ID"
                                                            data-bukuImage="@book.Gambar"
                                                            data-bukuJudul="@book.Judul"
                                                            data-bukuPenulis="@book.Penulis"

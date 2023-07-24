@@ -52,15 +52,15 @@ namespace BlazorAPP_Login.Data
             {
                 var categories = new List<Category>
                 {
-                    new Category { NamaCategory = "Agama" },
-                    new Category { NamaCategory = "Bahasa" },
+                    new Category { Nama = "Agama" },
+                    new Category { Nama = "Bahasa" },
 
                 };
                 categories.ForEach(a => context.Categories.Add(a));
                 // Sintaks Detail ada pada lampiran project
                 var cat1 = new Category
                 {
-                    NamaCategory = "Teknologi",
+                    Nama = "Teknologi",
                     Books = new List<Book>()
                 {
                         new Book { Judul = "XAMARIN ANDROID - Mudah Membangung Aplikasi Mobile",
@@ -92,7 +92,7 @@ namespace BlazorAPP_Login.Data
 
                 var cat2 = new Category()
                 {
-                    NamaCategory = "Sosial",
+                    Nama = "Sosial",
                     Books = new List<Book>()
                 {
                      new Book { Judul = "Raga Kayu Jiwa Manusia",

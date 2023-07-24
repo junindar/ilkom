@@ -5,7 +5,7 @@ namespace BlazorAPP_Login.Entity
 {
     public class Book
     {
-        public int BookID { get; set; }
+        public int ID { get; set; }
         public string Judul { get; set; }
         public string Penulis { get; set; }
         public string Penerbit { get; set; }

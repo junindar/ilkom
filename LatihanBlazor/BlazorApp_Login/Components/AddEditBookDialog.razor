@@ -56,7 +56,7 @@
                                     <InputSelect id="category" class="form-control col-sm-8" @bind-Value="@CategoryId" required>
                                         @foreach (var cat in Categories)
                                             {
-                                            <option value="@cat.CategoryID">@cat.NamaCategory</option>
+                                            <option value="@cat.ID">@cat.Nama</option>
                                             }
                                         /**/
                                         /**/
@@ -109,7 +109,7 @@
                         <button type="submit" class="btn btn-primary">Save</button>
                         <AuthorizeView Context="AdminAuth" Roles="Admin">
 
-                            @if (Book.BookID > 0)
+                            @if (Book.ID > 0)
                             {
                                 <a class="btn btn-danger" @onclick="@DeleteBook">
                                     Delete

@@ -22,7 +22,7 @@ namespace BlazorAPP_Login.Data
 
         public async Task<Category> GetById(int categoryId)
         {
-            return await _dbContext.Categories.FirstOrDefaultAsync(c=>c.CategoryID== categoryId);
+            return await _dbContext.Categories.FirstOrDefaultAsync(c=>c.ID== categoryId);
         }
     }
 }

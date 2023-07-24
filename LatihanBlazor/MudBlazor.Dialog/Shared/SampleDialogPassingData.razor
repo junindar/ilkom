@@ -1,0 +1,36 @@
+﻿@using MudBlazor.Dialog.Data
+<MudDialog Class="mud-dialog mud-dialog-width-sm mud-dialog-width-full">
+    <TitleContent>
+        <MudText Typo="Typo.h6">
+            <MudIcon Icon="@Icons.Material.Filled.DeleteForever" Class="mr-3 mb-n1" />
+            Delete server?
+        </MudText>
+    </TitleContent>
+    <DialogContent>
+        <MudTextField Value="@server.Id.ToString()" Label="Server ID" ReadOnly="true" />
+        <MudTextField Value="@server.Name" Label="Server Name" ReadOnly="true" />
+        <MudTextField Value="@server.Location" Label="Location" ReadOnly="true" />
+        <MudTextField Value="@server.IpAddress" Label="IP Address" ReadOnly="true" />
+    </DialogContent>
+    <DialogActions>
+        <MudButton OnClick="Cancel">Cancel</MudButton>
+        <MudButton Color="Color.Error" OnClick="DeleteServer">Delete Server</MudButton>
+    </DialogActions>
+</MudDialog>
+@code {
+    [CascadingParameter] MudDialogInstance MudDialog { get; set; }
+
+    [Parameter] public Server server { get; set; } = new Server();
+
+    private void Cancel()
+    {
+        MudDialog.Cancel();
+    }
+
+    private void DeleteServer()
+    {
+    //In a real world scenario this bool would probably be a service to delete the item from api/database
+        _snackBar.Add("Server Deleted", Severity.Success);
+        MudDialog.Close(DialogResult.Ok(server.Id));
+    }
+}

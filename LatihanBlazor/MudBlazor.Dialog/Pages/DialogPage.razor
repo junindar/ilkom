@@ -1,0 +1,296 @@
+﻿@page "/DialogPage"
+@using MudBlazor.Dialog.Data
+
+
+
+
+<TitlePrompt Title="Dialog" />
+<div class="row">
+    <br />
+</div>
+<MudCard Outlined="true">
+    <MudCardContent>
+       
+        <div class="row">
+            <div class="col-md-4">
+                <MudText>Basic</MudText>
+                <MudButton @onclick="OpenDialog" Variant="Variant.Filled" Color="Color.Primary">
+                    Open Simple Dialog
+                </MudButton>
+            </div>
+            <div class="col-md-4">
+             
+            </div>
+            <div class="col-md-4">
+             
+            </div>
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+            <div class="col-md-12">
+                <MudText>Configuration (Per Dialog)</MudText>
+                <MudButton OnClick="@((e) => OpenDialogConfiguration(maxWidth))">Open MaxWidth Dialog</MudButton>
+                <MudButton OnClick="@((e) => OpenDialogConfiguration(closeButton))" Color="Color.Primary">Close Button Dialog</MudButton>
+                <MudButton OnClick="@((e) => OpenDialogConfiguration(noHeader))" Color="Color.Secondary">No header Dialog</MudButton>
+                <MudButton OnClick="@((e) => OpenDialogConfiguration(disableBackdropClick))" Color="Color.Tertiary">Disable backdrop dialog</MudButton>
+                <MudButton OnClick="@((e) => OpenDialogConfiguration(fullScreen))" Color="Color.Info">Full Screen Dialog</MudButton>
+                <MudButton OnClick="@((e) => OpenDialogConfiguration(topCenter))" Color="Color.Success">Top Center Dialog</MudButton>
+            </div>
+          
+          
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+            <div class="col-md-12">
+                <MudText>Configuration (From Dialog)</MudText>
+                <MudButton OnClick="OpenDialogConfiguration2" Variant="Variant.Filled" Color="Color.Primary">
+                    Options Dialog
+                </MudButton>
+            </div>
+
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+            <div class="col-md-12">
+                <MudText>Templating and Passing Simple Data</MudText>
+                <MudButton @onclick="DialogParam1" Variant="Variant.Filled" Color="Color.Error">Sample 1</MudButton>
+                <MudButton @onclick="DialogParam2" Variant="Variant.Filled" Color="Color.Success">Sample 2</MudButton>
+                <MudButton @onclick="DialogParam3" Variant="Variant.Filled" Color="Color.Warning">Sample 3</MudButton>
+            </div>
+
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+            <div class="row">
+                <MudText>Passing Data</MudText>
+                @foreach (var item in Servers)
+                {
+                    <div class="col-md-3">
+                        <MudPaper Class="col-md-12">
+                            <MudText>@item.Name</MudText>
+                            <MudButton Variant="Variant.Text" Color="Color.Error" OnClick="@((e) => DeleteServer(item))">Delete</MudButton>
+                        </MudPaper>
+                    </div>
+                    
+                }
+            </div>
+
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+            <div class="col-md-4">
+                <MudText>Scrollable Dialog</MudText>
+                <MudButton OnClick="OpenDialogScroll" Variant="Variant.Filled" Color="Color.Primary">
+                    Scrollable Dialog
+                </MudButton>
+            </div>
+
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+<MudCard Outlined="true">
+    <MudCardContent>
+
+        <div class="row">
+            <div class="col-md-4">
+                <MudText>Blurry Dialog</MudText>
+                <MudButton @onclick="OpenDialogBlur" Variant="Variant.Filled" Color="Color.Primary">
+                    Open Simple Dialog
+                </MudButton>
+
+                <style>
+    .my-custom-class {
+        backdrop-filter: blur(10px);
+    }
+</style>
+            </div>
+
+
+        </div>
+
+    </MudCardContent>
+
+
+</MudCard>
+<div class="row">
+    <br />
+</div>
+
+
+<div class="row">
+    <br />
+</div>
+<div class="row">
+    <br />
+</div>
+<div class="row">
+    <br />
+</div>
+@code {
+    
+    private void OpenDialog()
+    {
+        var options = new DialogOptions { CloseOnEscapeKey = true };
+        _dialogService.Show<SampleDialog>("Simple Dialog", options);
+    }
+
+
+    DialogOptions maxWidth = new() { MaxWidth = MaxWidth.Medium, FullWidth = true };
+    DialogOptions closeButton = new DialogOptions() { CloseButton = true };
+    DialogOptions noHeader = new DialogOptions() { NoHeader = true };
+    DialogOptions disableBackdropClick = new DialogOptions() { DisableBackdropClick = true };
+    DialogOptions fullScreen = new DialogOptions() { FullScreen = true, CloseButton = true };
+    DialogOptions topCenter = new DialogOptions() { Position = DialogPosition.TopCenter };
+
+    private void OpenDialogConfiguration(DialogOptions options)
+    {
+        _dialogService.Show<SampleDialog>("Custom Options Dialog", options);
+    }
+
+    private void OpenDialogConfiguration2()
+    {
+        _dialogService.Show<SampleDialogSetOptions>("Options Dialog");
+    }
+
+    private void DialogParam1()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Apakah data akan dihapus?");
+        parameters.Add("ButtonText", "Delete");
+        parameters.Add("Color", Color.Error);
+
+        var options = new DialogOptions() { CloseButton = true, MaxWidth = MaxWidth.ExtraSmall };
+
+        _dialogService.Show<SampleDialogParameter>("Delete", parameters, options);
+    }
+
+    private void DialogParam2()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Apakah proses akan dilanjutkan?");
+        parameters.Add("ButtonText", "Yes");
+        parameters.Add("Color", Color.Success);
+
+        _dialogService.Show<SampleDialogParameter>("Confirm", parameters);
+    }
+
+    private void DialogParam3()
+    {
+        var parameters = new DialogParameters();
+        parameters.Add("ContentText", "Memulai download?");
+        parameters.Add("ButtonText", "Download");
+        parameters.Add("Color", Color.Info);
+
+        _dialogService.Show<SampleDialogParameter>("Download", parameters);
+    }
+   
+    async Task DeleteServer(Server server)
+    {
+        var parameters = new DialogParameters { ["server"]=server };
+
+        var dialog = await _dialogService.ShowAsync<SampleDialogPassingData>("Delete Server", parameters);
+        var result = await dialog.Result;
+
+        if (!result.Canceled)
+        {
+    //In a real world scenario we would reload the data from the source here since we "removed" it in the dialog already.
+            Guid.TryParse(result.Data.ToString(), out Guid deletedServer);
+            Servers.RemoveAll(item => item.Id == deletedServer);
+        }
+    }
+
+    //Pretend we are loading this data from a database or API
+    public List<Server> Servers { get; } = new List<Server>
+    {
+        new Server{ Id = Guid.NewGuid(), Name = "Server1", Location = "Denmark", IpAddress = "193.254.123.1" },
+        new Server{ Id = Guid.NewGuid(), Name = "Server2", Location = "Sweden", IpAddress = "127.0.0.1" },
+        new Server{ Id = Guid.NewGuid(), Name = "Server3", Location = "Russia", IpAddress = "173.164.2.1" },
+        new Server{ Id = Guid.NewGuid(), Name = "Server4", Location = "Germany", IpAddress = "193.168.1.1" },
+    };
+
+
+    bool license_accepted = false;
+
+    async Task OpenDialogScroll()
+    {
+        var result = await _dialogService.Show<SampleDialogScroll>("MudBlazor License").Result;
+
+        if (!result.Canceled)
+        {
+            license_accepted = (bool)(result.Data ?? false);
+        }
+    }
+
+    private void OpenDialogBlur()
+    {
+        var options = new DialogOptions { ClassBackground = "my-custom-class" };
+        _dialogService.Show<SampleDialog>("Simple Dialog", options);
+    }
+}

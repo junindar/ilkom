@@ -43,7 +43,7 @@ namespace BlazorAPP_Login.Data
 
         public async Task<Book> GetBookById(int bookId)
         {
-            var book= await _dbContext.Books.Include(b=>b.Category).Where(c => c.BookID == bookId).FirstOrDefaultAsync();
+            var book= await _dbContext.Books.Include(b=>b.Category).Where(c => c.ID == bookId).FirstOrDefaultAsync();
            
             return book;
 
@@ -52,7 +52,7 @@ namespace BlazorAPP_Login.Data
 
         public async Task<IEnumerable<Book>> GetRandomBooks(string cat)
         {
-            return await _dbContext.Books.Where(c=>c.Category.NamaCategory==cat)
+            return await _dbContext.Books.Where(c=>c.Category.Nama==cat)
                 .OrderBy(r => Guid.NewGuid()).Include(b => b.Category).ToListAsync();
         }
     }
