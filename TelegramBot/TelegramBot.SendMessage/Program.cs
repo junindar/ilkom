@@ -6,7 +6,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 
-var botClient = new TelegramBotClient("6590764043:AAGjMTZCBtymS-vHU4qXAMM2LXi72RXgijI");
+var botClient = new TelegramBotClient("");
 
 using CancellationTokenSource cts = new();
 
