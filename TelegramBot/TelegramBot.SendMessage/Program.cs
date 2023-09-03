@@ -6,7 +6,7 @@ using Telegram.Bot.Types.Enums;
 using Telegram.Bot.Types.ReplyMarkups;
 
 
-var botClient = new TelegramBotClient("");
+var botClient = new TelegramBotClient("6590764043:AAGjMTZCBtymS-vHU4qXAMM2LXi72RXgijI");
 
 using CancellationTokenSource cts = new();
 
@@ -64,9 +64,9 @@ async Task HandleUpdateAsync(ITelegramBotClient botClient, Update update, Cancel
     // FileStream fStream = new FileStream(@"e:\ikan.jpg", FileMode.Open);
     Message sentMessage = await botClient.SendPhotoAsync(
         chatId: chatId,
-        photo: InputFile.FromUri("https://github.com/TelegramBots/book/raw/master/src/docs/photo-ara.jpg"),
+        photo: InputFile.FromUri("https://raw.githubusercontent.com/junindar/ilkom/master/TelegramBot/Images/AspNetCore.png"),
         //photo: InputFile.FromStream(fStream, "test.jpg"),
-        caption: "<b>Ara bird</b>. <i>Source</i>: <a href=\"https://pixabay.com\">Pixabay</a>",
+        caption: "<b>ASP .NET Core MVC </b>. <i>Source</i>: <a href=\"https://play.google.com/store/books/details/Junindar_ASP_NET_Core_MVC?id=CIG9DwAAQBAJ&hl=en&gl=US\">Google Play</a>",
         parseMode: ParseMode.Html,
         cancellationToken: cancellationToken);
     //fStream.Close(); fStream.Dispose();
