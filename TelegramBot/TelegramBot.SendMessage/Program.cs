@@ -9,7 +9,7 @@ using TelegramBot.SendMessage;
 using File = System.IO.File;
 
 
-var botClient = new TelegramBotClient("");
+var botClient = new TelegramBotClient("6590764043:AAGboXx5TiQMeeQ__oxGxm-lzqeMzdp2iY0");
 
 using CancellationTokenSource cts = new();
 List<Photo> lstPhotos = new List<Photo>();
@@ -306,13 +306,11 @@ async Task HandleUpdateSendAudioAsync(ITelegramBotClient botClient, Update updat
 
     Message sentMessage = await botClient.SendAudioAsync(
         chatId: chatId,
-        audio: InputFile.FromUri("https://github.com/TelegramBots/book/raw/master/src/docs/audio-guitar.mp3"),
-        /*
-        performer: "Joel Thomas Hunger",
-        title: "Fun Guitar and Ukulele",
-        duration: 91, // in seconds
-        */
-        cancellationToken: cancellationToken);
+        audio: InputFile.FromUri("https://raw.githubusercontent.com/junindar/ilkom/master/TelegramBot/Audio/Bed Of Roses.mp3"),
+        //performer:"Bon Jovi",
+        //title: "Bed Of Roses",
+       thumbnail:InputFile.FromUri("https://raw.githubusercontent.com/junindar/ilkom/master/TelegramBot/images/bonjovi.JPEG"),
+       cancellationToken: cancellationToken);
     var result = sentMessage;
 }
 
