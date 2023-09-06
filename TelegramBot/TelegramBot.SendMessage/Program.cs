@@ -9,7 +9,7 @@ using TelegramBot.SendMessage;
 using File = System.IO.File;
 
 
-var botClient = new TelegramBotClient("6590764043:AAGboXx5TiQMeeQ__oxGxm-lzqeMzdp2iY0");
+var botClient = new TelegramBotClient("");
 
 using CancellationTokenSource cts = new();
 List<Photo> lstPhotos = new List<Photo>();
