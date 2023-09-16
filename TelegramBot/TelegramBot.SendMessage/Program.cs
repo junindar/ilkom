@@ -54,7 +54,7 @@ ReceiverOptions receiverOptions = new()
 };
 
 botClient.StartReceiving(
-    updateHandler: HandleUpdateSendAudioAsync,
+    updateHandler: HandleUpdateSendVoiceAsync,
     pollingErrorHandler: HandlePollingErrorAsync,
     receiverOptions: receiverOptions,
     cancellationToken: cts.Token
@@ -274,19 +274,6 @@ async Task HandleUpdateSendStickerAsync(ITelegramBotClient botClient, Update upd
         sticker: InputFile.FromFileId(message1.Sticker!.FileId),
         cancellationToken: cancellationToken);
 
-    //if (sentMessage.From!=null && sentMessage.ReplyToMessage!=null && sentMessage.Entities!=null)
-    //{
-    //    Console.WriteLine(
-    //        $"{sentMessage.From.FirstName} sent message {sentMessage.MessageId} " +
-    //        $"to chat {sentMessage.Chat.Id} at {sentMessage.Date}. " +
-    //        $"It is a reply to message {sentMessage.ReplyToMessage.MessageId} " +
-    //        $"and has {sentMessage.Entities.Length} message entities.");
-    //}
-
-    //Message sentMessage = await botClient.SendTextMessageAsync(
-    //    chatId: chatId,
-    //    text: "You said:\n" + messageText,
-    //    cancellationToken: cancellationToken);
 }
 
 async Task HandleUpdateSendAudioAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
@@ -304,17 +291,49 @@ async Task HandleUpdateSendAudioAsync(ITelegramBotClient botClient, Update updat
 
 
 
+
+    FileStream fStream = new FileStream(@"\audio\Bed Of Roses.mp3", FileMode.Open);
+    FileStream fStreamThumb = new FileStream(@"\Images\BonJovi.JPEG", FileMode.Open);
     Message sentMessage = await botClient.SendAudioAsync(
         chatId: chatId,
-        audio: InputFile.FromUri("https://raw.githubusercontent.com/junindar/ilkom/master/TelegramBot/Audio/Bed Of Roses.mp3"),
-        //performer:"Bon Jovi",
+        // photo: InputFile.FromUri("https://raw.githubusercontent.com/junindar/ilkom/master/TelegramBot/Images/AspNetCore.png"),
+        audio: InputFile.FromStream(fStream),
+        thumbnail: InputFile.FromStream(fStreamThumb),
+        //performer: "Bon Jovi",
         //title: "Bed Of Roses",
-       thumbnail:InputFile.FromUri("https://raw.githubusercontent.com/junindar/ilkom/master/TelegramBot/images/bonjovi.JPEG"),
-       cancellationToken: cancellationToken);
+        cancellationToken: cancellationToken);
+    fStream.Close(); fStream.Dispose();
+    fStreamThumb.Close(); fStreamThumb.Dispose();
     var result = sentMessage;
 }
 
+async Task HandleUpdateSendVoiceAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+{
 
+    if (update.Message is not { } message)
+        return;
+
+    if (message.Text is not { } messageText)
+        return;
+
+    var chatId = message.Chat.Id;
+
+    Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
+
+
+
+
+    FileStream fStream = new FileStream(@"\Voice\sample1.ogg", FileMode.Open);
+   
+    Message sentMessage = await botClient.SendVoiceAsync(
+        chatId: chatId,
+     voice: InputFile.FromStream(fStream), 
+        cancellationToken: cancellationToken);
+    
+    fStream.Close(); fStream.Dispose();
+   
+    
+}
 
 Task HandlePollingErrorAsync(ITelegramBotClient botClient, Exception exception, CancellationToken cancellationToken)
 {
