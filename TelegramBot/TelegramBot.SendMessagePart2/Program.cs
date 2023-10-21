@@ -51,7 +51,7 @@ ReceiverOptions receiverOptions = new()
 };
 
 botClient.StartReceiving(
-    updateHandler: HandleUpdateSendAnimationAsync,
+    updateHandler: HandleUpdateSendVideoAsync,
     pollingErrorHandler: HandlePollingErrorAsync,
     receiverOptions: receiverOptions,
     cancellationToken: cts.Token
@@ -79,17 +79,14 @@ async Task HandleUpdateSendVideoAsync(ITelegramBotClient botClient, Update updat
 
 
 
-    FileStream fStream = new FileStream(@"E:\Program\Ilkom\Artikel Program\ilkom\TelegramBot\video\videoplayback.mp4", FileMode.Open);
-    FileStream fStreamThumb = new FileStream(@"E:\Program\Ilkom\Artikel Program\ilkom\TelegramBot\Images\reel.png", FileMode.Open);
-    Message sentMessage = await botClient.SendVideoAsync(
+    FileStream fStream = new FileStream(@"..\videoplayback.mp4", FileMode.Open);
+    await botClient.SendVideoAsync(
         chatId: chatId,
         video: InputFile.FromStream(fStream),
-        thumbnail: InputFile.FromStream(fStreamThumb), 
-       duration:5,
-         caption:"Video Reel Pancing",
+        caption: "Video Reel Pancing",
        cancellationToken: cancellationToken);
     fStream.Close(); fStream.Dispose();
-    fStreamThumb.Close(); fStreamThumb.Dispose();
+
 
 }
 
@@ -108,8 +105,8 @@ async Task HandleUpdateSendVideoNoteAsync(ITelegramBotClient botClient, Update u
 
 
 
-    FileStream fStream = new FileStream(@"E:\Program\Ilkom\Artikel Program\ilkom\TelegramBot\video\video-waves.mp4", FileMode.Open);
-    FileStream fStreamThumb = new FileStream(@"E:\Program\Ilkom\Artikel Program\ilkom\TelegramBot\Images\reel.png", FileMode.Open);
+    FileStream fStream = new FileStream(@"..\video-waves.mp4", FileMode.Open);
+    FileStream fStreamThumb = new FileStream(@"..\reel.png", FileMode.Open);
     Message sentMessage = await botClient.SendVideoNoteAsync(
         chatId: chatId,
         videoNote: InputFile.FromStream(fStream),
@@ -178,7 +175,7 @@ async Task HandleUpdateSendDocumentAsync(ITelegramBotClient botClient, Update up
 
 
   
-    FileStream fStream = new FileStream(@"E:\Program\Ilkom\Artikel Program\ilkom\TelegramBot\Images\reel.png", FileMode.Open);
+    FileStream fStream = new FileStream(@"..\reel.png", FileMode.Open);
    
 
     Message sentMessage = await botClient.SendDocumentAsync(
@@ -208,16 +205,63 @@ async Task HandleUpdateSendAnimationAsync(ITelegramBotClient botClient, Update u
 
     Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
 
-
-
-   
-
-   await botClient.SendAnimationAsync(
+    await botClient.SendAnimationAsync(
     chatId: chatId,
-      animation: InputFile.FromUri("fStream"),
+      animation: InputFile.FromUri("https://raw.githubusercontent.com/junindar/ilkom/master/TelegramBot/video/giphy.gif"),
         caption: "Animation",
         cancellationToken: cancellationToken);
    
+
+}
+
+
+async Task HandleUpdateSendContactAsync(ITelegramBotClient botClient, Update update, CancellationToken cancellationToken)
+{
+
+    if (update.Message is not { } message)
+        return;
+
+    if (message.Text is not { } messageText)
+        return;
+
+    var chatId = message.Chat.Id;
+
+    Console.WriteLine($"Received a '{messageText}' message in chat {chatId}.");
+
+    await botClient.SendContactAsync(
+         chatId: chatId,
+         phoneNumber: "+1234567890",
+         firstName: "Junindar",
+         lastName: "Tasripin",
+         cancellationToken: cancellationToken);
+
+    await botClient.SendContactAsync(
+         chatId: chatId,
+         phoneNumber: "+1234567890",
+         firstName: "Junindar",
+         vCard: "BEGIN:VCARD\n" +
+                "VERSION:3.0\n" +
+                "N:Tasripin;Junindar\n" +
+                "ORG:ARSYITECH\n" +
+                "TEL;TYPE=voice,work,pref:+1234567890\n" +
+                "EMAIL:junindar.tasripin@email.com\n" +
+                "END:VCARD",
+         cancellationToken: cancellationToken);
+
+
+    await botClient.SendVenueAsync(
+        chatId: chatId,
+        latitude: 0.9830643988427209f,
+        longitude: 104.09879776647044f,
+        title: "RAKIT HAMBALI",
+        address: "Piayu Laut, Kampung Tua, Batam",
+        cancellationToken: cancellationToken);
+
+    await botClient.SendLocationAsync(
+        chatId: chatId,
+        latitude: 0.9830643988427209f,
+        longitude: 104.09879776647044f,
+        cancellationToken: cancellationToken);
 
 }
 
