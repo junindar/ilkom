@@ -1,0 +1,64 @@
+﻿@page "/booklist"
+@inject IBookService BookService
+<h1>Daftar Buku</h1>
+
+@if (_books == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    
+
+  
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th class="hide-col"></th>
+                <th >Judul</th>
+                <th >Penulis</th>
+                <th class="hide-col ">Penerbit</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in _books)
+            {
+                <tr>
+                    <td class="hide-col"><img src="@($"images/{book.Gambar}")" class="rounded-circle" width="100" height="100" /></td>
+                    <td style="color:#B10505;">@book.Judul</td>
+                    <td>@book.Penulis</td>
+                    <td class="hide-col">@book.Penerbit</td>
+                    <td>
+                        <a href="@($"bookdetail/{book.Id}")" class="btn btn-danger table-btn">
+                           ...
+                        </a>
+                        
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+<style>
+    @@media (max-width:960px) {
+        .hide-col {
+            display: none
+        }
+    }
+
+
+   
+
+</style>
+@code {
+   
+    private IEnumerable<Book?>? _books = null;
+    protected override async Task OnInitializedAsync()
+    {
+        _books = await BookService.GetBooksAsync();
+    }
+    
+
+}

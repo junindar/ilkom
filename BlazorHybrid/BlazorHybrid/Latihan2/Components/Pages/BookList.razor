@@ -1,0 +1,137 @@
+﻿@page "/booklist"
+@inject IBookService BookService
+<h1>Daftar Buku</h1>
+
+@if (_books == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <BookDetailDialog @ref="BookDetailDialog" CloseEventCallback="@AddEditBookDialog_OnDialogClose"></BookDetailDialog>
+
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>Judul</th>
+            <th >Penulis</th>
+            <th >Penerbit</th>
+            @* <th></th> *@
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var book in _books)
+        {
+            <tr>
+                    <td><img src="@($"images/{book.Gambar}")" /></td>
+                    <td data-label="Judul" style="color:#B10505;">@book.Judul</td>
+                    <td data-label="Penulis">@book.Penulis</td>
+                    <td data-label="Penerbit">@book.Penerbit</td>
+               @*  <td>
+                    <a href="@($"bookdetail/{book.Id}")" class="btn btn-danger table-btn">
+                        ...
+                    </a>
+                  
+                </td> *@
+                @*  <button @onclick="@(() => AddEditBookShow(book.Id))" class="btn btn-danger table-btn">  Detail</button> *@
+            </tr>
+        }
+
+    
+        </tbody>
+    </table>
+
+    @* <table class="table">
+        <thead>
+            <tr>
+                <th class="hide-col"></th>
+                <th >Judul</th>
+                <th >Penulis</th>
+                <th class="hide-col ">Penerbit</th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var book in _books)
+            {
+                <tr>
+                    <td class="hide-col"><img src="@($"images/{book.Gambar}")" class="rounded-circle" width="100" height="100" /></td>
+                    <td style="color:#B10505;">@book.Judul</td>
+                    <td>@book.Penulis</td>
+                    <td class="hide-col">@book.Penerbit</td>
+                    <td>
+                        <a href="@($"bookdetail/{book.Id}")" class="btn btn-danger table-btn">
+                           ...
+                        </a>
+                        <button @onclick="@(() => AddEditBookShow(book.Id))" class="btn btn-danger table-btn">  Detail</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table> *@
+}
+<style>
+    table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
+
+    img {
+        max-width: 100%;
+        height: auto;
+         border-radius: 50%;  /* Makes the image circular */
+    }
+        @@media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            th {
+                display: none;
+            }
+            td {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+                border: none;
+                border-bottom: 1px solid #ddd;
+            }
+            td:before {
+                content: attr(data-label);
+                flex-basis: 100%;
+                text-align: center;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+       
+        }
+   
+
+   
+
+</style>
+@code {
+    protected BookDetailDialog BookDetailDialog { get; set; }
+    private IEnumerable<Book?>? _books = null;
+    protected override async Task OnInitializedAsync()
+    {
+        _books = await BookService.GetBooksAsync();
+    }
+    public void AddEditBookShow(int bookid)
+    {
+        BookDetailDialog.Show(bookid);
+    }
+    public async void AddEditBookDialog_OnDialogClose()
+    {
+        // Books = (await BookService.GetAll()).ToList();
+        StateHasChanged();
+    }
+
+}

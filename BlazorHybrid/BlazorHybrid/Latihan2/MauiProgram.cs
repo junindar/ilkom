@@ -1,7 +1,11 @@
-﻿using Introduction.Service;
+﻿using Latihan2.Service;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Microsoft.Maui.Controls.Hosting;
+using Microsoft.Maui.Hosting;
 
-namespace Introduction
+
+namespace Latihan2
 {
     public static class MauiProgram
     {
@@ -22,7 +26,6 @@ namespace Introduction
     		builder.Logging.AddDebug();
 #endif
             builder.Services.AddTransient<IBookService, BookService>();
-
             return builder.Build();
         }
     }
