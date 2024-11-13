@@ -1,0 +1,95 @@
+﻿@page "/booklist2"
+@inherits BookList2Base
+<h1>Daftar Buku</h1>
+
+@if (Books == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+   
+    <table>
+        <thead>
+        <tr>
+            <th></th>
+            <th>Judul</th>
+            <th >Penulis</th>
+            <th >Penerbit</th>
+            <th></th>
+        </tr>
+        </thead>
+        <tbody>
+        @foreach (var book in Books)
+        {
+            <tr>
+                    <td><img src="@($"images/{book.Gambar}")" /></td>
+                    <td data-label="Judul" style="color:#B10505;">@book.Judul</td>
+                    <td data-label="Penulis">@book.Penulis</td>
+                    <td data-label="Penerbit">@book.Penerbit</td>
+                <td>
+                    <a href="@($"bookdetail/{book.Id}")" class="btn btn-danger table-btn">
+                        ...
+                    </a>
+                   
+                </td>
+             
+            </tr>
+        }
+
+    
+        </tbody>
+    </table>
+
+
+
+    
+}
+<style>
+    table {
+        width: 100%;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 10px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    img {
+        max-width: 100%;
+        height: auto;
+        border-radius: 50%; /* Makes the image circular */
+    }
+        @@media (max-width: 600px) {
+            table, thead, tbody, th, td, tr {
+                display: block;
+            }
+            th {
+                display: none;
+            }
+            td {
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                padding: 10px;
+                border: none;
+                border-bottom: 1px solid #ddd;
+            }
+            td:before {
+                content: attr(data-label);
+                flex-basis: 100%;
+                text-align: center;
+                font-weight: bold;
+                margin-bottom: 5px;
+            }
+
+       
+        }
+   
+
+   
+
+</style>
+

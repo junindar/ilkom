@@ -1,4 +1,5 @@
 ﻿@page "/booklist"
+
 @inject IBookService BookService
 <h1>Daftar Buku</h1>
 
@@ -8,8 +9,7 @@
 }
 else
 {
-    <BookDetailDialog @ref="BookDetailDialog" 
-     CloseEventCallback="@AddEditBookDialog_OnDialogClose"></BookDetailDialog>
+    <BookDetailDialog @ref="BookDetailDialog" CloseEventCallback="@AddEditBookDialog_OnDialogClose"></BookDetailDialog>
 
     <table>
         <thead>
@@ -30,12 +30,15 @@ else
                     <td data-label="Penulis">@book.Penulis</td>
                     <td data-label="Penerbit">@book.Penerbit</td>
                 <td>
-                   @*  <a href="@($"bookdetail/{book.Id}")" class="btn btn-danger table-btn">
-                        ...
-                    </a> *@
-                    <button @onclick="@(() => AddEditBookShow(book.Id))" class="btn btn-danger table-btn">Detail</button>
+                    <div class="=row">
+                        <a href="@($"bookdetail/{book.Id}")" class="btn btn-danger table-btn">
+                            ...
+                        </a>
+                       @*  <button @onclick="@(() => AddEditBookShow(book.Id))" class="btn btn-danger table-btn"> Detail</button> *@
+                    </div>
+                   
                 </td>
-             
+                
             </tr>
         }
 
@@ -43,9 +46,6 @@ else
         </tbody>
     </table>
 
-
-
-    @*  <button @onclick="@(() => AddEditBookShow(book.Id))" class="btn btn-danger table-btn">  Detail</button> *@
     @* <table class="table">
         <thead>
             <tr>
@@ -77,20 +77,19 @@ else
 }
 <style>
     table {
-        width: 100%;
-        border-collapse: collapse;
-    }
-
-    th, td {
-        padding: 10px;
-        text-align: left;
-        border: 1px solid #ddd;
-    }
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+            border: 1px solid #ddd;
+        }
 
     img {
         max-width: 100%;
         height: auto;
-        border-radius: 50%; /* Makes the image circular */
+         border-radius: 50%;  /* Makes the image circular */
     }
         @@media (max-width: 600px) {
             table, thead, tbody, th, td, tr {
@@ -123,14 +122,12 @@ else
 
 </style>
 @code {
-    
+    protected BookDetailDialog BookDetailDialog { get; set; }
     private IEnumerable<Book?>? _books = null;
     protected override async Task OnInitializedAsync()
     {
         _books = await BookService.GetBooksAsync();
     }
-
-    protected BookDetailDialog BookDetailDialog { get; set; }
     public void AddEditBookShow(int bookid)
     {
         BookDetailDialog.Show(bookid);

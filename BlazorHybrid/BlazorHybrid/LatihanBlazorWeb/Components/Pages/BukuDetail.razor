@@ -1,0 +1,6 @@
+﻿@page "/bookdetail/{BookId}"
+<BookDetail BookId="@BookId"></BookDetail>
+@code{
+    [Parameter]
+        public string BookId { get; set; }
+}
