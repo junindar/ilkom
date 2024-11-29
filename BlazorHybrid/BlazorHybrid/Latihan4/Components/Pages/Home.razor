@@ -1,0 +1,17 @@
+﻿@page "/"
+@using Microsoft.AspNetCore.Authorization
+@attribute [Authorize (Roles = "Admin,Super Admin")]
+<h1>Hello, world!</h1>
+<AuthorizeView>
+    <Authorized>
+        Welcome to your new app.
+    </Authorized>
+  
+    <NotAuthorized>
+        Please Login
+    </NotAuthorized>
+</AuthorizeView>
+
+<AuthorizeView Roles="Admin">
+    This only visible for Admin Role
+</AuthorizeView>

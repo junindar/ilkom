@@ -7,11 +7,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Introduction", "Introductio
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan2", "Latihan2\Latihan2.csproj", "{33EC60AA-F554-4CBE-ABB2-920C1F91B26C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Latihan.Library", "Latihan.Library\Latihan.Library.csproj", "{B25BC6D0-FBE8-4419-8892-BCECC8FD01AF}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan.Library", "Latihan.Library\Latihan.Library.csproj", "{B25BC6D0-FBE8-4419-8892-BCECC8FD01AF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Latihan3", "Latihan3\Latihan3.csproj", "{A3892FE2-2F4B-49DA-96F6-9056D1821EE2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan3", "Latihan3\Latihan3.csproj", "{A3892FE2-2F4B-49DA-96F6-9056D1821EE2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "LatihanBlazorWeb", "LatihanBlazorWeb\LatihanBlazorWeb.csproj", "{F1526FC5-52A2-46F6-86E7-5B3EFD253BDA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LatihanBlazorWeb", "LatihanBlazorWeb\LatihanBlazorWeb.csproj", "{F1526FC5-52A2-46F6-86E7-5B3EFD253BDA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Latihan4", "Latihan4\Latihan4.csproj", "{91845D66-0EAB-4473-AD3A-3BCA06BA3DF8}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,6 +47,12 @@ Global
 		{F1526FC5-52A2-46F6-86E7-5B3EFD253BDA}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F1526FC5-52A2-46F6-86E7-5B3EFD253BDA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F1526FC5-52A2-46F6-86E7-5B3EFD253BDA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91845D66-0EAB-4473-AD3A-3BCA06BA3DF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{91845D66-0EAB-4473-AD3A-3BCA06BA3DF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{91845D66-0EAB-4473-AD3A-3BCA06BA3DF8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{91845D66-0EAB-4473-AD3A-3BCA06BA3DF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{91845D66-0EAB-4473-AD3A-3BCA06BA3DF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{91845D66-0EAB-4473-AD3A-3BCA06BA3DF8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
