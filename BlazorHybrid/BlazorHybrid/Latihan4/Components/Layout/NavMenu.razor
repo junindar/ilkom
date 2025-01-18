@@ -27,33 +27,31 @@
                         <span class="bi bi-list-book-nav-menu" aria-hidden="true"></span> Daftar Buku
                     </NavLink>
                 </div>
+
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" @onclick="Logout" style="cursor:pointer">
+                    <NavLink class="nav-link" style="cursor:pointer" @onclick="Logout">
                         <span class="bi bi-list-logout-nav-menu" aria-hidden="true"></span> Logout
                     </NavLink>
                 </div>
-               
             </Authorized>
             <NotAuthorized>
                 <div class="nav-item px-3">
-                    <NavLink class="nav-link" @onclick="Login" style="cursor:pointer">
+                    <NavLink class="nav-link" style="cursor:pointer" @onclick="Login">
                         <span class="bi bi-list-login-nav-menu" aria-hidden="true"></span> Login
                     </NavLink>
                 </div>
             </NotAuthorized>
-            
         </AuthorizeView>
        
 
     </nav>
 </div>
+
 @code{
-
-
     private void Logout()
     {
         var authState = (CustomAuthStateProvider)AuthStateProvider;
-         authState.Logout();
+        authState.Logout();
         NavigationManager.NavigateTo("");
     }
 
@@ -61,6 +59,5 @@
     {
         var authState = (CustomAuthStateProvider)AuthStateProvider;
         await  authState.LogInAsync();
-       
     }
 }

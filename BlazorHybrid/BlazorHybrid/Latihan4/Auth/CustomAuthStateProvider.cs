@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Components.Authorization;
 
+
 namespace Latihan4.Auth
 {
     public class CustomAuthStateProvider : AuthenticationStateProvider
@@ -29,6 +30,20 @@ namespace Latihan4.Auth
 
         private Task<ClaimsPrincipal> LoginWithExternalProviderAsync()
         {
+
+            Claim[] claims = {
+                new(ClaimTypes.Name, "Junindar"), new(ClaimTypes.Role, "Admin"),
+
+            };
+
+            var identity = new ClaimsIdentity(claims,"Custom");
+           
+            var authenticatedUser = new ClaimsPrincipal(identity);
+            return Task.FromResult(authenticatedUser);
+        }
+
+        private Task<ClaimsPrincipal> LoginWithExternalProviderAsync2()
+        {
             /*
                 Provide OpenID/MSAL code to authenticate the user. See your identity 
                 provider's documentation for details.
@@ -46,9 +61,11 @@ namespace Latihan4.Auth
 
             };
 
-            var identity = new ClaimsIdentity(claims,"Custom");
+            var identity = new ClaimsIdentity(claims, "Custom");
             var authenticatedUser = new ClaimsPrincipal(identity);
             return Task.FromResult(authenticatedUser);
+
+
         }
 
         public void Logout()

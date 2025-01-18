@@ -1,4 +1,4 @@
-﻿using Latihan.Library.Service;
+﻿    using Latihan.Library.Service;
 using Microsoft.AspNetCore.Components.Authorization;
 using Microsoft.Extensions.Logging;
 using Latihan4.Auth;
@@ -25,7 +25,8 @@ namespace Latihan4
             builder.Services.AddAuthorizationCore();
             builder.Services.AddCascadingAuthenticationState();
             builder.Services.AddScoped<AuthenticationStateProvider, CustomAuthStateProvider>();
-          builder.Services.AddTransient<IBookService, BookService>();
+          
+            builder.Services.AddTransient<IBookService, BookService>();
             return builder.Build();
         }
     }
