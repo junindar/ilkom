@@ -1,0 +1,108 @@
+﻿@inject IBookService BookService
+@if (ShowDialog)
+{
+    if (Book == null)
+    {
+        <p><em>Data Tidak Tersedia</em></p>
+    }
+    else
+    {
+        <div class="modal fade show d-block" id="exampleModal" tabindex="-1" role="dialog">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content" >
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="titleLabel">Detail Boku</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close" @onclick="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+
+                        <div class="col-12 row">
+                            <div class="col-4 col-12">
+                                <img src="@($"images/{Book.Gambar}")" width="200" height="300" />
+                            </div>
+                            <div class="col-8 col-12 row">
+                                <div class="col-xs-12 col-sm-8">
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label color-title">Judul</label>
+                                        <div class="col-sm-8">
+                                            <label type="text" readonly class="form-control-plaintext">@Book.Judul</label>
+                                        </div>
+                                    </div>
+                                    @*Detail sintaks ada lampiran project*@
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label color-title">Penulis</label>
+                                        <div class="col-sm-8">
+                                            <label type="text" readonly class="form-control-plaintext">@Book.Penulis</label>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label color-title">Penerbit</label>
+                                        <div class="col-sm-8">
+                                            <label type="text" readonly class="form-control-plaintext">@Book.Penerbit</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-labe color-title">Deskripsi</label>
+                                        <div class="col-sm-8">
+                                            <label type="text" readonly class="form-control-plaintext">@Book.Deskripsi</label>
+                                        </div>
+                                    </div>
+                                    <div class="form-group row">
+                                        <label class="col-sm-4 col-form-label color-title">Status</label>
+                                        <div class="col-sm-8">
+
+                                            @if (Book.Status)
+                                            {
+                                                <label type="text" readonly class="form-control-plaintext">Tersedia</label>
+                                            }
+                                            else
+                                            {
+                                                <label type="text" readonly class="form-control-plaintext">DiPinjam</label>
+
+                                            }
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <a class="btn btn-outline-primary edit-btn" @onclick="@Close">Close</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    }
+   
+}
+
+@code {
+    public bool ShowDialog { get; set; }
+    public Book? Book { get; set; } 
+    [Parameter]
+    public EventCallback<bool> CloseEventCallback { get; set; }
+        
+
+    public async void Show(int bookid)
+    {
+       
+        if (bookid >0)
+        {
+           
+
+            Book = await BookService.GetBookByIdAsync(bookid);
+            
+        }
+
+        ShowDialog = true;
+        StateHasChanged();
+    }
+
+       
+    public void Close()
+    {
+        ShowDialog = false;
+    }
+}

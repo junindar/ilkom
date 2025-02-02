@@ -15,7 +15,15 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "LatihanBlazorWeb", "Latihan
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan4", "Latihan4\Latihan4.csproj", "{91845D66-0EAB-4473-AD3A-3BCA06BA3DF8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Latihan5", "Latihan5\Latihan5.csproj", "{EDF597B2-0051-45B7-A36B-28B872663916}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan5", "Latihan5\Latihan5.csproj", "{EDF597B2-0051-45B7-A36B-28B872663916}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan.RCL", "Latihan.RCL\Latihan.RCL.csproj", "{A9FC609A-9485-4F13-92F9-87D619D39D54}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan6", "Latihan6\Latihan6.csproj", "{24DA9D41-9C71-4D43-AB9C-9D4D57A6CAD7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan.WPF", "Latihan.WPF\Latihan.WPF.csproj", "{85DA9F5D-EB96-442F-B8D4-47A25AB9C38C}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Latihan.WindowsForm", "Latihan.WindowsForm\Latihan.WindowsForm.csproj", "{CB2714D6-199C-4CD2-96AD-7624B006E13E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,6 +69,24 @@ Global
 		{EDF597B2-0051-45B7-A36B-28B872663916}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EDF597B2-0051-45B7-A36B-28B872663916}.Release|Any CPU.Build.0 = Release|Any CPU
 		{EDF597B2-0051-45B7-A36B-28B872663916}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{A9FC609A-9485-4F13-92F9-87D619D39D54}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9FC609A-9485-4F13-92F9-87D619D39D54}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9FC609A-9485-4F13-92F9-87D619D39D54}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9FC609A-9485-4F13-92F9-87D619D39D54}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24DA9D41-9C71-4D43-AB9C-9D4D57A6CAD7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{24DA9D41-9C71-4D43-AB9C-9D4D57A6CAD7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{24DA9D41-9C71-4D43-AB9C-9D4D57A6CAD7}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{24DA9D41-9C71-4D43-AB9C-9D4D57A6CAD7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{24DA9D41-9C71-4D43-AB9C-9D4D57A6CAD7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{24DA9D41-9C71-4D43-AB9C-9D4D57A6CAD7}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{85DA9F5D-EB96-442F-B8D4-47A25AB9C38C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85DA9F5D-EB96-442F-B8D4-47A25AB9C38C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85DA9F5D-EB96-442F-B8D4-47A25AB9C38C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85DA9F5D-EB96-442F-B8D4-47A25AB9C38C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{CB2714D6-199C-4CD2-96AD-7624B006E13E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{CB2714D6-199C-4CD2-96AD-7624B006E13E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{CB2714D6-199C-4CD2-96AD-7624B006E13E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{CB2714D6-199C-4CD2-96AD-7624B006E13E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

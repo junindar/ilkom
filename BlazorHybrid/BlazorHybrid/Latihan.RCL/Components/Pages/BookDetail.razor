@@ -1,0 +1,86 @@
+﻿@page "/bookdetail/{BookId}"
+@inject IBookService BookService
+
+@if (Book == null)
+{
+    <p><em>Data Tidak Tersedia</em></p>
+}
+else
+{
+    <h3 class="page-title color-title">Detail Buku : @Book.Judul</h3>
+    <div class="col-4" style="margin-bottom:10px;margin-left:2px;">
+        <a href="BookList" class="btn btn-danger table-btn">
+            Kembali
+        </a>
+    </div>
+    <div class="col-12 row">
+        <div class="col-4 col-12">
+            <img src="@($"images/{Book.Gambar}")" width="200" height="300" />
+        </div>
+        <div class="col-8 col-12 row">
+            <div class="col-xs-12 col-sm-8">
+               
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label color-title">Judul</label>
+                    <div class="col-sm-8">
+                        <label type="text" readonly class="form-control-plaintext">@Book.Judul</label>
+                    </div>
+                </div>
+                @*Detail sintaks ada lampiran project*@
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label color-title">Penulis</label>
+                    <div class="col-sm-8">
+                        <label type="text" readonly class="form-control-plaintext">@Book.Penulis</label>
+                    </div>
+                </div>
+
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label color-title">Penerbit</label>
+                    <div class="col-sm-8">
+                        <label type="text" readonly class="form-control-plaintext">@Book.Penerbit</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-labe color-title">Deskripsi</label>
+                    <div class="col-sm-8">
+                        <label type="text" readonly class="form-control-plaintext">@Book.Deskripsi</label>
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-sm-4 col-form-label color-title">Status</label>
+                    <div class="col-sm-8">
+
+                        @if (Book.Status)
+                        {
+                            <label type="text" readonly class="form-control-plaintext">Tersedia</label>
+                        }
+                        else
+                        {
+                            <label type="text" readonly class="form-control-plaintext">DiPinjam</label>
+
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+<style>
+    .color-title{ 
+        color: #B10505;
+        font-weight: bold;
+    }
+</style>
+
+@code {
+    [Parameter]
+    public string BookId { get; set; }
+
+    private Book? Book { get; set; } 
+
+    protected override async Task OnInitializedAsync()
+    {
+        
+        Book = await BookService.GetBookByIdAsync(int.Parse(BookId));
+    }
+}

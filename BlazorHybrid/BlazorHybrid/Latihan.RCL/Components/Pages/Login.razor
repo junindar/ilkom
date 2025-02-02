@@ -1,0 +1,96 @@
+﻿@page "/Login"
+@using Latihan.RCL.Entity
+@using System.Security.Claims
+@inject AuthenticationStateProvider AuthStateProvider
+@inject NavigationManager NavigationManager
+
+
+
+<EditForm Model="@user" OnValidSubmit="@ValidateUser">
+    @*Detail sintaks pada project lampiran*@
+    <div>
+
+    </div>
+    <div>
+        <h3 style="font-weight: bold;">Login</h3>
+    </div>
+    <div>
+        <br/>
+    </div>
+    <div class="col-3 row">
+        <input class="form-control col-12" @bind="user.Username" placeholder="Username"/>
+    </div>
+    <br/>
+    <div class="col-3 row">
+        <input type="password" class="form-control col-12" @bind="user.Password" placeholder="password"/>
+    </div>
+    <br/>
+    <div class="col-3 row">
+        <span class="col-12"></span>
+        <input type="submit" class="form-control col-6 btn btn-danger" value="Login"/>
+
+    </div>
+    <br/>
+    <div class="col-12 row" style="text-align: left; font-weight: bold">
+        <span class="col-12">@LoginMesssage</span>
+    </div>
+</EditForm>
+@code {
+
+
+    private User user = new();
+    public string LoginMesssage { get; set; }
+    ClaimsPrincipal claimsPrincipal;
+
+    [CascadingParameter]
+    private Task<AuthenticationState> authenticationStateTask { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        user = new User();
+
+        claimsPrincipal = (await authenticationStateTask).User;
+
+        if (claimsPrincipal.Identity != null && claimsPrincipal.Identity.IsAuthenticated)
+        {
+            ((ICustomAuthStateProvider)AuthStateProvider).Logout();
+        }
+            
+
+    }
+
+    protected async Task<bool> ValidateUser()
+    {
+        if (user.Username == "admin" && user.Password == "123456")
+        {
+            user.Nama = "Junindar";
+            user.Role= "Admin";
+          
+        }
+        else  if (user.Username == "user1" && user.Password == "123456")
+        {
+            user.Nama = "Arya";
+            user.Role = "Normal User";
+   
+        }
+        else if (user.Username == "user2" && user.Password == "123456")
+        {
+            user.Nama = "Syifa";
+            user.Role = "Staff";
+   
+        }
+        else
+        {
+            LoginMesssage = "Invalid username or password";
+            return await Task.FromResult(true);
+        }
+        var authState = (ICustomAuthStateProvider)AuthStateProvider;
+        await authState.LogInAsync(user);
+        NavigationManager.NavigateTo("/");
+        
+        return await Task.FromResult(true);
+
+            
+
+    }
+}
