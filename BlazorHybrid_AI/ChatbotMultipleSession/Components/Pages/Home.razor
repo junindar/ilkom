@@ -1,0 +1,899 @@
+﻿@page "/"
+@inject IChatService chatService
+@inject IChatHistoryService historyService
+@inject IChatSessionService sessionService
+
+@using ChatbotMultipleSession.Service
+@inject IJSRuntime JS
+<div class="chat-container">
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg xmlns="http://www.w3.org/2000/svg" width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                </svg>
+                <span>ChatBot</span>
+            </div>
+            <button class="new-chat-btn" @onclick="NewSession" title="New Chat">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"/>
+                    <line x1="5" y1="12" x2="19" y2="12"/>
+                </svg>
+            </button>
+        </div>
+
+        <div class="sessions-container">
+            @if (sessionService.Sessions.Count == 0)
+            {
+                <div class="empty-sessions">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                    <p>No chats yet</p>
+                </div>
+            }
+            else
+            {
+
+                <ul class="sessions-list">
+                    @foreach (var s in sessionService.Sessions.OrderByDescending(s => s.LastUpdated))
+                    {
+                        <li class="session-item @(s.Id == sessionService.CurrentSession?.Id ? "active" : "")"
+                            @onclick="@(() => SwitchSession(s.Id))">
+
+                            @if (editingSessionId == s.Id)
+                            {
+                                <input type="text" class="rename-input"
+                                       @bind="editTitle"
+                                       @onkeypress="(e => KeyPressRename(e, s.Id))" />
+
+                                <div class="edit-actions">
+                                    <!-- Confirm (✔) -->
+                                    <button class="confirm-btn"
+                                            @onclick:stopPropagation="true"
+                                            @onclick="@(() => ConfirmRename(s.Id))"
+                                            title="Confirm rename">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="20 6 9 17 4 12" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Cancel (✖) -->
+                                    <button class="cancel-btn"
+                                            @onclick:stopPropagation="true"
+                                            @onclick="CancelRename"
+                                            title="Cancel rename">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="18" y1="6" x2="6" y2="18" />
+                                            <line x1="6" y1="6" x2="18" y2="18" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            }
+                            else
+                            {
+                                <div class="session-info">
+                                    <div class="session-title">@s.Title</div>
+                                    <div class="session-meta">
+                                        <span class="message-count">@s.Messages.Count msgs</span>
+                                        <span class="session-date">@s.LastUpdated.ToString("MMM dd")</span>
+                                    </div>
+                                </div>
+
+                                <div class="session-buttons">
+                                    <!-- Edit (✎) -->
+                                    <button class="edit-btn"
+                                            @onclick:stopPropagation="true"
+                                            @onclick="@(() => StartRename(s.Id, s.Title))"
+                                            title="Rename chat">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M12 20h9" />
+                                            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4z" />
+                                        </svg>
+                                    </button>
+
+                                    <!-- Delete -->
+                                    <button class="delete-btn"
+                                            @onclick:stopPropagation="true"
+                                            @onclick="@(() => DeleteSession(s.Id))"
+                                            title="Delete chat">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16"
+                                             viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                             stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                            <polyline points="3 6 5 6 21 6" />
+                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
+                                        </svg>
+                                    </button>
+                                </div>
+                            }
+                        </li>
+                    }
+                </ul>
+
+
+
+             @*    <ul class="sessions-list">
+                    @foreach (var s in sessionService.Sessions.OrderByDescending(s => s.LastUpdated))
+                    {
+                        <li class="session-item @(s.Id == sessionService.CurrentSession?.Id ? "active" : "")"
+                            @onclick="@(() => SwitchSession(s.Id))">
+                            <div class="session-info">
+                                <div class="session-title">@s.Title</div>
+                                <div class="session-meta">
+                                    <span class="message-count">@s.Messages.Count msgs</span>
+                                    <span class="session-date">@s.LastUpdated.ToString("MMM dd")</span>
+                                </div>
+                            </div>
+                            <button class="delete-btn" 
+                                    @onclick:stopPropagation="true"
+                                    @onclick="@(() => DeleteSession(s.Id))"
+                                    title="Delete chat">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="3 6 5 6 21 6"/>
+                                    <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                                </svg>
+                            </button>
+                        </li>
+                    }
+                </ul> *@
+            }
+        </div>
+
+      @*   <div class="sidebar-footer">
+            <button class="footer-btn">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="3"/>
+                    <path d="M12 1v6m0 6v6M4.22 4.22l4.24 4.24m5.08 5.08l4.24 4.24M1 12h6m6 0h6M4.22 19.78l4.24-4.24m5.08-5.08l4.24-4.24"/>
+                </svg>
+                Settings
+            </button>
+        </div> *@
+    </div>
+
+    <!-- Chat Area -->
+    <div class="chat-main">
+        @if (sessionService.CurrentSession == null)
+        {
+            <div class="empty-chat">
+                <div class="empty-icon">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+                    </svg>
+                </div>
+                <h3>Start a New Chat</h3>
+                <p>Select a chat from the sidebar or create a new one to begin</p>
+            </div>
+        }
+        else
+        {
+            <!-- Chat Header -->
+            <div class="chat-header">
+                <div class="header-content">
+                    <div>
+                        <h4>@sessionService.CurrentSession.Title</h4>
+                        <small>@sessionService.CurrentSession.Messages.Count messages in this chat</small>
+                    </div>
+                    <div class="header-actions">
+                        <button class="icon-btn" title="More options">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="12" cy="12" r="1"/>
+                                <circle cx="19" cy="12" r="1"/>
+                                <circle cx="5" cy="12" r="1"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Messages Area -->
+            <div class="messages-box" id="chatBox">
+                @if (sessionService.CurrentSession.Messages.Count == 0)
+                {
+                    <div class="no-messages">
+                        <p>No messages yet. Start the conversation!</p>
+                    </div>
+                }
+                else
+                {
+                    @foreach (var msg in sessionService.CurrentSession.Messages)
+                    {
+                        <div class="message-wrapper @(msg.Role == "user" ? "user-message" : "bot-message")">
+                            <div class="message-avatar">
+                                @if (msg.Role == "user")
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                                        <circle cx="12" cy="7" r="4"/>
+                                    </svg>
+                                }
+                                else
+                                {
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <path d="M12 8V4H8"/>
+                                        <rect width="16" height="12" x="4" y="8" rx="2"/>
+                                        <path d="M2 14h2"/>
+                                        <path d="M20 14h2"/>
+                                        <path d="M15 13v2"/>
+                                        <path d="M9 13v2"/>
+                                    </svg>
+                                }
+                            </div>
+                            <div class="message-content">
+                                <div class="message-bubble">@msg.Content</div>
+                                <div class="message-time">@DateTime.Now.ToString("HH:mm")</div>
+                            </div>
+                        </div>
+                    }
+                }
+                <div id="messagesEnd"></div>
+            </div>
+
+            <!-- Input Area -->
+            <div class="input-area">
+                <div class="input-wrapper">
+                    <textarea class="message-input" 
+                              @bind="inputMessage" 
+                              placeholder="Type your message here..."
+                              @onkeypress="KeyPress"
+                              rows="1"></textarea>
+                    <button class="send-btn" @onclick="SendMessage" disabled="@string.IsNullOrWhiteSpace(inputMessage)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m22 2-7 20-4-9-9-4Z"/>
+                            <path d="M22 2 11 13"/>
+                        </svg>
+                    </button>
+                </div>
+                <small class="input-hint">Press <kbd>Enter</kbd> to send, <kbd>Shift + Enter</kbd> for new line</small>
+            </div>
+        }
+    </div>
+</div>
+
+<style>
+    
+    .session-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 6px 10px;
+        cursor: pointer;
+    }
+
+        .session-item.active {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+    .session-buttons button,
+    .edit-actions button {
+        background: none;
+        border: none;
+        padding: 3px;
+        margin-left: 4px;
+        cursor: pointer;
+    }
+
+    .session-buttons svg,
+    .edit-actions svg {
+        width: 16px;
+        height: 16px;
+        stroke: currentColor;
+        transition: stroke 0.2s ease;
+    }
+
+    .edit-btn:hover svg {
+        stroke: #0dcaf0;
+    }
+
+    .confirm-btn:hover svg {
+        stroke: #198754;
+    }
+
+    .cancel-btn:hover svg {
+        stroke: #dc3545;
+    }
+
+    .delete-btn:hover svg {
+        stroke: #dc3545;
+    }
+
+    .rename-input {
+        width: 70%;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        padding: 3px 6px;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    .chat-container {
+        display: flex;
+        height: 100vh;
+        background: #f8f9fa;
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    }
+
+    /* ============= SIDEBAR ============= */
+    .sidebar {
+        width: 280px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        display: flex;
+        flex-direction: column;
+        box-shadow: 0 4px 20px rgba(102, 126, 234, 0.3);
+    }
+
+    .sidebar-header {
+        padding: 20px;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .logo {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        font-size: 1.3rem;
+        font-weight: 700;
+    }
+
+    .new-chat-btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: rgba(255, 255, 255, 0.2);
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .new-chat-btn:hover {
+        background: rgba(255, 255, 255, 0.3);
+        transform: translateY(-2px);
+    }
+
+    .sessions-container {
+        flex: 1;
+        overflow-y: auto;
+        padding: 10px;
+    }
+
+    .sessions-container::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    .sessions-container::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.3);
+        border-radius: 10px;
+    }
+
+    .empty-sessions {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        opacity: 0.7;
+        text-align: center;
+    }
+
+    .empty-sessions svg {
+        margin-bottom: 10px;
+        opacity: 0.8;
+    }
+
+    .empty-sessions p {
+        font-size: 0.9rem;
+        margin: 0;
+    }
+
+    .sessions-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+
+    .session-item {
+        padding: 12px;
+        margin-bottom: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        border-radius: 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 2px solid transparent;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .session-item:hover {
+        background: rgba(255, 255, 255, 0.2);
+        transform: translateX(5px);
+    }
+
+    .session-item.active {
+        background: rgba(255, 255, 255, 0.25);
+        border-color: rgba(255, 255, 255, 0.5);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    }
+
+    .session-info {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .session-title {
+        font-weight: 600;
+        font-size: 0.95rem;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .session-meta {
+        display: flex;
+        gap: 8px;
+        margin-top: 4px;
+        font-size: 0.75rem;
+        opacity: 0.8;
+    }
+
+    .delete-btn {
+        background: transparent;
+        border: none;
+        color: white;
+        cursor: pointer;
+        padding: 4px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+
+    .session-item:hover .delete-btn {
+        opacity: 1;
+    }
+
+    .delete-btn:hover {
+        color: #ff6b6b;
+    }
+
+    .sidebar-footer {
+        padding: 15px;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+
+    .footer-btn {
+        width: 100%;
+        padding: 10px;
+        background: rgba(255, 255, 255, 0.15);
+        border: none;
+        color: white;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .footer-btn:hover {
+        background: rgba(255, 255, 255, 0.25);
+    }
+
+    /* ============= CHAT MAIN ============= */
+    .chat-main {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        background: white;
+    }
+
+    .empty-chat {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        color: #999;
+    }
+
+    .empty-icon {
+        width: 120px;
+        height: 120px;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border-radius: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        margin-bottom: 20px;
+        box-shadow: 0 10px 40px rgba(102, 126, 234, 0.2);
+        animation: float 3s ease-in-out infinite;
+    }
+
+    .empty-chat h3 {
+        font-size: 1.5rem;
+        color: #333;
+        margin: 0 0 10px 0;
+    }
+
+    .empty-chat p {
+        color: #999;
+        margin: 0;
+    }
+
+    /* ============= CHAT HEADER ============= */
+    .chat-header {
+        padding: 20px;
+        background: white;
+        border-bottom: 1px solid #e0e0e0;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .header-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    .chat-header h4 {
+        margin: 0;
+        color: #333;
+        font-size: 1.2rem;
+    }
+
+    .chat-header small {
+        color: #999;
+        display: block;
+        margin-top: 4px;
+    }
+
+    .header-actions {
+        display: flex;
+        gap: 8px;
+    }
+
+    .icon-btn {
+        width: 36px;
+        height: 36px;
+        border: none;
+        background: #f0f0f0;
+        color: #666;
+        border-radius: 8px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+    }
+
+    .icon-btn:hover {
+        background: #e0e0e0;
+    }
+
+    /* ============= MESSAGES BOX ============= */
+    .messages-box {
+        flex: 1;
+        overflow-y: auto;
+        padding: 20px;
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        background: linear-gradient(to bottom, #ffffff 0%, #f8f9fa 100%);
+    }
+
+    .messages-box::-webkit-scrollbar {
+        width: 8px;
+    }
+
+    .messages-box::-webkit-scrollbar-thumb {
+        background: #ddd;
+        border-radius: 10px;
+    }
+
+    .no-messages {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        height: 100%;
+        color: #999;
+    }
+
+    .message-wrapper {
+        display: flex;
+        gap: 12px;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    .message-wrapper.user-message {
+        flex-direction: row-reverse;
+    }
+
+    .message-avatar {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        flex-shrink: 0;
+    }
+
+    .user-message .message-avatar {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    }
+
+    .bot-message .message-avatar {
+        background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+    }
+
+    .message-content {
+        max-width: 70%;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .user-message .message-content {
+        align-items: flex-end;
+    }
+
+    .bot-message .message-content {
+        align-items: flex-start;
+    }
+
+    .message-bubble {
+        padding: 12px 16px;
+        border-radius: 18px;
+        line-height: 1.5;
+        word-wrap: break-word;
+    }
+
+    .user-message .message-bubble {
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-bottom-right-radius: 4px;
+        box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+    }
+
+    .bot-message .message-bubble {
+        background: white;
+        color: #333;
+        border: 1px solid #e0e0e0;
+        border-bottom-left-radius: 4px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+    }
+
+    .message-time {
+        font-size: 0.75rem;
+        color: #999;
+        margin-top: 4px;
+    }
+
+    /* ============= INPUT AREA ============= */
+    .input-area {
+        padding: 20px;
+        background: white;
+        border-top: 1px solid #e0e0e0;
+    }
+
+    .input-wrapper {
+        display: flex;
+        gap: 10px;
+        background: white;
+        border: 2px solid #e0e0e0;
+        border-radius: 16px;
+        padding: 8px;
+        transition: all 0.3s ease;
+    }
+
+    .input-wrapper:focus-within {
+        border-color: #667eea;
+        box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+    }
+
+    .message-input {
+        flex: 1;
+        border: none;
+        outline: none;
+        padding: 10px;
+        font-size: 1rem;
+        resize: none;
+        max-height: 150px;
+        font-family: inherit;
+        color: #333;
+    }
+
+    .message-input::placeholder {
+        color: #999;
+    }
+
+    .send-btn {
+        width: 44px;
+        height: 44px;
+        border: none;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        color: white;
+        border-radius: 12px;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: all 0.3s ease;
+        flex-shrink: 0;
+    }
+
+    .send-btn:not(:disabled):hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+    }
+
+    .send-btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+
+    .input-hint {
+        display: block;
+        margin-top: 8px;
+        color: #999;
+        text-align: center;
+    }
+
+    .input-hint kbd {
+        background: #f0f0f0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+        padding: 2px 6px;
+        font-family: monospace;
+        font-size: 0.8rem;
+    }
+
+    /* ============= ANIMATIONS ============= */
+    @@keyframes slideIn {
+        from {
+            opacity: 0;
+            transform: translateY(10px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+
+    @@keyframes float {
+        0%, 100% {
+            transform: translateY(0);
+        }
+        50% {
+            transform: translateY(-10px);
+        }
+    }
+
+    /* ============= RESPONSIVE ============= */
+    @@media (max-width: 768px) {
+        .sidebar {
+            width: 100%;
+            height: auto;
+            flex-direction: row;
+        }
+
+        .sessions-container {
+            display: none;
+        }
+
+        .chat-main {
+            max-height: calc(100vh - 60px);
+        }
+
+        .message-content {
+            max-width: 85%;
+        }
+    }
+
+</style>
+
+@code {
+    private string inputMessage = string.Empty;
+    private bool isLoading = false;
+    private Guid? editingSessionId = null;
+    private string editTitle = "";
+    private void StartRename(Guid id, string currentTitle)
+    {
+        editingSessionId = id;
+        editTitle = currentTitle;
+    }
+
+    private void CancelRename()
+    {
+        editingSessionId = null;
+        editTitle = "";
+    }
+
+    private void ConfirmRename(Guid id)
+    {
+        if (!string.IsNullOrWhiteSpace(editTitle))
+        {
+            sessionService.RenameSession(id, editTitle);
+        }
+        editingSessionId = null;
+        editTitle = "";
+    }
+
+    private void KeyPressRename(KeyboardEventArgs e, Guid id)
+    {
+        if (e.Key == "Enter")
+            ConfirmRename(id);
+    }
+    private async Task KeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter" && !e.ShiftKey)
+        {
+            await SendMessage();
+        }
+    }
+
+    private void NewSession()
+    {
+        sessionService.CreateNewSession($"Chat {sessionService.Sessions.Count + 1}");
+        StateHasChanged();
+    }
+
+    private void SwitchSession(Guid id)
+    {
+        sessionService.SwitchSession(id);
+        StateHasChanged();
+    }
+
+    private void DeleteSession(Guid id)
+    {
+        sessionService.DeleteSession(id);
+        StateHasChanged();
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(inputMessage) || sessionService.CurrentSession == null || isLoading)
+            return;
+
+        // Tambah pesan user
+        sessionService.AddMessage("user", inputMessage);
+        inputMessage = string.Empty;
+        isLoading = true;
+        StateHasChanged();
+
+        // Scroll ke bawah
+        await Task.Delay(100);
+        await JS.InvokeVoidAsync("scrollToBottom", "chatBox");
+
+        // Simulasi AI response (ganti dengan Azure OpenAI call)
+        await Task.Delay(1000);
+        sessionService.AddMessage("assistant", "This is a response from AI Assistant");
+        
+        isLoading = false;
+        StateHasChanged();
+
+        // Scroll ke bawah
+        await Task.Delay(50);
+        await JS.InvokeVoidAsync("scrollToBottom", "chatBox");
+    }
+}

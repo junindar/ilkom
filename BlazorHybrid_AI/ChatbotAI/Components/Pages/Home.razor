@@ -1,0 +1,88 @@
+﻿@page "/"
+@inject IChatService chatService
+@using ChatbotAI.Models
+
+
+
+<div class="container mt-4">
+    <div class="card shadow-sm border-0">
+        <div class="card-header bg-primary text-white rounded-top">
+            <h3 class="mb-0">🤖 AI ChatBot</h3>
+        </div>
+
+        @if (isLoading)
+        {
+            <div class="text-center mt-3">
+                <div class="spinner-grow text-primary" role="status">
+                    <span class="visually-hidden">Loading...</span>
+                </div>
+            </div>
+        }
+
+        <div class="card-body" style="height: 400px; overflow-y: auto;" id="chatContainer">
+            @foreach (var message in messages)
+            {
+                <div class="d-flex align-items-start mb-3 @(message.Role == "user" ? "justify-content-end" : "justify-content-start")">
+                    @if (message.Role != "user")
+                    {
+                        <img src="images/bot-avatar.png" class="rounded-circle me-2" width="40" height="40" />
+                    }
+                    <div class="p-3 rounded text-white"
+                         style="max-width: 75%; background-color:@(message.Role == "user" ? "#0d6efd" : "#6c757d")">
+                        <small><b>@(message.Role == "user" ? "You" : "Bot")</b></small><br />
+                        @message.Content
+                    </div>
+                    @if (message.Role == "user")
+                    {
+                        <img src="images/user-avatar.png" class="rounded-circle ms-2" width="40" height="40" />
+                    }
+                </div>
+            }
+        </div>
+
+        <div class="card-footer bg-light rounded-bottom">
+            <div class="input-group">
+                <textarea class="form-control" rows="2" placeholder="Ask anything..."
+                          @bind="userInput" style="border-radius: 8px; resize: none;"></textarea>
+                <button class="btn btn-primary" @onclick="SendMessage">Send</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private bool isLoading = false;
+    private string userInput;
+
+    private List<ChatMessage> messages = new();
+
+
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(userInput)) return;
+
+        messages.Add(new ChatMessage("user", userInput));
+        isLoading = true;
+
+        var response = await chatService.SendMessageAsync(messages);
+
+        if (response != null)
+        {
+           messages.Add(new ChatMessage("assistant", response));
+           
+        }
+        userInput = string.Empty;
+        isLoading = false;
+
+        await ScrollToBottom();
+    }
+
+  
+
+
+    private async Task ScrollToBottom()
+    {
+        await Task.Delay(100);
+    }
+}

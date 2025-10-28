@@ -1,0 +1,156 @@
+﻿@page "/Home2"
+@inject IChatService chatService
+@inject IChatSessionService sessionService
+@using ChatbotMultipleSession.Models
+@using ChatbotMultipleSession.Service
+@inject IJSRuntime JS
+<div class="flex">
+    <!-- Sidebar -->
+    <div class="w-64 border-end pe-2">
+        <h5>Sessions</h5>
+        <button class="btn btn-sm btn-primary mb-2" @onclick="NewSession">+ New Chat</button>
+
+        @*  <ul class="list-group small">
+            @foreach (var s in sessionService.Sessions.OrderByDescending(s => s.LastUpdated))
+            {
+                <li class="list-group-item @(s.Id == sessionService.CurrentSession?.Id ? "active" : "")"
+                    @onclick="@(() => SwitchSession(s.Id))">
+                    @s.Title
+                    <button class="btn btn-sm btn-danger float-end"
+                            @onclick="(() => DeleteSession(s.Id))">×</button>
+                </li>
+            }
+        </ul> *@
+        <ul class="list-group small">
+            @foreach (var s in sessionService.Sessions.OrderByDescending(s => s.LastUpdated))
+            {
+                <li class="list-group-item @(s.Id == sessionService.CurrentSession?.Id ? "active" : "")"
+                    @onclick="@(() => SwitchSession(s.Id))">
+
+                    @if (editingSessionId == s.Id)
+                    {
+                        <input type="text" class="form-control form-control-sm d-inline w-75"
+                               @bind="editTitle" @onkeypress="(e => KeyPressRename(e, s.Id))" />
+                        <button class="btn btn-sm btn-success ms-1" @onclick="@(() => ConfirmRename(s.Id))">✔</button>
+                        <button class="btn btn-sm btn-secondary ms-1" @onclick="CancelRename">✖</button>
+                    }
+                    else
+                    {
+                        @s.Title
+                        <button class="btn btn-sm btn-outline-secondary float-end ms-1"
+                                @onclick:stopPropagation="true"
+                                @onclick="@(() => StartRename(s.Id, s.Title))">✎</button>
+                        <button class="btn btn-sm btn-danger float-end"
+                                @onclick:stopPropagation="true"
+                                @onclick="@(() => DeleteSession(s.Id))">×</button>
+                    }
+                </li>
+            }
+        </ul>
+
+    </div>
+
+    <!-- Chat Area -->
+    <div class="flex-grow-1 ps-3 d-flex flex-column" style="height: 80vh;">
+        <div class="flex-grow-1 overflow-auto border rounded p-2" id="chatBox">
+            @if (sessionService.CurrentSession != null)
+            {
+                @foreach (var msg in sessionService.CurrentSession.Messages)
+                {
+                 
+                    <div class="my-1 @(msg.Role == "user" ? "text-end" : "text-start")">
+                        <div class="@(msg.Role == "user" ? "chat-bubble-user" : "chat-bubble-assistant")">
+                            @msg.Content
+                        </div>
+                    </div>
+                }
+            }
+            else
+            {
+                <p class="text-muted">No session selected.</p>
+            }
+        </div>
+
+        <div class="mt-2 d-flex">
+            <input @bind="inputMessage" class="form-control me-2" placeholder="Ask Anything." @onkeypress="KeyPress" />
+            <button class="btn btn-success" @onclick="SendMessage">Send</button>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string inputMessage = "";
+    private List<ChatMessage> messages = new();
+    private Guid? editingSessionId = null;
+    private string editTitle = "";
+    private void StartRename(Guid id, string currentTitle)
+    {
+        editingSessionId = id;
+        editTitle = currentTitle;
+    }
+
+    private void CancelRename()
+    {
+        editingSessionId = null;
+        editTitle = "";
+    }
+
+    private void ConfirmRename(Guid id)
+    {
+        if (!string.IsNullOrWhiteSpace(editTitle))
+        {
+            sessionService.RenameSession(id, editTitle);
+        }
+        editingSessionId = null;
+        editTitle = "";
+    }
+
+    private void KeyPressRename(KeyboardEventArgs e, Guid id)
+    {
+        if (e.Key == "Enter")
+            ConfirmRename(id);
+    }
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(inputMessage) || sessionService.CurrentSession == null)
+            return;
+
+        sessionService.AddMessage("user", inputMessage);
+      
+
+        messages.Add(new ChatMessage { Role = "user", Content = inputMessage, Timestamp = DateTime.Now });
+
+      
+        var response = await chatService.SendMessageAsync(messages);
+        sessionService.AddMessage("assistant", response);
+
+        await ScrollToBottom();
+    }
+
+    private void NewSession()
+    {
+        sessionService.CreateNewSession();
+    }
+
+    private void SwitchSession(Guid id)
+    {
+        sessionService.SwitchSession(id);
+    }
+
+    private void DeleteSession(Guid id)
+    {
+        sessionService.DeleteSession(id);
+    }
+
+    private async Task KeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter")
+            await SendMessage();
+    }
+
+    private async Task ScrollToBottom()
+    {
+        await Task.Delay(100);
+        await JS.InvokeVoidAsync("scrollToBottom");
+    }
+}
