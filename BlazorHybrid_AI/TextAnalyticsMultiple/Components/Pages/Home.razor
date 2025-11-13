@@ -1,0 +1,182 @@
+﻿@page "/"
+@using TextAnalyticsMultiple.Models
+@using TextAnalyticsMultiple.Service
+
+@inject IOpenAiService OpenAiService
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-10">
+
+            <!-- Header -->
+            <div class="text-center mb-4">
+                <h2 class="fw-bold text-primary">
+                    <i class="bi bi-bar-chart-line"></i> Bulk Sentiment Analysis
+                </h2>
+                <p class="text-muted">Upload your dataset and analyze sentiment for multiple texts automatically.</p>
+            </div>
+
+            <!-- File Upload -->
+            <div class="card shadow-lg border-0 mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-3"><i class="bi bi-upload"></i> Upload Text Data</h5>
+                    <p class="text-muted mb-3">Supported formats: <code>.csv</code>, <code>.txt</code>, <code>.xlsx</code></p>
+
+                    <InputFile OnChange="LoadFile" class="form-control mb-3" />
+
+                    @if (FileName != null)
+                    {
+                        <div class="alert alert-info mt-2">
+                            📄 Loaded file: <b>@FileName</b> — <b>@Texts.Count</b> rows
+                        </div>
+
+                       @*  <button class="btn btn-primary px-4" @onclick="AnalyzeAll" disabled="@IsProcessing || !Texts.Any()"> *@
+                            <button class="btn btn-primary px-4" @onclick="AnalyzeAll" >
+                            @if (IsProcessing)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2">Processing...</span>
+                            }
+                            else
+                            {
+                                <i class="bi bi-play-circle">Analyze All</i>
+                            }
+                        </button>
+                    }
+                </div>
+            </div>
+
+            <!-- Progress -->
+            @if (IsProcessing)
+            {
+                <div class="progress mb-3 animate-fade-in">
+                    <div class="progress-bar progress-bar-striped progress-bar-animated bg-primary"
+                         role="progressbar"
+                         style="width:@ProgressPercentage"
+                         aria-valuenow="@ProgressPercentage"
+                         aria-valuemin="0" aria-valuemax="100">
+                        @ProgressPercentage
+                    </div>
+                </div>
+            }
+
+            <!-- Results -->
+            @if (Results.Any())
+            {
+                <div class="card shadow-sm border-0 mt-4 animate-fade-in">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary"><i class="bi bi-table"></i> Analysis Results</h5>
+                        <div class="table-responsive mt-3">
+                            <table class="table table-hover align-middle">
+                                <thead class="table-light">
+                                    <tr>
+                                        <th>No</th>
+                                        <th>Text</th>
+                                        <th>Sentiment</th>
+                                        <th>Confidence</th>
+                                        <th>Explanation</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var r in Results.Select((x, i) => new { x, i }))
+                                    {
+                                        <tr>
+                                            <td>@(r.i + 1)</td>
+                                            <td>@r.x.Text</td>
+                                            <td class="@GetSentimentColorClass(r.x.Result?.Sentiment)">
+                                                @r.x.Result?.Sentiment
+                                            </td>
+                                            <td>@r.x.Result?.Confidence</td>
+                                            <td>@r.x.Result?.Explanation</td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@code {
+    string? FileName;
+    bool IsProcessing;
+    int ProcessedCount = 0;
+    string ProgressPercentage => Texts.Count == 0 ? "0%" : $"{(ProcessedCount * 100 / Texts.Count)}%";
+
+    List<(string Text, SentimentResult? Result)> Results = new();
+    List<string> Texts = new();
+
+    async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        FileName = file.Name;
+        Texts.Clear();
+
+        using var memory = new MemoryStream();
+        await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(memory);
+        memory.Position = 0;
+
+        if (file.Name.EndsWith(".csv", StringComparison.OrdinalIgnoreCase) ||
+            file.Name.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+        {
+            using var reader = new StreamReader(memory);
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (!string.IsNullOrWhiteSpace(line))
+                    Texts.Add(line.Trim());
+            }
+        }
+        else if (file.Name.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            using var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(memory);
+            do
+            {
+                while (reader.Read())
+                {
+                    if (reader.GetValue(0) != null)
+                    {
+                        var text = reader.GetValue(0).ToString();
+                        if (!string.IsNullOrWhiteSpace(text))
+                            Texts.Add(text.Trim());
+                    }
+                }
+            } while (reader.NextResult());
+        }
+
+        Results = Texts.Select(t => (t, (SentimentResult?)null)).ToList();
+        IsProcessing = false;
+        StateHasChanged();
+    }
+
+    async Task AnalyzeAll()
+    {
+        if (!Texts.Any()) return;
+        IsProcessing = true;
+        ProcessedCount = 0;
+        Results.Clear();
+
+        foreach (var t in Texts)
+        {
+            var result = await OpenAiService.AnalyzeSentimentAsync(t);
+            Results.Add((t, result));
+            ProcessedCount++;
+            StateHasChanged();
+            await Task.Delay(400);
+        }
+
+        IsProcessing = false;
+    }
+
+    string GetSentimentColorClass(string? sentiment) => sentiment?.ToLower() switch
+    {
+        "positive" => "text-success fw-bold",
+        "negative" => "text-danger fw-bold",
+        "neutral" => "text-secondary fw-bold",
+        _ => ""
+    };
+}

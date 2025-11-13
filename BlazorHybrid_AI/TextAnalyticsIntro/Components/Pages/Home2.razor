@@ -1,0 +1,32 @@
+﻿@page "/Home2"
+@using TextAnalyticsIntro.Models
+@using TextAnalyticsIntro.Service
+
+@inject IOpenAiService OpenAiService
+<h3>Sentiment Analysis</h3>
+
+<textarea @bind="InputText" rows="6" style="width:100%"></textarea>
+<div class="mt-2">
+    <button class="btn btn-primary" @onclick="Analyze">Analyze</button>
+</div>
+
+@if (Result != null)
+{
+    <div class="card mt-3 p-3">
+        <h5>Language: @Result.Language</h5>
+        <h5>Sentiment: @Result.Sentiment</h5>
+        <p>Confidence: @Result.Confidence</p>
+        <p><b>Explanation:</b> @Result.Explanation</p>
+    </div>
+}
+
+@code {
+    string InputText = string.Empty;
+    SentimentResult? Result;
+
+    async Task Analyze()
+    {
+        if (string.IsNullOrWhiteSpace(InputText)) return;
+        Result = await OpenAiService.AnalyzeSentimentMultiLanguageAsync(InputText);
+    }
+}

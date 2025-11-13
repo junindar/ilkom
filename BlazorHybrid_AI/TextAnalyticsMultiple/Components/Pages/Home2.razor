@@ -1,0 +1,127 @@
+﻿@page "/Home2"
+@using TextAnalyticsMultiple.Models
+@using TextAnalyticsMultiple.Service
+
+@inject IOpenAiService OpenAiService
+
+<h3>Bulk Sentiment Analysis</h3>
+
+<InputFile OnChange="LoadFile" />
+@if (FileName != null)
+{
+    <p>📄 Loaded file: <b>@FileName</b> (@Texts.Count rows)</p>
+    <button class="btn btn-primary" @onclick="AnalyzeAll" disabled="@IsProcessing">
+        @(IsProcessing ? "Processing..." : "Analyze All")
+    </button>
+}
+
+@if (Results.Any())
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Text</th>
+                <th>Sentiment</th>
+                <th>Confidence</th>
+                <th>Explanation</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Results.Select((x, i) => new { x, i }))
+            {
+                <tr>
+                    <td>@(r.i + 1)</td>
+                    <td>@r.x.Text</td>
+                    <td>@r.x.Result?.Sentiment</td>
+                    <td>@r.x.Result?.Confidence</td>
+                    <td>@r.x.Result?.Explanation</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    string? FileName;
+    bool IsProcessing;
+    List<(string Text, SentimentResult? Result)> Results = new();
+    List<string> Texts = new();
+
+    async Task LoadFile(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        FileName = file.Name;
+        Texts.Clear();
+
+   
+        using var memory = new MemoryStream();
+        await file.OpenReadStream(maxAllowedSize: 10 * 1024 * 1024).CopyToAsync(memory);
+        memory.Position = 0;
+
+        if (file.Name.EndsWith(".csv", StringComparison.OrdinalIgnoreCase))
+        {
+            using var reader = new StreamReader(memory);
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (!string.IsNullOrWhiteSpace(line))
+                    Texts.Add(line.Trim());
+            }
+        }
+        else if (file.Name.EndsWith(".txt", StringComparison.OrdinalIgnoreCase))
+        {
+            using var reader = new StreamReader(memory);
+            while (!reader.EndOfStream)
+            {
+                var line = await reader.ReadLineAsync();
+                if (!string.IsNullOrWhiteSpace(line))
+                    Texts.Add(line.Trim());
+            }
+        }
+        else if (file.Name.EndsWith(".xlsx", StringComparison.OrdinalIgnoreCase))
+        {
+            System.Text.Encoding.RegisterProvider(System.Text.CodePagesEncodingProvider.Instance);
+            memory.Position = 0;
+
+            using var reader = ExcelDataReader.ExcelReaderFactory.CreateReader(memory);
+            do
+            {
+                while (reader.Read())
+                {
+    // Ambil nilai kolom pertama
+                    if (reader.GetValue(0) != null)
+                    {
+                        var text = reader.GetValue(0).ToString();
+                        if (!string.IsNullOrWhiteSpace(text)) Texts.Add(text.Trim());
+                    }
+                }
+            } while (reader.NextResult());
+        }
+
+        Results.Clear();
+        foreach (var t in Texts)
+            Results.Add((t, null));
+
+        StateHasChanged();
+    }
+
+
+    async Task AnalyzeAll()
+    {
+        if (!Texts.Any()) return;
+        IsProcessing = true;
+
+        int processed = 0;
+        foreach (var t in Texts)
+        {
+            var result = await OpenAiService.AnalyzeSentimentAsync(t);
+            Results[processed] = (t, result);
+            processed++;
+            StateHasChanged();
+            await Task.Delay(500); 
+        }
+
+        IsProcessing = false;
+    }
+}

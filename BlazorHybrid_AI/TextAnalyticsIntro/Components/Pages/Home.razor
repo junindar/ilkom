@@ -1,0 +1,92 @@
+﻿@page "/"
+@using TextAnalyticsIntro.Models
+@using TextAnalyticsIntro.Service
+
+@inject IOpenAiService OpenAiService
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8">
+
+            <div class="card shadow-lg border-0">
+                <div class="card-header bg-primary text-white text-center">
+                    <h3 class="mb-0"><i class="bi bi-chat-square-text"></i> Sentiment Analysis</h3>
+                </div>
+
+                <div class="card-body">
+                    <div class="form-group mb-3">
+                        <label for="inputText" class="form-label fw-bold">Enter your text:</label>
+                        <textarea id="inputText"
+                                  class="form-control shadow-sm"
+                                  placeholder="Type or paste text here..."
+                                  @bind="InputText"
+                                  rows="6"></textarea>
+                    </div>
+
+                    <div class="d-flex justify-content-end">
+                        <button class="btn btn-primary px-4" @onclick="Analyze" disabled="@IsLoading">
+                            @if (IsLoading)
+                            {
+                                <span class="spinner-border spinner-border-sm me-2">Analyzing...</span>
+                                
+                                                        }
+                            else
+                            {
+                                <i class="bi bi-search">Analyze</i>
+                                
+                                                        }
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            @if (Result != null)
+            {
+                <div class="card shadow-sm border-0 mt-4 animate-fade-in">
+                    <div class="card-body">
+                        <h5 class="card-title text-primary"><i class="bi bi-translate"></i> Language:</h5>
+                        <p class="card-text fs-5">@Result.Language</p>
+
+                        <h5 class="card-title text-primary"><i class="bi bi-emoji-smile"></i> Sentiment:</h5>
+                        <p class="fs-5 fw-semibold @(GetSentimentColorClass(Result.Sentiment))">@Result.Sentiment</p>
+
+                        <h6 class="mt-3 text-secondary">Confidence: <span class="fw-bold">@Result.Confidence</span></h6>
+                        <hr />
+                        <p class="mb-0"><b>Explanation:</b> @Result.Explanation</p>
+                    </div>
+                </div>
+            }
+
+        </div>
+    </div>
+</div>
+
+@code {
+    string InputText = string.Empty;
+    SentimentResult? Result;
+    bool IsLoading = false;
+
+    async Task Analyze()
+    {
+        if (string.IsNullOrWhiteSpace(InputText)) return;
+
+        IsLoading = true;
+        Result = null;
+        try
+        {
+            Result = await OpenAiService.AnalyzeSentimentMultiLanguageAsync(InputText);
+        }
+        finally
+        {
+            IsLoading = false;
+        }
+    }
+
+    string GetSentimentColorClass(string sentiment) => sentiment?.ToLower() switch
+    {
+        "positive" => "text-success",
+        "negative" => "text-danger",
+        "neutral" => "text-secondary",
+        _ => "text-dark"
+    };
+}
