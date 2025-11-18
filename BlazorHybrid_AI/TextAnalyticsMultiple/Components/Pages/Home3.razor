@@ -1,4 +1,4 @@
-﻿@page "/Home2"
+﻿@page "/Home3"
 @using TextAnalyticsMultiple.Models
 @using TextAnalyticsMultiple.Service
 @inject IOpenAiService OpenAiService
@@ -104,24 +104,22 @@
         StateHasChanged();
     }
 
+
     async Task AnalyzeAll()
     {
         if (!Texts.Any()) return;
-        
         IsProcessing = true;
-        Results.Clear();
-        StateHasChanged();
 
-        var batchResults = await OpenAiService.AnalyzeSentimentBatchAsync(Texts);
-
-        for (int i = 0; i < Texts.Count; i++)
+        int processed = 0;
+        foreach (var t in Texts)
         {
-            var result = i < batchResults.Count ? batchResults[i] : null;
-            Results.Add((Texts[i], result));
+            var result = await OpenAiService.AnalyzeSentimentMultiLanguageAsync(t);
+            Results[processed] = (t, result);
+            processed++;
+            StateHasChanged();
+            await Task.Delay(500); 
         }
 
         IsProcessing = false;
-        StateHasChanged();
     }
-   
 }

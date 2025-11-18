@@ -109,8 +109,6 @@ namespace TextAnalyticsMultiple.Service
            
         }
 
-     
-
         public async Task<SentimentResult> AnalyzeSentimentMultiLanguageAsync(string text)
         {
             var url = $"{_endpoint}openai/deployments/{_deploymentId}/chat/completions?api-version={_apiVersion}";
@@ -118,8 +116,6 @@ namespace TextAnalyticsMultiple.Service
             _httpClient.DefaultRequestHeaders.Clear();
             _httpClient.DefaultRequestHeaders.Add("api-key", _apiKey);
             _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
-
-           
 
 
             var prompt = $@"
@@ -200,6 +196,116 @@ namespace TextAnalyticsMultiple.Service
 
 
         }
+
+
+        public async Task<List<SentimentResult>> AnalyzeSentimentBatchAsync(List<string> texts)
+        {
+            var url = $"{_endpoint}openai/deployments/{_deploymentId}/chat/completions?api-version={_apiVersion}";
+
+            _httpClient.DefaultRequestHeaders.Clear();
+            _httpClient.DefaultRequestHeaders.Add("api-key", _apiKey);
+            _httpClient.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+
+           
+            var textsJson = JsonSerializer.Serialize(texts);
+
+            var prompt = $@"
+            You are a multilingual sentiment analysis expert.
+            Analyze ALL texts in the array below in ONE response.
+
+            Task:
+            1. For each text, detect the language automatically
+            2. Determine sentiment: Positive, Negative, or Neutral
+            3. Estimate confidence score (0 to 1)
+            4. Give short explanation in the same language as the text
+
+            Return ONLY a valid JSON array with results for ALL texts, in the same order.
+
+            Example output format:
+            [
+              {{
+                ""Language"": ""Indonesian"",
+                ""Sentiment"": ""Negative"",
+                ""Confidence"": 0.93,
+                ""Explanation"": ""Menunjukkan ketidakpuasan terhadap layanan.""
+              }},
+              {{
+                ""Language"": ""English"",
+                ""Sentiment"": ""Positive"",
+                ""Confidence"": 0.88,
+                ""Explanation"": ""Expresses satisfaction with the product.""
+              }}
+            ]
+            Texts to analyze:
+            {textsJson}";
+
+            var requestBody = new
+            {
+                messages = new[]
+                {
+                new { role = "system", content = "You are a helpful AI assistant specialized in batch sentiment analysis. Always return valid JSON array." },
+                new { role = "user", content = prompt }
+            },
+                temperature = 0.0,
+                max_tokens = texts.Count * 150 // Sesuaikan dengan jumlah teks
+            };
+
+            var json = JsonSerializer.Serialize(requestBody);
+            var content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            try
+            {
+                var response = await _httpClient.PostAsync(url, content);
+
+                if (!response.IsSuccessStatusCode)
+                {
+                    var errorText = await response.Content.ReadAsStringAsync();
+                    return texts.Select(t => new SentimentResult
+                    {
+                        Sentiment = "Error",
+                        Explanation = $"API Error: {errorText}"
+                    }).ToList();
+                }
+
+                using var responseStream = await response.Content.ReadAsStreamAsync();
+                using var jsonDoc = await JsonDocument.ParseAsync(responseStream);
+
+                var textOut = jsonDoc.RootElement
+                    .GetProperty("choices")[0]
+                    .GetProperty("message")
+                    .GetProperty("content")
+                    .GetString()?
+                    .Trim();
+
+                if (string.IsNullOrWhiteSpace(textOut))
+                {
+                    return texts.Select(t => new SentimentResult
+                    {
+                        Sentiment = "Error",
+                        Explanation = "Empty response from API"
+                    }).ToList();
+                }
+
+                // Parse JSON array response
+                var results = JsonSerializer.Deserialize<List<SentimentResult>>(textOut,
+                    new JsonSerializerOptions { PropertyNameCaseInsensitive = true });
+
+                return results ?? texts.Select(t => new SentimentResult
+                {
+                    Sentiment = "Error",
+                    Explanation = "Failed to parse response"
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                return texts.Select(t => new SentimentResult
+                {
+                    Sentiment = "Error",
+                    Explanation = $"Exception: {ex.Message}"
+                }).ToList();
+            }
+        }
+
 
     }
 }

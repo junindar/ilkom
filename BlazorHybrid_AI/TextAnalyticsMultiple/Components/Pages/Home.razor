@@ -156,20 +156,23 @@
     async Task AnalyzeAll()
     {
         if (!Texts.Any()) return;
-        IsProcessing = true;
-        ProcessedCount = 0;
-        Results.Clear();
 
-        foreach (var t in Texts)
+        IsProcessing = true;
+        Results.Clear();
+        StateHasChanged();
+
+
+        var batchResults = await OpenAiService.AnalyzeSentimentBatchAsync(Texts);
+
+
+        for (int i = 0; i < Texts.Count; i++)
         {
-            var result = await OpenAiService.AnalyzeSentimentAsync(t);
-            Results.Add((t, result));
-            ProcessedCount++;
-            StateHasChanged();
-            await Task.Delay(400);
+            var result = i < batchResults.Count ? batchResults[i] : null;
+            Results.Add((Texts[i], result));
         }
 
         IsProcessing = false;
+        StateHasChanged();
     }
 
     string GetSentimentColorClass(string? sentiment) => sentiment?.ToLower() switch

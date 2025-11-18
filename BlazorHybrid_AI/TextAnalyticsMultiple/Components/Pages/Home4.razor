@@ -1,0 +1,86 @@
+﻿@page "/Home4"
+@using TextAnalyticsMultiple.Models
+@using TextAnalyticsMultiple.Service
+@using System.Text.RegularExpressions
+@inject IOpenAiService OpenAiService
+<h3>Bulk Sentiment Analysis</h3>
+
+<textarea @bind="InputText" rows="6" style="width:100%"></textarea>
+    <button class="btn btn-primary" @onclick="AnalyzeAll" disabled="@IsProcessing">
+        @(IsProcessing ? "Processing..." : "Analyze All")
+    </button>
+
+@if (Results.Any())
+{
+    <table class="table mt-3">
+        <thead>
+            <tr>
+                <th>No</th>
+                <th>Text</th>
+                <th>Language</th>
+                <th>Sentiment</th>
+                <th>Confidence</th>
+                <th>Explanation</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var r in Results.Select((x, i) => new { x, i }))
+            {
+                <tr>
+                    <td>@(r.i + 1)</td>
+                    <td>@r.x.Text</td>
+                    <td>@r.x.Result?.Language</td>
+                    <td>@r.x.Result?.Sentiment</td>
+                    <td>@r.x.Result?.Confidence</td>
+                    <td>@r.x.Result?.Explanation</td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+
+@code {
+    bool IsProcessing;
+    List<(string Text, SentimentResult? Result)> Results = new();
+    string InputText = string.Empty;
+  
+    private static List<string> SplitIntoSentences(string input)
+    {
+        if (string.IsNullOrWhiteSpace(input)) return new List<string>();
+
+
+        var parts = Regex.Split(input.Trim(), @"(?<=[\.\?\!,\n])\s+")
+            .Select(p => p.Trim())
+            .Where(p => !string.IsNullOrEmpty(p))
+            .ToList();
+
+        if (parts.Count == 1 && parts[0].Length > 200)
+        {
+            parts = Regex.Split(parts[0], @"[.,]\s*")
+                .Select(p => p.Trim())
+                .Where(p => !string.IsNullOrEmpty(p))
+                .ToList();
+        }
+
+        return parts;
+    }
+
+    async Task AnalyzeAll()
+    {
+        var sentences = SplitIntoSentences(InputText);
+        if (sentences.Count == 0) return;
+        IsProcessing = true;
+        Results.Clear(); 
+        int processed = 0;
+        foreach (var t in sentences)
+        {
+            var result = await OpenAiService.AnalyzeSentimentMultiLanguageAsync(t);
+            Results.Add((t, result));
+            StateHasChanged();
+            await Task.Delay(500);
+        }
+
+        IsProcessing = false;
+    }
+}

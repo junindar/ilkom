@@ -11,5 +11,7 @@ namespace TextAnalyticsMultiple.Service
     {
         Task<SentimentResult> AnalyzeSentimentAsync(string text);
         Task<SentimentResult> AnalyzeSentimentMultiLanguageAsync(string text);
+
+        Task<List<SentimentResult>> AnalyzeSentimentBatchAsync(List<string> texts);
     }
 }

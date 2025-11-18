@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿    using Microsoft.Extensions.Configuration;
 using System.Net.Http.Headers;
 using System.Text;
 using System.Text.Json;
@@ -26,6 +26,8 @@ namespace TextAnalyticsIntro.Service
             _deploymentId = "xxxxx";
             _apiKey = "xxxxxx";
             _apiVersion = "xxxxx";
+
+          
         }
 
         public async Task<SentimentResult> AnalyzeSentimentAsync(string text)
@@ -45,8 +47,6 @@ namespace TextAnalyticsIntro.Service
               ""Explanation"": ""Short reason""
             }}
             Text: ""{text}""";
-
-
 
           
             var requestBody = new
