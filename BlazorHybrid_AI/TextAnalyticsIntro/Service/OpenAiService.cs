@@ -21,13 +21,13 @@ namespace TextAnalyticsIntro.Service
         public OpenAiService(HttpClient httpClient)
         {
             _httpClient = httpClient;
-
             _endpoint = "https://xxxx.openai.azure.com/";
             _deploymentId = "xxxxx";
             _apiKey = "xxxxxx";
             _apiVersion = "xxxxx";
+           
 
-          
+
         }
 
         public async Task<SentimentResult> AnalyzeSentimentAsync(string text)

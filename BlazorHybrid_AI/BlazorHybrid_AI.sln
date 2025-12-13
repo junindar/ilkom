@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAnalyticsIntro", "TextA
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAnalyticsMultiple", "TextAnalyticsMultiple\TextAnalyticsMultiple.csproj", "{BE052E96-599E-4F5A-BE1E-2212347A00AA}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAnalyticsCognitiveServices", "TextAnalyticsCognitiveServices\TextAnalyticsCognitiveServices.csproj", "{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -57,6 +59,12 @@ Global
 		{BE052E96-599E-4F5A-BE1E-2212347A00AA}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BE052E96-599E-4F5A-BE1E-2212347A00AA}.Release|Any CPU.Build.0 = Release|Any CPU
 		{BE052E96-599E-4F5A-BE1E-2212347A00AA}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

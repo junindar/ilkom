@@ -1,0 +1,47 @@
+﻿@page "/Home2"
+@using TextAnalyticsCognitiveServices.Models
+@using TextAnalyticsCognitiveServices.Service
+@inject ITextAnalyticsService TextService
+
+<h3>Sentiment Analysis</h3>
+<textarea @bind="InputText" rows="6" style="width:100%"></textarea>
+<div class="mt-2">
+    <button class="btn btn-primary" @onclick="Analyze">Analyze</button>
+</div>
+@if (Result != null)
+{
+    <div class="card mt-3 p-3">
+      
+        <h5>Sentiment: @Result.Sentiment</h5>
+        <p>Confidence: @Result.Confidence</p>
+        <p><b>Explanation:</b> @Result.Explanation</p>
+    </div>
+}
+
+
+
+
+@code {
+    string InputText { get; set; } = "Saya sangat senang menggunakan aplikasi ini.";
+  
+    SentimentResultDto? Result { get; set; }
+
+
+    async Task Analyze()
+    {
+        try
+        {
+           
+            Result = await TextService.AnalyzeSentimentAsync(InputText);
+        }
+        catch (Exception ex)
+        {
+    
+            await Shell.Current.DisplayAlert("Error", ex.Message, "OK");
+        }
+       
+    }
+
+
+   
+}
