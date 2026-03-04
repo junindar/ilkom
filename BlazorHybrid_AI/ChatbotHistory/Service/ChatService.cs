@@ -27,6 +27,7 @@ namespace ChatbotHistory.Service
             _deploymentId = "xxxxx";
             _apiKey = "xxxxxx";
             _apiVersion = "xxxxx";
+
         }
         public async Task<string> SendMessageAsync(List<ChatMessage> messages)
         {

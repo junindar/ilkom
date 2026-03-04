@@ -1,0 +1,199 @@
+﻿@page "/home4"
+@using ComputerVisionIntro.Service
+@using ComputerVisionIntro.Helper
+@using ComputerVisionIntro.Models
+@inject IComputerVisionService VisionService
+
+@using System.Text.RegularExpressions
+
+
+<div class="container mt-4">
+
+    <div class="card shadow-sm mb-4">
+        <div class="card-body">
+            <h3 class="card-title mb-3">Scan Struk Belanja</h3>
+
+            <InputFile OnChange="OnFileSelected" accept="image/*"
+                       class="form-control" />
+        </div>
+    </div>
+
+    @if (ImagePreview != null)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body text-center">
+                <h5 class="mb-3">Gambar Struk</h5>
+                <img src="@ImagePreview"
+                     class="img-fluid rounded border"
+                     style="max-height:350px" />
+            </div>
+        </div>
+    }
+
+    @if (Lines != null)
+    {
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <h4 class="mb-3">Hasil OCR</h4>
+
+                <div class="row mb-3">
+                    <div class="col-md-4">
+                        <strong>Merchant</strong>
+                        <div>@Merchant</div>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Tanggal</strong>
+                        <div>@Date</div>
+                    </div>
+                    <div class="col-md-4">
+                        <strong>Total</strong>
+                        <div class="text-success fs-5">
+                            @Total
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-responsive">
+                    <table class="table table-striped table-bordered align-middle">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>No</th>
+                                <th>Nama Makanan</th>
+                                <th class="text-end">Harga</th>
+                                <th class="text-center">Jumlah</th>
+                                <th class="text-end">Total</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in items)
+                            {
+                                <tr>
+                                    <td>@item.No</td>
+                                    <td>@item.Nama</td>
+                                    <td class="text-end">@item.Harga.ToString("N0")</td>
+                                    <td class="text-center">@item.Jumlah</td>
+                                    <td class="text-end">@item.Total.ToString("N0")</td>
+                                </tr>
+                            }
+
+                            <tr class="fw-bold">
+                                <td colspan="4" class="text-end">Sub Total</td>
+                                <td class="text-end">@subTotal.ToString("N0")</td>
+                            </tr>
+                            <tr class="fw-bold">
+                                <td colspan="4" class="text-end">Pajak (10%)</td>
+                                <td class="text-end">@pajak.ToString("N0")</td>
+                            </tr>
+                            <tr class="fw-bold table-success">
+                                <td colspan="4" class="text-end">Total</td>
+                                <td class="text-end">@total.ToString("N0")</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+
+            </div>
+        </div>
+    }
+
+</div>
+@code {
+    private List<string>? Lines;
+    private string? Total;
+    private string? Date;
+    private string? Merchant;
+    private string? ImagePreview;
+
+    List<ReceiptItem> items = new();
+
+    int subTotal;
+    int pajak;
+    int total;
+
+    private async Task OnFileSelected(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        if (file == null) return;
+
+        using var stream = file.OpenReadStream();
+        var result = await VisionService.AnalyzeReceiptAsync(stream);
+
+        Lines = result.Lines;
+        Total = result.Total;
+        Date = result.Date;
+        Merchant = result.Merchant;
+
+        items.Clear();
+        ParseItems();
+
+        subTotal = ExtractValue("sub");
+        pajak = ExtractValue("pajak");
+        total = ExtractValue("total");
+
+        ImagePreview = $"data:image/png;base64,{Convert.ToBase64String(result.ImageData)}";
+    }
+
+
+    private void ParseItems()
+    {
+        int no = 1;
+        for (int i = 0; i < Lines.Count; i++)
+        {
+            string line = Lines[i].Trim();
+
+            if (TryParseCase1(line, ref i, ref no)) continue;
+            if (TryParseCase2(i, ref i, ref no)) continue;
+        }
+    }
+
+
+    private bool TryParseCase1(string line, ref int i, ref int no)
+    {
+        if (!Regex.IsMatch(line, @"^\d+\s+.+")) return false;
+
+        var parts = line.Split(' ', 2);
+        int qty = int.Parse(parts[0]);
+        string nama = parts[1];
+
+        if (i + 1 < Lines.Count && MyHelper.IsPrice(Lines[i + 1]))
+        {
+            double harga = double.Parse(MyHelper.Normalize(Lines[i + 1])) / qty;
+            items.Add(new ReceiptItem { No = no++, Nama = nama, Harga = harga, Jumlah = qty });
+            i++;
+        }
+        return true;
+    }
+
+
+    private bool TryParseCase2(int index, ref int i, ref int no)
+    {
+        if (!int.TryParse(Lines[index].Trim(), out int jumlah)) return false;
+        if (index + 2 >= Lines.Count || !MyHelper.IsPrice(Lines[index + 2])) return false;
+
+        string nama = Lines[index + 1].Trim();
+        double harga = double.Parse(MyHelper.Normalize(Lines[index + 2])) / jumlah;
+        items.Add(new ReceiptItem { No = no++, Nama = nama, Harga = harga, Jumlah = jumlah });
+        i += 2;
+        return true;
+    }
+
+    private int ExtractValue(string keyword)
+    {
+        for (int i = 0; i < Lines.Count; i++)
+        {
+            string line = Lines[i].Trim().ToLower();
+            if (!line.Contains(keyword)) continue;
+
+
+            if (i + 1 < Lines.Count && MyHelper.IsNumber(Lines[i + 1]))
+                return int.Parse(MyHelper.Normalize(Lines[i + 1]));
+
+
+            var match = Regex.Match(Lines[i], @"([\d.,]+)$");
+            if (match.Success) return int.Parse(MyHelper.Normalize(match.Value));
+        }
+        return 0;
+    }
+
+   
+}

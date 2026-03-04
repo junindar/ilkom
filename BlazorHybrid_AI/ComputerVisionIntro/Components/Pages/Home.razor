@@ -1,0 +1,71 @@
+﻿@page "/"
+@using ComputerVisionIntro.Service
+@using ComputerVisionIntro.Helper
+@inject IComputerVisionService VisionService
+
+<div class="container mt-4">
+    <div class="card shadow-sm">
+        <div class="card-body">
+            <h3 class="card-title mb-3 text-primary">
+                Azure Computer Vision
+                <small class="text-muted d-block fs-6">Blazor Hybrid Demo</small>
+            </h3>
+
+            <button class="btn btn-primary mb-3" @onclick="PickImage" disabled="@IsLoading">
+                <i class="bi bi-image"></i> Pilih Gambar
+            </button>
+
+            @if (!string.IsNullOrEmpty(ImagePreview))
+            {
+                <div class="text-center mt-3">
+                    <img src="@ImagePreview"
+                         class="img-fluid rounded border"
+                         style="max-height:300px" />
+                </div>
+            }
+
+            @if (IsLoading)
+            {
+                <div class="text-center mt-4">
+                    <div class="spinner-border text-primary" role="status"></div>
+                    <p class="mt-2 text-muted">Menganalisis gambar dengan AI...</p>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Description))
+            {
+                <div class="alert alert-info mt-4">
+                    <strong>Deskripsi AI:</strong>
+                    <p class="mb-0">@Description</p>
+                </div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string? ImagePreview;
+    private string? Description;
+    private bool IsLoading;
+
+    private async Task PickImage()
+    {
+        Description = null;
+
+        var file = await FilePickerHelper.PickImageAsync();
+        if (file == null)
+        {
+           
+            return;
+        }
+
+        ImagePreview = await FileHelper.ToBase64ImageAsync(file);
+        IsLoading = true;
+        StateHasChanged();
+       
+      
+        Description = await VisionService.AnalyzeImageAsync(file);
+
+        IsLoading = false;
+    }
+}

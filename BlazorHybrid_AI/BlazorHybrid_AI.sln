@@ -17,6 +17,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAnalyticsMultiple", "Te
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TextAnalyticsCognitiveServices", "TextAnalyticsCognitiveServices\TextAnalyticsCognitiveServices.csproj", "{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ComputerVisionIntro", "ComputerVisionIntro\ComputerVisionIntro.csproj", "{11E1C270-6DCC-44E4-A068-9C080E6B4367}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -65,6 +67,12 @@ Global
 		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F26989EE-F652-4A2F-9D10-422FBE9C7DF8}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{11E1C270-6DCC-44E4-A068-9C080E6B4367}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11E1C270-6DCC-44E4-A068-9C080E6B4367}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11E1C270-6DCC-44E4-A068-9C080E6B4367}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{11E1C270-6DCC-44E4-A068-9C080E6B4367}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11E1C270-6DCC-44E4-A068-9C080E6B4367}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11E1C270-6DCC-44E4-A068-9C080E6B4367}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

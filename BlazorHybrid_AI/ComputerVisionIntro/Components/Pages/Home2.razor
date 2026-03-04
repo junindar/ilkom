@@ -1,0 +1,43 @@
+﻿@page "/home2"
+@using ComputerVisionIntro.Service
+@using ComputerVisionIntro.Helper
+@inject IComputerVisionService VisionService
+
+<h3>Azure Computer Vision - Blazor Hybrid</h3>
+
+<button class="btn btn-primary" @onclick="PickImage">
+    Pilih Gambar
+</button>
+
+@if (!string.IsNullOrEmpty(ImagePreview))
+{
+    <div style="margin-top:20px">
+        <img src="@ImagePreview"
+             style="max-width:400px; border:1px solid #ccc;" />
+    </div>
+}
+
+@if (!string.IsNullOrEmpty(Description))
+{
+    <p style="margin-top:15px">
+        <b>Deskripsi:</b> @Description
+    </p>
+}
+
+@code {
+    private string? ImagePreview;
+    private string? Description;
+
+    private async Task PickImage()
+    {
+        var file = await FilePickerHelper.PickImageAsync();
+        if (file == null)
+            return;
+
+       
+        ImagePreview = await FileHelper.ToBase64ImageAsync(file);
+
+       
+        Description = await VisionService.AnalyzeImageAsync(file);
+    }
+}

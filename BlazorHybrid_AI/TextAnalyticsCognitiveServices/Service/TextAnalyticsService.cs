@@ -11,8 +11,8 @@ namespace TextAnalyticsCognitiveServices.Service
         public TextAnalyticsService()
         {
             _client = new TextAnalyticsClient(
-                new Uri("https://xxxx.cognitiveservices.azure.com/"),
-                new AzureKeyCredential("xxxxxx")
+                new Uri("https://****.cognitiveservices.azure.com/"),
+                new AzureKeyCredential("")
             );
         }
 
