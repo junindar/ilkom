@@ -1,0 +1,189 @@
+﻿@page "/Home2"
+@using SpeechToText.Service
+@inject IAzureSpeechService SpeechService
+@implements IDisposable
+
+<style>
+
+    .glass-card {
+        background: #ffffff;
+        border-radius: 15px;
+        border: none;
+        box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+
+    .listening-wave {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 5px;
+        height: 20px;
+    }
+
+    .wave-bar {
+        width: 4px;
+        height: 100%;
+        background: #0d6efd;
+        border-radius: 10px;
+        animation: wave 1s ease-in-out infinite;
+    }
+
+    @@keyframes wave {
+        0%, 100% {
+            height: 5px;
+        }
+
+        50% {
+            height: 20px;
+        }
+    }
+
+    .text-preview {
+        color: #6c757d;
+        font-style: italic;
+    }
+
+    .transcript-area {
+        border-radius: 12px;
+        border: 1px solid #dee2e6;
+        padding: 15px;
+        min-height: 250px;
+        font-size: 1.1rem;
+        line-height: 1.6;
+    }
+</style>
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <div class="card glass-card">
+                <div class="card-body p-4">
+
+                    @* Header *@
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <div>
+                            <h2 class="fw-bold mb-0 text-primary">Azure AI Speech Service</h2>
+                            <p class="text-muted small"></p>
+                        </div>
+                        <div class="text-end">
+                            <span class="badge rounded-pill @(SpeechService.IsListening ? "bg-danger" : "bg-light text-dark") p-2 px-3">
+                                @if (SpeechService.IsListening)
+                                {
+                                    <span class="spinner-grow spinner-grow-sm me-1"></span>
+                                }
+                                @statusMessage
+                            </span>
+                        </div>
+                    </div>
+
+                    @* Visualizer *@
+                    @if (SpeechService.IsListening)
+                    {
+                        <div class="listening-wave mb-3">
+                            <div class="wave-bar" style="animation-delay: 0.1s"></div>
+                            <div class="wave-bar" style="animation-delay: 0.2s"></div>
+                            <div class="wave-bar" style="animation-delay: 0.3s"></div>
+                        </div>
+                    }
+
+                    @* Transcript Display *@
+                    <div class="form-group position-relative">
+                        <div class="transcript-area bg-light overflow-auto">
+                            @recognizedText
+                            <span class="text-preview">@interimText</span>
+                        </div>
+                    </div>
+
+                    @* Controls *@
+                    <div class="d-flex flex-wrap gap-3 mt-4">
+                        @if (!SpeechService.IsListening)
+                        {
+                            <button class="btn btn-primary btn-lg rounded-pill px-4 shadow-sm" @onclick="Start">
+                                <i class="bi bi-mic-fill me-2"></i>Start
+                            </button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger btn-lg rounded-pill px-4 shadow-sm" @onclick="Stop">
+                                <i class="bi bi-stop-fill me-2"></i>Stop
+                            </button>
+                        }
+
+                        <button class="btn btn-outline-secondary btn-lg rounded-pill px-4" @onclick="Clear">
+                            <i class="bi bi-trash me-2"></i>Clear
+                        </button>
+
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string recognizedText = "";
+    private string interimText = "";
+    private string statusMessage = "Ready";
+
+    protected override void OnInitialized()
+    {
+
+        SpeechService.OnRecognizing += HandleRecognizing;
+        SpeechService.OnRecognized += HandleRecognized;
+        SpeechService.OnError += HandleError;
+    }
+
+    private async void HandleRecognizing(string text)
+    {
+        await InvokeAsync(() =>
+        {
+            interimText = text;
+            StateHasChanged();
+        });
+    }
+
+    private async void HandleRecognized(string text)
+    {
+        await InvokeAsync(() =>
+        {
+            recognizedText += " " + text;
+            interimText = "";
+            StateHasChanged();
+        });
+    }
+
+    private async void HandleError(string error)
+    {
+        await InvokeAsync(() =>
+        {
+            statusMessage = "Error occurred";
+            StateHasChanged();
+        });
+    }
+
+    private async Task Start()
+    {
+        statusMessage = "Listening...";
+        await SpeechService.StartContinuousRecognitionAsync();
+    }
+
+    private async Task Stop()
+    {
+        await SpeechService.StopContinuousRecognitionAsync();
+        statusMessage = "Ready";
+        interimText = "";
+    }
+
+    private void Clear() => recognizedText = string.Empty;
+
+
+    public void Dispose()
+    {
+
+        SpeechService.OnRecognizing -= HandleRecognizing;
+        SpeechService.OnRecognized -= HandleRecognized;
+        SpeechService.OnError -= HandleError;
+    }
+}

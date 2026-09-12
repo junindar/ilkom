@@ -1,0 +1,486 @@
+﻿@page "/TextToSpeech"
+@using SpeechToText.Service
+@inject IAzureSpeechService SpeechService
+
+
+
+<PageTitle>Azure Text-to-Speech</PageTitle>
+
+<style>
+    .avatar-container {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin-bottom: 1.5rem;
+    }
+
+    .avatar-wrapper {
+        position: relative;
+        width: 200px;
+        height: 260px;
+    }
+
+    .avatar-svg {
+        width: 200px;
+        height: 260px;
+        filter: drop-shadow(0 4px 12px rgba(0,0,0,0.2));
+    }
+
+    .avatar-svg.speaking {
+        animation: head-bob 1.5s ease-in-out infinite;
+    }
+
+    /* Realistic eye blink */
+    .eye-lid {
+        transform-origin: center;
+        animation: blink-real 4s infinite;
+    }
+
+    .speaking .eye-lid {
+        animation: blink-real 2.5s infinite;
+    }
+
+    /* Mouth animation for speaking */
+    .mouth-closed { opacity: 1; transition: opacity 0.1s; }
+    .mouth-open { opacity: 0; transition: opacity 0.1s; }
+
+    .speaking .mouth-closed { animation: mouth-toggle-closed 0.35s infinite; }
+    .speaking .mouth-open { animation: mouth-toggle-open 0.35s infinite; }
+
+    /* Jaw movement */
+    .jaw-group {
+        transform-origin: 100px 190px;
+    }
+
+    .speaking .jaw-group {
+        animation: jaw-move 0.35s infinite;
+    }
+
+    /* Eyebrow subtle movement */
+    .eyebrow-svg {
+        transform-origin: center;
+    }
+
+    .speaking .eyebrow-svg {
+        animation: brow-raise 1.8s ease-in-out infinite;
+    }
+
+    /* Sound wave */
+    .sound-wave {
+        position: absolute;
+        right: -35px;
+        top: 45%;
+        transform: translateY(-50%);
+        display: flex;
+        gap: 3px;
+        align-items: center;
+        opacity: 0;
+        transition: opacity 0.3s;
+    }
+
+    .sound-wave.active {
+        opacity: 1;
+    }
+
+    .sound-bar {
+        width: 4px;
+        background: linear-gradient(180deg, #27ae60, #2ecc71);
+        border-radius: 2px;
+    }
+
+    .sound-bar:nth-child(1) { animation: sound 0.4s ease-in-out infinite alternate; height: 12px; }
+    .sound-bar:nth-child(2) { animation: sound 0.4s ease-in-out 0.1s infinite alternate; height: 20px; }
+    .sound-bar:nth-child(3) { animation: sound 0.4s ease-in-out 0.2s infinite alternate; height: 14px; }
+    .sound-bar:nth-child(4) { animation: sound 0.4s ease-in-out 0.15s infinite alternate; height: 22px; }
+    .sound-bar:nth-child(5) { animation: sound 0.4s ease-in-out 0.05s infinite alternate; height: 10px; }
+
+    /* Speech bubble */
+    .speech-bubble {
+        background: #fff;
+        border: 2px solid #27ae60;
+        border-radius: 16px;
+        padding: 12px 18px;
+        margin-top: 14px;
+        max-width: 300px;
+        text-align: center;
+        position: relative;
+        font-size: 0.9rem;
+        color: #333;
+        min-height: 44px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-wrap: wrap;
+        gap: 4px;
+        opacity: 0;
+        transform: translateY(-8px);
+        transition: opacity 0.3s, transform 0.3s;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    }
+
+    .speech-bubble.visible {
+        opacity: 1;
+        transform: translateY(0);
+    }
+
+    .speech-bubble::before {
+        content: '';
+        position: absolute;
+        top: -10px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 10px solid transparent;
+        border-right: 10px solid transparent;
+        border-bottom: 10px solid #27ae60;
+    }
+
+    .speech-bubble::after {
+        content: '';
+        position: absolute;
+        top: -7px;
+        left: 50%;
+        transform: translateX(-50%);
+        border-left: 8px solid transparent;
+        border-right: 8px solid transparent;
+        border-bottom: 8px solid #fff;
+    }
+
+    .spoken-word {
+        color: #27ae60;
+        font-weight: 600;
+    }
+
+    /* Status indicator */
+    .avatar-status {
+        text-align: center;
+        margin-top: 8px;
+        font-size: 0.8rem;
+        color: #666;
+        font-weight: 500;
+    }
+
+    .avatar-status.active {
+        color: #27ae60;
+        animation: pulse-text 1.5s infinite;
+    }
+
+    @@keyframes mouth-toggle-closed {
+        0%, 40% { opacity: 1; }
+        45%, 90% { opacity: 0; }
+        95%, 100% { opacity: 1; }
+    }
+
+    @@keyframes mouth-toggle-open {
+        0%, 40% { opacity: 0; }
+        45%, 90% { opacity: 1; }
+        95%, 100% { opacity: 0; }
+    }
+
+    @@keyframes jaw-move {
+        0%, 100% { transform: translateY(0); }
+        50% { transform: translateY(3px); }
+    }
+
+    @@keyframes blink-real {
+        0%, 92%, 100% { transform: scaleY(1); }
+        95%, 97% { transform: scaleY(0.05); }
+    }
+
+    @@keyframes head-bob {
+        0%, 100% { transform: rotate(0deg) translateY(0); }
+        20% { transform: rotate(1.5deg) translateY(-1px); }
+        50% { transform: rotate(-1deg) translateY(1px); }
+        80% { transform: rotate(0.5deg) translateY(-0.5px); }
+    }
+
+    @@keyframes brow-raise {
+        0%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-1.5px); }
+        60% { transform: translateY(-0.5px); }
+    }
+
+    @@keyframes sound {
+        0% { transform: scaleY(0.5); }
+        100% { transform: scaleY(1.4); }
+    }
+
+    @@keyframes pulse-text {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.6; }
+    }
+</style>
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-success text-white">
+            <h3 class="mb-0">Azure Text-to-Speech</h3>
+        </div>
+        <div class="card-body">
+
+            <!-- Realistic Avatar Section -->
+            <div class="avatar-container">
+                <div class="avatar-wrapper">
+                    <svg class="avatar-svg @(isSpeaking ? "speaking" : "")" viewBox="0 0 200 260" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                            <radialGradient id="skinGrad" cx="50%" cy="40%" r="50%">
+                                <stop offset="0%" stop-color="#FDDCB5"/>
+                                <stop offset="70%" stop-color="#F5C5A3"/>
+                                <stop offset="100%" stop-color="#E8AD8C"/>
+                            </radialGradient>
+                            <radialGradient id="cheekGrad" cx="50%" cy="50%" r="50%">
+                                <stop offset="0%" stop-color="#F4A7A7" stop-opacity="0.4"/>
+                                <stop offset="100%" stop-color="#F4A7A7" stop-opacity="0"/>
+                            </radialGradient>
+                            <linearGradient id="hairGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#4A3728"/>
+                                <stop offset="50%" stop-color="#3B2B1F"/>
+                                <stop offset="100%" stop-color="#2C1E14"/>
+                            </linearGradient>
+                            <linearGradient id="shirtGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#4A90D9"/>
+                                <stop offset="100%" stop-color="#357ABD"/>
+                            </linearGradient>
+                        </defs>
+
+                        <!-- Neck -->
+                        <rect x="82" y="175" width="36" height="35" rx="8" fill="#F0BB9A"/>
+                        <ellipse cx="100" cy="175" rx="18" ry="5" fill="#E8AD8C" opacity="0.5"/>
+
+                        <!-- Shoulders / Shirt -->
+                        <path d="M 45 230 Q 45 205 75 200 L 82 195 L 82 210 Q 100 220 118 210 L 118 195 L 125 200 Q 155 205 155 230 L 155 260 L 45 260 Z" fill="url(#shirtGrad)"/>
+                        <path d="M 90 195 Q 100 202 110 195" stroke="#357ABD" stroke-width="1.5" fill="none"/>
+
+                        <!-- Head shape -->
+                        <ellipse cx="100" cy="115" rx="62" ry="72" fill="url(#skinGrad)"/>
+
+                        <!-- Ears -->
+                        <ellipse cx="39" cy="120" rx="9" ry="14" fill="#F0BB9A"/>
+                        <ellipse cx="39" cy="120" rx="5" ry="9" fill="#E8AD8C" opacity="0.4"/>
+                        <ellipse cx="161" cy="120" rx="9" ry="14" fill="#F0BB9A"/>
+                        <ellipse cx="161" cy="120" rx="5" ry="9" fill="#E8AD8C" opacity="0.4"/>
+
+                        <!-- Hair -->
+                        <path d="M 40 95 Q 40 35 100 30 Q 160 35 160 95 Q 158 60 100 55 Q 42 60 40 95 Z" fill="url(#hairGrad)"/>
+                        <path d="M 38 95 Q 38 70 55 55 Q 70 42 100 38 Q 130 42 145 55 Q 162 70 162 95 L 160 105 Q 155 75 100 68 Q 45 75 40 105 Z" fill="url(#hairGrad)"/>
+                        <!-- Side hair -->
+                        <path d="M 38 95 Q 36 110 39 125 Q 37 110 40 95" fill="#3B2B1F" opacity="0.6"/>
+                        <path d="M 162 95 Q 164 110 161 125 Q 163 110 160 95" fill="#3B2B1F" opacity="0.6"/>
+
+                        <!-- Eyebrows -->
+                        <g class="eyebrow-svg">
+                            <path d="M 68 93 Q 77 88 87 91" stroke="#4A3728" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                            <path d="M 113 91 Q 123 88 132 93" stroke="#4A3728" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                        </g>
+
+                        <!-- Eyes -->
+                        <g>
+                            <!-- Left eye -->
+                            <ellipse cx="78" cy="108" rx="12" ry="9" fill="white"/>
+                            <ellipse cx="78" cy="108" rx="12" ry="9" stroke="#C4A882" stroke-width="0.8" fill="none"/>
+                            <circle cx="79" cy="109" r="5.5" fill="#5B3A1A"/>
+                            <circle cx="79" cy="109" r="3.2" fill="#1A0E05"/>
+                            <circle cx="77" cy="107" r="1.5" fill="white" opacity="0.8"/>
+                            <!-- Left eyelid -->
+                            <ellipse class="eye-lid" cx="78" cy="100" rx="13" ry="9" fill="url(#skinGrad)"/>
+
+                            <!-- Right eye -->
+                            <ellipse cx="122" cy="108" rx="12" ry="9" fill="white"/>
+                            <ellipse cx="122" cy="108" rx="12" ry="9" stroke="#C4A882" stroke-width="0.8" fill="none"/>
+                            <circle cx="121" cy="109" r="5.5" fill="#5B3A1A"/>
+                            <circle cx="121" cy="109" r="3.2" fill="#1A0E05"/>
+                            <circle cx="119" cy="107" r="1.5" fill="white" opacity="0.8"/>
+                            <!-- Right eyelid -->
+                            <ellipse class="eye-lid" cx="122" cy="100" rx="13" ry="9" fill="url(#skinGrad)"/>
+                        </g>
+
+                        <!-- Eyelashes -->
+                        <path d="M 66 104 Q 68 102 70 103" stroke="#3B2B1F" stroke-width="0.8" fill="none"/>
+                        <path d="M 86 103 Q 88 102 90 104" stroke="#3B2B1F" stroke-width="0.8" fill="none"/>
+                        <path d="M 110 104 Q 112 102 114 103" stroke="#3B2B1F" stroke-width="0.8" fill="none"/>
+                        <path d="M 130 103 Q 132 102 134 104" stroke="#3B2B1F" stroke-width="0.8" fill="none"/>
+
+                        <!-- Nose -->
+                        <path d="M 100 112 L 97 132 Q 94 137 92 136" stroke="#D4A07A" stroke-width="1.2" fill="none" stroke-linecap="round"/>
+                        <path d="M 97 136 Q 100 138 103 136" stroke="#D4A07A" stroke-width="1" fill="none"/>
+                        <ellipse cx="94" cy="135" rx="3" ry="2.5" fill="#E8AD8C" opacity="0.5"/>
+                        <ellipse cx="106" cy="135" rx="3" ry="2.5" fill="#E8AD8C" opacity="0.5"/>
+
+                        <!-- Cheeks -->
+                        <ellipse cx="65" cy="130" rx="12" ry="8" fill="url(#cheekGrad)"/>
+                        <ellipse cx="135" cy="130" rx="12" ry="8" fill="url(#cheekGrad)"/>
+
+                        <!-- Mouth area -->
+                        <g class="jaw-group">
+                            <!-- Closed mouth (lips) -->
+                            <g class="mouth-closed">
+                                <path d="M 85 152 Q 93 149 100 150 Q 107 149 115 152" stroke="#C4706E" stroke-width="2" fill="none" stroke-linecap="round"/>
+                                <path d="M 87 152 Q 100 157 113 152" stroke="#B85A58" stroke-width="1.5" fill="none" opacity="0.6"/>
+                                <!-- Upper lip detail -->
+                                <path d="M 93 150 Q 100 147 107 150" stroke="#C4706E" stroke-width="1" fill="none"/>
+                            </g>
+                            <!-- Open mouth -->
+                            <g class="mouth-open">
+                                <ellipse cx="100" cy="154" rx="13" ry="9" fill="#8B1A1A"/>
+                                <ellipse cx="100" cy="157" rx="10" ry="5" fill="#6B0F0F"/>
+                                <!-- Teeth -->
+                                <rect x="90" y="147" width="20" height="6" rx="2" fill="white" opacity="0.9"/>
+                                <!-- Lips around open mouth -->
+                                <path d="M 85 150 Q 93 146 100 147 Q 107 146 115 150" stroke="#C4706E" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+                                <path d="M 87 160 Q 100 166 113 160" stroke="#B85A58" stroke-width="2" fill="none" stroke-linecap="round"/>
+                            </g>
+                        </g>
+
+                        <!-- Chin definition -->
+                        <path d="M 85 170 Q 100 180 115 170" stroke="#E0A882" stroke-width="0.8" fill="none" opacity="0.4"/>
+                    </svg>
+
+                    <!-- Sound wave indicator -->
+                    <div class="sound-wave @(isSpeaking ? "active" : "")">
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                        <div class="sound-bar"></div>
+                    </div>
+                </div>
+
+                <!-- Status text -->
+                <div class="avatar-status @(isSpeaking ? "active" : "")">
+                    @if (isSpeaking)
+                    {
+                        <span>🔊 Sedang berbicara...</span>
+                    }
+                    else
+                    {
+                        <span>🎤 Siap berbicara</span>
+                    }
+                </div>
+
+                <!-- Speech bubble -->
+                <div class="speech-bubble @(isSpeaking ? "visible" : "")">
+                    @if (isSpeaking && displayedWords.Count > 0)
+                    {
+                        @foreach (var word in displayedWords)
+                        {
+                            <span class="spoken-word">@word </span>
+                        }
+                    }
+                    else if (isSpeaking)
+                    {
+                        <span>...</span>
+                    }
+                </div>
+            </div>
+
+            <div class="form-group mb-3">
+                <label class="form-label font-weight-bold">Masukkan Teks:</label>
+                <textarea class="form-control" 
+                          rows="5" 
+                          @bind="textToSpeak" 
+                          placeholder="Ketik sesuatu di sini untuk dibacakan..."></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Pilih Suara:</label>
+                <select class="form-select" @bind="selectedVoice">
+                    <option value="id-ID-GadisNeural">Gadis (Perempuan - Indonesia)</option>
+                    <option value="id-ID-ArdiNeural">Ardi (Laki-laki - Indonesia)</option>
+                    <option value="en-US-JennyNeural">Jenny (Perempuan - English)</option>
+                </select>
+            </div>
+
+            <button class="btn btn-primary btn-lg w-100" 
+                    @onclick="SpeakText" 
+                    disabled="@isProcessing">
+                @if (isProcessing)
+                {
+                    <span class="spinner-border spinner-border-sm"></span> <span>Memproses...</span>
+                }
+                else
+                {
+                    <span><i class="oi oi-volume-high"></i> Putar Suara</span>
+                }
+            </button>
+
+            @if (!string.IsNullOrEmpty(errorMessage))
+            {
+                <div class="alert alert-danger mt-3">@errorMessage</div>
+            }
+        </div>
+    </div>
+</div>
+
+@code {
+    private string textToSpeak = "Halo, selamat datang di aplikasi Blazor Hybrid. Saya adalah suara buatan Azure.";
+    private string selectedVoice = "id-ID-GadisNeural";
+    private bool isProcessing = false;
+    private bool isSpeaking = false;
+    private string errorMessage = "";
+    private List<string> displayedWords = new();
+    private CancellationTokenSource? animationCts;
+
+    private async Task SpeakText()
+    {
+        if (string.IsNullOrWhiteSpace(textToSpeak)) return;
+
+        isProcessing = true;
+        isSpeaking = true;
+        errorMessage = "";
+        displayedWords.Clear();
+
+        animationCts?.Cancel();
+        animationCts = new CancellationTokenSource();
+
+        try
+        {
+            var animationTask = AnimateWordsAsync(textToSpeak, animationCts.Token);
+            var speechTask = SpeechService.SpeakAsync(textToSpeak, selectedVoice);
+
+            var error = await speechTask;
+
+            animationCts.Cancel();
+            await Task.Delay(100);
+
+            if (!string.IsNullOrEmpty(error))
+            {
+                errorMessage = $"Error: {error}";
+            }
+        }
+        finally
+        {
+            isSpeaking = false;
+            isProcessing = false;
+            displayedWords.Clear();
+            StateHasChanged();
+        }
+    }
+
+    private async Task AnimateWordsAsync(string text, CancellationToken token)
+    {
+        var words = text.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+        int delayPerWord = Math.Max(150, 4000 / Math.Max(words.Length, 1));
+
+        foreach (var word in words)
+        {
+            if (token.IsCancellationRequested) break;
+
+            displayedWords.Add(word);
+
+            if (displayedWords.Count > 5)
+            {
+                displayedWords.RemoveAt(0);
+            }
+
+            await InvokeAsync(StateHasChanged);
+
+            try
+            {
+                await Task.Delay(delayPerWord, token);
+            }
+            catch (TaskCanceledException)
+            {
+                break;
+            }
+        }
+    }
+}

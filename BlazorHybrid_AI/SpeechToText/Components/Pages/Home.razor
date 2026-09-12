@@ -1,0 +1,83 @@
+﻿@page "/"
+@using SpeechToText.Service
+@inject IAzureSpeechService SpeechService
+@implements IDisposable
+
+<div class="container mt-4">
+    <div class="card shadow">
+        <div class="card-header bg-primary text-white">
+            <h3>Speech to Text</h3>
+        </div>
+        <div class="card-body">
+            <p>Status: <span class="badge @(SpeechService.IsListening ? "bg-danger" : "bg-secondary")">@statusText</span></p>
+            
+            <textarea class="form-control" rows="8" readonly>@fullTranscript</textarea>
+            <p class="text-muted italic">@interimText</p>
+
+            <div class="mt-3 d-flex gap-2">
+                <button class="btn btn-success" @onclick="Start" disabled="@SpeechService.IsListening">Start</button>
+                <button class="btn btn-danger" @onclick="Stop" disabled="@(!SpeechService.IsListening)">Stop</button>
+                <button class="btn btn-light" @onclick='() => fullTranscript = ""'>Clear</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+    private string fullTranscript = "";
+    private string interimText = "";
+    private string statusText = "Siap";
+
+    protected override void OnInitialized()
+    {
+      
+        SpeechService.OnRecognizing += HandleRecognizing;
+        SpeechService.OnRecognized += HandleRecognized;
+        SpeechService.OnError += HandleError;
+    }
+
+    private async void HandleRecognizing(string text)
+    {
+        await InvokeAsync(() => {
+            interimText = text;
+            StateHasChanged();
+        });
+    }
+
+    private async void HandleRecognized(string text)
+    {
+        await InvokeAsync(() => {
+            fullTranscript += " " + text;
+            interimText = "";
+            StateHasChanged();
+        });
+    }
+
+    private async void HandleError(string error)
+    {
+        await InvokeAsync(() => {
+            statusText = $"Error: {error}";
+            StateHasChanged();
+        });
+    }
+
+    private async Task Start() 
+    {
+        statusText = "Mendengarkan...";
+        await SpeechService.StartContinuousRecognitionAsync();
+    }
+
+    private async Task Stop() 
+    {
+        statusText = "Berhenti";
+        await SpeechService.StopContinuousRecognitionAsync();
+    }
+
+    public void Dispose()
+    {
+      
+        SpeechService.OnRecognizing -= HandleRecognizing;
+        SpeechService.OnRecognized -= HandleRecognized;
+        SpeechService.OnError -= HandleError;
+    }
+}
