@@ -1,0 +1,24 @@
+<span class="badge rounded-pill @CssFor(Status)">
+    @LabelFor(Status)
+</span>
+
+@code {
+    [Parameter] public ProcessStatus Status { get; set; }
+
+    private static string CssFor(ProcessStatus status) => status switch
+    {
+        ProcessStatus.Processing => "text-bg-warning",
+        ProcessStatus.Done => "text-bg-success",
+        ProcessStatus.Failed => "text-bg-danger",
+        _ => "text-bg-secondary"
+    };
+
+    private static string LabelFor(ProcessStatus status) => status switch
+    {
+        ProcessStatus.Idle => "No activity yet",
+        ProcessStatus.Processing => "Processing...",
+        ProcessStatus.Done => "Done",
+        ProcessStatus.Failed => "Failed, please try again",
+        _ => ""
+    };
+}

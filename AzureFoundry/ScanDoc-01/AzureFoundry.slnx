@@ -1,0 +1,5 @@
+<Solution>
+  <Project Path="AzureFoundry.DocAssistant.Core/AzureFoundry.DocAssistant.Core.csproj" Id="e025385f-6141-4004-b505-53b9a92143c7" />
+  <Project Path="AzureFoundry.DocAssistant.Infrastructure/AzureFoundry.DocAssistant.Infrastructure.csproj" Id="4c45c631-1ddb-40d7-a1da-f13af556f33f" />
+  <Project Path="AzureFoundry.DocAssistant/AzureFoundry.DocAssistant.csproj" />
+</Solution>

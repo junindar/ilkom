@@ -1,0 +1,458 @@
+@page "/"
+@implements IAsyncDisposable
+@inject DocumentScanService Scan
+@inject IDocumentStore Store
+@inject IClipboardImageService ClipboardSvc
+@inject IJSRuntime JS
+
+<div class="d-flex justify-content-between align-items-start gap-3 mb-4">
+    <div>
+        <h1 class="h3 mb-1">Scan document</h1>
+        <p class="text-body-secondary mb-0">Take a photo or paste a receipt or letter. The text is read automatically and stored on this computer.</p>
+    </div>
+    <StatusBadge Status="_status" />
+</div>
+
+<div class="row g-4">
+    <section class="col-lg-8" aria-label="Preview and result">
+        <div class="card">
+            <div class="preview-area bg-body-secondary d-flex align-items-center justify-content-center p-3">
+                @if (_cameraActive)
+                {
+                    <video id="@VideoId" class="preview-media bg-black" autoplay playsinline muted></video>
+                }
+                else if (_previewSrc is not null)
+                {
+                    <img class="preview-media bg-white" src="@_previewSrc" alt="Document preview" />
+                }
+                else
+                {
+                    <p class="text-body-secondary text-center mb-0">No document yet. Choose a file, open the camera, or press <kbd>Ctrl</kbd> + <kbd>V</kbd> to paste an image.</p>
+                }
+            </div>
+
+            <div class="card-body">
+                @if (_cameraActive)
+                {
+                    <div class="d-flex flex-wrap gap-2">
+                        <button type="button" class="btn btn-primary" @onclick="CaptureFromCameraAsync" disabled="@IsProcessing">Capture and read</button>
+                        <button type="button" class="btn btn-link" @onclick="CloseCameraAsync" disabled="@IsProcessing">Cancel</button>
+                    </div>
+                }
+                else
+                {
+                    <div class="d-flex flex-wrap gap-2">
+                        <label class="btn btn-primary mb-0" aria-disabled="@IsProcessing">
+                            Choose file
+                            <InputFile class="d-none" OnChange="OnFileSelectedAsync"
+                                       accept=".jpg,.jpeg,.png,.webp" disabled="@IsProcessing" />
+                        </label>
+                        <button type="button" class="btn btn-outline-secondary" @onclick="PasteFromClipboardAsync" disabled="@IsProcessing">Paste from clipboard</button>
+                        <button type="button" class="btn btn-outline-secondary" @onclick="OpenCamera" disabled="@IsProcessing">Open camera</button>
+                    </div>
+                    <p class="form-text mb-0 mt-2">To capture the screen, press <kbd>Win</kbd> + <kbd>Shift</kbd> + <kbd>S</kbd>, then <kbd>Ctrl</kbd> + <kbd>V</kbd> here.</p>
+                }
+
+                @if (IsProcessing)
+                {
+                    <div class="progress mt-3" role="progressbar" aria-label="Reading document">
+                        <div class="progress-bar progress-bar-striped progress-bar-animated w-100"></div>
+                    </div>
+                }
+
+                @if (_errorMessage is not null)
+                {
+                    <div class="alert alert-danger mt-3 mb-0" role="alert">@_errorMessage</div>
+                }
+
+                @if (_selected is { Status: DocumentStatus.Unread } && !IsProcessing && !_cameraActive)
+                {
+                    <button type="button" class="btn btn-primary mt-3" @onclick="ReadAgainAsync">Read this document again</button>
+                }
+            </div>
+        </div>
+
+        @if (_selected is { Status: DocumentStatus.Ready })
+        {
+            <section class="card mt-4" aria-label="Reading result">
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h2 class="h6 mb-0">Reading result</h2>
+                    <button type="button" class="btn btn-sm btn-outline-secondary" @onclick="CopyResultAsync">Copy text</button>
+                </div>
+                <div class="card-body">
+                    <pre class="result-text mb-0">@_selected.Text</pre>
+                </div>
+            </section>
+        }
+    </section>
+
+    <aside class="col-lg-4" aria-label="Scan history">
+        <div class="card">
+            <div class="card-header">
+                <h2 class="h6 mb-0">History</h2>
+            </div>
+            @if (_history.Count == 0)
+            {
+                <div class="card-body text-body-secondary">
+                    Documents you scan appear here and remain after the application is closed.
+                </div>
+            }
+            else
+            {
+                <ul class="list-group list-group-flush">
+                    @foreach (var item in _history)
+                    {
+                        <li class="list-group-item d-flex align-items-center gap-2 @(item.Id == _selected?.Id ? "active" : "")">
+                            <button type="button" class="btn btn-link text-start text-decoration-none flex-grow-1 p-0 text-reset"
+                                    @onclick="() => SelectHistoryAsync(item)" disabled="@IsProcessing">
+                                <span class="d-block fw-semibold text-truncate">@item.Title</span>
+                                <small class="d-block">@item.Time.ToString("dd/MM HH:mm")</small>
+                                @if (item.Status == DocumentStatus.Unread)
+                                {
+                                    <span class="badge rounded-pill text-bg-warning mt-1">Not read yet</span>
+                                }
+                            </button>
+                            <button type="button" class="btn btn-sm btn-link text-danger" aria-label="Delete @item.Title"
+                                    @onclick="() => DeleteAsync(item)" disabled="@IsProcessing">Delete</button>
+                        </li>
+                    }
+                </ul>
+            }
+        </div>
+    </aside>
+</div>
+
+@code {
+    private const string VideoId = "doc-camera";
+    private const long MaxSizeBytes = 10 * 1024 * 1024; // 10 MB
+    private static readonly TimeSpan _ocrTimeout = TimeSpan.FromSeconds(90);
+    private static readonly string[] _supportedMediaTypes = ["image/jpeg", "image/png", "image/webp"];
+
+    private string? _previewSrc=null;
+    private string? _errorMessage;
+    private ProcessStatus _status = ProcessStatus.Idle;
+    private bool _cameraActive=false;
+    private bool _shouldStartCamera;
+    private DotNetObjectReference<ScanDocument>? _selfRef;
+    private Document? _selected;
+    private List<Document> _history = [];
+
+    private bool IsProcessing => _status == ProcessStatus.Processing;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _history = (await Store.ListAsync(DocumentType.Image, 50)).ToList();
+        }
+        catch (StorageException ex)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = ex.Message;
+        }
+    }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (firstRender)
+        {
+            _selfRef = DotNetObjectReference.Create(this);
+            await JS.InvokeVoidAsync("docPaste.register", _selfRef);
+        }
+
+        if (!_shouldStartCamera)
+        {
+            return;
+        }
+
+        _shouldStartCamera = false;
+
+        try
+        {
+            await JS.InvokeVoidAsync("docCamera.start", VideoId);
+        }
+        catch (JSException)
+        {
+            _cameraActive = false;
+            _status = ProcessStatus.Failed;
+            _errorMessage = "The camera could not be opened. Make sure a camera is connected and not in use by another application.";
+            StateHasChanged();
+        }
+    }
+
+    // ---- Clipboard ----
+
+    [JSInvokable]
+    public Task OnCtrlV()
+    {
+        if (_cameraActive || IsProcessing)
+        {
+            return Task.CompletedTask;
+        }
+
+        return InvokeAsync(PasteFromClipboardAsync);
+    }
+
+    private async Task PasteFromClipboardAsync()
+    {
+        _errorMessage = null;
+        try
+        {
+            var image = await ClipboardSvc.GetImageAsync(MaxSizeBytes);
+            if (image is null)
+            {
+                _status = ProcessStatus.Failed;
+                _errorMessage = "The clipboard does not contain an image. Copy a screenshot (Win+Shift+S) or copy an image file (jpg, png, webp), then paste again.";
+                return;
+            }
+
+            await ProcessImageAsync(image.Bytes, image.MediaType, image.Name);
+        }
+        catch (InvalidImageException ex)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = ex.Message;
+        }
+    }
+
+    // ---- Camera ----
+
+    private void OpenCamera()
+    {
+        _errorMessage = null;
+        _cameraActive = true;
+        _shouldStartCamera = true; 
+    }
+
+    private async Task CloseCameraAsync()
+    {
+        await JS.InvokeVoidAsync("docCamera.stop");
+        _cameraActive = false;
+    }
+
+    private async Task CaptureFromCameraAsync()
+    {
+        try
+        {
+            var base64 = await JS.InvokeAsync<string>("docCamera.capture", VideoId);
+            var bytes = Convert.FromBase64String(base64);
+            await CloseCameraAsync();
+            await ProcessImageAsync(bytes, "image/jpeg", $"camera-{DateTime.Now:HHmmss}.jpg");
+        }
+        catch (JSException)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = "Failed to capture an image from the camera. Please try again.";
+        }
+    }
+
+    // ---- File ----
+
+    private async Task OnFileSelectedAsync(InputFileChangeEventArgs e)
+    {
+        var file = e.File;
+        var mediaType = MediaTypeFor(file);
+
+        if (!_supportedMediaTypes.Contains(mediaType))
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = "File format is not supported. Use jpg, png, or webp.";
+            return;
+        }
+
+        if (file.Size > MaxSizeBytes)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = "Maximum file size is 10 MB.";
+            return;
+        }
+
+        using var ms = new MemoryStream();
+        await using (var stream = file.OpenReadStream(MaxSizeBytes))
+        {
+            await stream.CopyToAsync(ms);
+        }
+
+       await ProcessImageAsync(ms.ToArray(), mediaType, file.Name);
+    }
+
+   
+    private static string MediaTypeFor(IBrowserFile file)
+    {
+        if (!string.IsNullOrWhiteSpace(file.ContentType))
+        {
+            return file.ContentType.ToLowerInvariant();
+        }
+
+        return System.IO.Path.GetExtension(file.Name).ToLowerInvariant() switch
+        {
+            ".jpg" or ".jpeg" => "image/jpeg",
+            ".png" => "image/png",
+            ".webp" => "image/webp",
+            _ => "",
+        };
+    }
+
+   
+
+    private async Task ProcessImageAsync(byte[] bytes, string mediaType, string name)
+    {
+        _errorMessage = null;
+        _status = ProcessStatus.Processing;
+        _selected = null;
+        _previewSrc = DataUri(bytes, mediaType);
+        StateHasChanged();
+
+        try
+        {
+          
+            var document = await Scan.SaveAsync(bytes, mediaType, name);
+            _history.Insert(0, document);
+            _selected = document;
+            StateHasChanged();
+
+            await RunOcrAsync(document);
+        }
+        catch (StorageException ex)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private async Task ReadAgainAsync()
+    {
+        if (_selected is null)
+        {
+            return;
+        }
+
+        _errorMessage = null;
+        _status = ProcessStatus.Processing;
+        StateHasChanged();
+
+        await RunOcrAsync(_selected);
+    }
+
+    private async Task RunOcrAsync(Document document)
+    {
+        try
+        {
+            using var cts = new CancellationTokenSource(_ocrTimeout);
+            var result = await Scan.ReadAsync(document.Id, cts.Token);
+
+            var index = _history.FindIndex(d => d.Id == result.Id);
+            if (index >= 0)
+            {
+                _history[index] = result;
+            }
+
+            _selected = result;
+            _status = ProcessStatus.Done;
+        }
+        catch (OcrException ex)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = ex.Message + " The document has been saved. Press \"Read this document again\" to retry.";
+        }
+        catch (StorageException ex)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = ex.Message;
+        }
+        catch (OperationCanceledException)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = "Reading took too long and was cancelled. The document has been saved. Press \"Read this document again\" to retry.";
+        }
+    }
+
+    // ---- History ----
+
+    private async Task SelectHistoryAsync(Document item)
+    {
+        if (IsProcessing)
+        {
+            return;
+        }
+
+        _selected = item;
+        _errorMessage = null;
+        _status = item.Status == DocumentStatus.Ready ? ProcessStatus.Done : ProcessStatus.Idle;
+
+        try
+        {
+            var file = await Store.GetFileAsync(item.Id);
+            _previewSrc = file is null ? null : DataUri(file.Bytes, file.MediaType);
+            if (file is null)
+            {
+                _errorMessage = "The image file for this document was not found in storage. Delete this document from the history and scan it again.";
+            }
+        }
+        catch (StorageException ex)
+        {
+            _previewSrc = null;
+            _status = ProcessStatus.Failed;
+            _errorMessage = ex.Message;
+        }
+    }
+
+    private async Task DeleteAsync(Document item)
+    {
+        var confirmed = await JS.InvokeAsync<bool>("confirm", $"Delete \"{item.Title}\" along with its reading result?");
+        if (!confirmed)
+        {
+            return;
+        }
+
+        try
+        {
+            await Store.DeleteAsync(item.Id);
+        }
+        catch (StorageException ex)
+        {
+            _status = ProcessStatus.Failed;
+            _errorMessage = ex.Message;
+            return;
+        }
+
+        _history.RemoveAll(d => d.Id == item.Id);
+
+        if (_selected?.Id == item.Id)
+        {
+            _selected = null;
+            _previewSrc = null;
+            _errorMessage = null;
+            _status = ProcessStatus.Idle;
+        }
+    }
+
+    private async Task CopyResultAsync()
+    {
+        if (_selected?.Text is { } text)
+        {
+            await JS.InvokeVoidAsync("navigator.clipboard.writeText", text);
+        }
+    }
+
+    private static string DataUri(byte[] bytes, string mediaType) =>
+        $"data:{mediaType};base64,{Convert.ToBase64String(bytes)}";
+
+    public async ValueTask DisposeAsync()
+    {
+        try
+        {
+            await JS.InvokeVoidAsync("docPaste.unregister");
+            if (_cameraActive)
+            {
+                await JS.InvokeVoidAsync("docCamera.stop");
+            }
+        }
+        catch (JSDisconnectedException)
+        {
+           
+        }
+
+        _selfRef?.Dispose();
+    }
+}
