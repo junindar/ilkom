@@ -259,3 +259,6 @@ paket-files/
 # Python Tools for Visual Studio (PTVS)
 __pycache__/
 *.pyc
+/AzureFoundry/AzureFoundry.DocAssistant/appsettings.json
+/AzureFoundry/ScanDoc-01/AzureFoundry.DocAssistant/appsettings.json
+/AzureFoundry/Documents
